@@ -34,7 +34,7 @@ public class StorageController {
                 .body(file);
     }
 
-    @GetMapping(value = "/images/{filename:.+}", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/images/{filename:.+}")
     public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
 
