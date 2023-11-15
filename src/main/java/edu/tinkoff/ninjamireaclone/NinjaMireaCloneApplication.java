@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone;
 
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
-import edu.tinkoff.ninjamireaclone.service.StorageService;
+import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

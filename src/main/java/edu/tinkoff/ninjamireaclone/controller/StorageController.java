@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
-import edu.tinkoff.ninjamireaclone.service.StorageService;
+import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

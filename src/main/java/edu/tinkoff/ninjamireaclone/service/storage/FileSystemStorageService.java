@@ -1,4 +1,4 @@
-package edu.tinkoff.ninjamireaclone.service;
+package edu.tinkoff.ninjamireaclone.service.storage;
 
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;

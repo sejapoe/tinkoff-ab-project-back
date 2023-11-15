@@ -1,4 +1,4 @@
-package edu.tinkoff.ninjamireaclone.service;
+package edu.tinkoff.ninjamireaclone.service.storage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

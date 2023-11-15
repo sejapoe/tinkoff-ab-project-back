@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone.storage;
 
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
-import edu.tinkoff.ninjamireaclone.service.StorageService;
+import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
