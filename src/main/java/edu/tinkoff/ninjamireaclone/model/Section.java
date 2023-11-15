@@ -1,10 +1,14 @@
 package edu.tinkoff.ninjamireaclone.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "section")
 public class Section {
 

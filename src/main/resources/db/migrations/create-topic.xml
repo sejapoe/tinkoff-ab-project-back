@@ -12,9 +12,7 @@
             <column name="name" type="VARCHAR">
                 <constraints nullable="false"/>
             </column>
-            <column name="parent_id" type="BIGINT">
-                <constraints nullable="true"/>
-            </column>
+            <column name="parent_id" type="BIGINT"/>
         </createTable>
 
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"

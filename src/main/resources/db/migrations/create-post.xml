@@ -14,12 +14,19 @@
             </column>
             <column name="text" type="varchar"/>
             <column name="attachment_url" type="varchar"/>
+            <column name="author_id" type="bigint"/>
+            <column name="created_at" type="DATE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"
                         maxValue="9223372036854775807" minValue="1" sequenceName="post_seq" startValue="1"/>
-        <addForeignKeyConstraint baseTableName="topic" baseColumnNames="parent_id"
-                                 constraintName="post_topic_id_fk" referencedTableName="section"
+        <addForeignKeyConstraint baseTableName="post" baseColumnNames="parent_id"
+                                 constraintName="post_topic_id_fk" referencedTableName="topic"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="post" baseColumnNames="author_id"
+                                 constraintName="post_user_id_fk" referencedTableName="user"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

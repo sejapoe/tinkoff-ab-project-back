@@ -1,10 +1,14 @@
 package edu.tinkoff.ninjamireaclone.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "topic")
 public class Topic {
 
@@ -17,6 +21,7 @@ public class Topic {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Section section;
 
     @OneToMany(
