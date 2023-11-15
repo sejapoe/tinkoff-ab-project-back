@@ -18,9 +18,6 @@ public class NinjaMireaCloneApplication {
 
     @Bean
     CommandLineRunner init(StorageService storageService) {
-        return (args) -> {
-            storageService.deleteAll();
-            storageService.init();
-        };
+        return (args) -> storageService.init();
     }
 }

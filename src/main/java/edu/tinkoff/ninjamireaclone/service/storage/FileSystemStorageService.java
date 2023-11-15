@@ -3,6 +3,9 @@ package edu.tinkoff.ninjamireaclone.service.storage;
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
+import edu.tinkoff.ninjamireaclone.model.Document;
+import edu.tinkoff.ninjamireaclone.model.DocumentType;
+import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,13 +21,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class FileSystemStorageService implements StorageService {
+    private final DocumentRepository documentRepository;
     private final Path rootLocation;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties storageProperties) {
+    public FileSystemStorageService(DocumentRepository documentRepository, StorageProperties storageProperties) {
+        this.documentRepository = documentRepository;
+
         if (storageProperties.getLocation().isBlank()) {
             throw new StorageException("File upload location can not be empty");
         }
@@ -50,8 +57,10 @@ public class FileSystemStorageService implements StorageService {
 
             String filename = file.getOriginalFilename();
             if (Objects.isNull(filename)) {
-                throw new StorageException("Failed to get file name");
+                filename = "";
             }
+
+            filename = UUID.randomUUID() + "-" + filename;
 
             Path destinationFile = this.rootLocation
                     .resolve(Paths.get(filename))
@@ -63,6 +72,18 @@ public class FileSystemStorageService implements StorageService {
 
             try (InputStream is = file.getInputStream()) {
                 Files.copy(is, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+                Document document = new Document();
+
+                String contentType = file.getContentType();
+                document.setDocumentType(
+                        Objects.nonNull(contentType) && contentType.startsWith("image/")
+                                ? DocumentType.IMAGE
+                                : DocumentType.FILE
+                );
+
+                document.setName(filename);
+                documentRepository.save(document);
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file", e);
@@ -91,6 +112,7 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void deleteAll() {
+        documentRepository.deleteAll();
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 }
