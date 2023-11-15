@@ -9,10 +9,9 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="post_pk"/>
             </column>
-            <column name="name" type="VARCHAR">
+            <column name="parent_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="parent_id" type="BIGINT"/>
             <column name="text" type="varchar"/>
             <column name="attachment_url" type="varchar"/>
         </createTable>
