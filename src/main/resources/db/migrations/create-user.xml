@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2023-11-15-create-user" author="JudexMars">
+        <createTable remarks="Пользователи" tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1"
+                        maxValue="9223372036854775807" minValue="1" sequenceName="user_seq" startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

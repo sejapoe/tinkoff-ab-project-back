@@ -4,4 +4,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
+    <include file="db/migrations/create-section.xml"/>
+    <include file="db/migrations/create-topic.xml"/>
+    <include file="db/migrations/create-user.xml"/>
+    <include file="db/migrations/create-post.xml"/>
+
 </databaseChangeLog>
