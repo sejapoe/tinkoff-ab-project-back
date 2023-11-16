@@ -10,3 +10,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+storage:
+  location: /tmp/ninja-mirea-clone/storage
