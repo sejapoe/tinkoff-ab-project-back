@@ -11,5 +11,6 @@
     <include file="db/migrations/create-user.xml"/>
     <include file="db/migrations/create-post.xml"/>
     <include file="db/migrations/create-document.xml"/>
+    <include file="db/migrations/create-rule.xml"/>
 
 </databaseChangeLog>
