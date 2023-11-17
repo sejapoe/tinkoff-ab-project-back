@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -20,4 +23,7 @@ public class Document {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private DocumentType documentType;
+
+    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
 }

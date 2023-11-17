@@ -9,12 +9,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
-public class User {
+@Table(name = "account")
+public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
+    @SequenceGenerator(name = "account_seq", sequenceName = "account_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "name")

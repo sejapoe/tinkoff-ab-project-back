@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="2023-11-18-create-attachment" author="JudexMars">
+        <createTable remarks="Вложения" tableName="attachment">
+
+            <column name="post_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="attachment_pk"/>
+            </column>
+
+            <column name="document_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="attachment_pk"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="attachment" baseColumnNames="post_id"
+                                 constraintName="attachment_post_id_fk" referencedTableName="post"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="attachment" baseColumnNames="document_id"
+                                 constraintName="attachment_document_id_fk" referencedTableName="document"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
