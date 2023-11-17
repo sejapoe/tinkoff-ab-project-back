@@ -16,6 +16,7 @@ import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,27 +49,7 @@ public class RuleServiceTest {
     }
 
     @Test
-    public void createRuleSetWithWrongCondition() {
-        // given
-        RuleSet ruleSet = new RuleSet();
-        ruleSet.setName("[TEST] Тестовый рулсет");
-        ruleSet.setCondition("if unknown()");
-        Rule rule = new Rule();
-        rule.setOrder(0L);
-        rule.setAction("create_subsection(Тест)");
-        rule.setRuleSet(ruleSet);
-        ruleSet.setRules(List.of(rule));
-
-        // when
-        Exception e = assertThrows(Exception.class, () -> ruleService.create(ruleSet));
-
-        // then
-        assertThat(ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("[TEST] Тестовый рулсет"))).isFalse();
-        assertThat(e).isInstanceOf(RuleException.class);
-        assertThat(e.getMessage()).isEqualTo("Unknown condition: \"unknown\"");
-    }
-
-    @Test
+    @DisplayName("Создание набора правил с неправильным действием")
     public void createRuleSetWithWrongAction() {
         // given
         Section root = sectionService.getRoot();
@@ -91,6 +72,29 @@ public class RuleServiceTest {
     }
 
     @Test
+    @DisplayName("Создание набора правил с неправильным условием")
+    public void createRuleSetWithWrongCondition() {
+        // given
+        RuleSet ruleSet = new RuleSet();
+        ruleSet.setName("[TEST] Тестовый рулсет");
+        ruleSet.setCondition("if unknown()");
+        Rule rule = new Rule();
+        rule.setOrder(0L);
+        rule.setAction("create_subsection(Тест)");
+        rule.setRuleSet(ruleSet);
+        ruleSet.setRules(List.of(rule));
+
+        // when
+        Exception e = assertThrows(Exception.class, () -> ruleService.create(ruleSet));
+
+        // then
+        assertThat(ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("[TEST] Тестовый рулсет"))).isFalse();
+        assertThat(e).isInstanceOf(RuleException.class);
+        assertThat(e.getMessage()).isEqualTo("Unknown condition: \"unknown\"");
+    }
+
+    @Test
+    @DisplayName("Создание валидного набора правил")
     public void createValidRuleset() {
         // given
         Section root = sectionService.getRoot();
@@ -111,6 +115,7 @@ public class RuleServiceTest {
     }
 
     @Test
+    @DisplayName("Невалидный набор правил при инициализации")
     public void invalidRuleSetOnInit() {
         // given
         RuleSet ruleSet = new RuleSet();
