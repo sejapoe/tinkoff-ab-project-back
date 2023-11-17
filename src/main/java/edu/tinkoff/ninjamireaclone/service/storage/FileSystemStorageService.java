@@ -57,8 +57,9 @@ public class FileSystemStorageService implements StorageService {
 
             String filename = file.getOriginalFilename();
             if (Objects.isNull(filename)) {
-                filename = "";
+                throw new StorageException("Failed to store file with empty name");
             }
+            String originalFilename = filename;
 
             filename = UUID.randomUUID() + "-" + filename;
 
@@ -82,7 +83,8 @@ public class FileSystemStorageService implements StorageService {
                                 : DocumentType.FILE
                 );
 
-                document.setName(filename);
+                document.setOriginalName(originalFilename);
+                document.setFilename(filename);
                 documentRepository.save(document);
             }
         } catch (IOException e) {
@@ -103,10 +105,10 @@ public class FileSystemStorageService implements StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException("Could not read file: " + filename);
+                throw new StorageFileNotFoundException("Failed to read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Failed to read file: " + filename, e);
         }
     }
 
