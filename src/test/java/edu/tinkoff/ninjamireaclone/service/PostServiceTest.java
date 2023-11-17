@@ -52,10 +52,6 @@ public class PostServiceTest {
         postRepository.deleteAll();
     }
 
-    private void createGivenEntities() {
-
-    }
-
     @Test
     @DisplayName("Создание поста с вложениями")
     @Transactional
