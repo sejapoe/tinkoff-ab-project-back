@@ -28,6 +28,13 @@ public class FileSystemStorageService implements StorageService {
     private final DocumentRepository documentRepository;
     private final Path rootLocation;
 
+    /**
+     * Constructor for the FileSystemStorageService class.
+     *
+     * @param documentRepository the document repository to be used for storing and retrieving documents
+     * @param storageProperties  the storage properties containing the file upload location
+     * @throws StorageException if the file upload location is empty
+     */
     @Autowired
     public FileSystemStorageService(DocumentRepository documentRepository, StorageProperties storageProperties) {
         this.documentRepository = documentRepository;
@@ -39,6 +46,9 @@ public class FileSystemStorageService implements StorageService {
         rootLocation = Paths.get(storageProperties.getLocation());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() {
         try {
@@ -48,6 +58,9 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void store(MultipartFile file) {
         try {
@@ -92,11 +105,17 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Resource loadAsResource(String filename) {
         try {
@@ -112,6 +131,9 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteAll() {
         documentRepository.deleteAll();
