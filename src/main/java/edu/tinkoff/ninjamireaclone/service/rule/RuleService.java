@@ -24,6 +24,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RuleService {
+    /**
+     * The EXPECTED_ENTITY_NUMBER variable represents the expected number of entities.
+     * It set for 3 because 3 possible entities ({@link Section}, {@link Topic}, {@link User}) are used in the project.)
+     *
+     * @see RuleService#createTriggers
+     */
+    private static final int EXPECTED_ENTITY_NUMBER = 3;
+    private static final int EXPECTED_ENTRIES_PER_KEY = 8;
     private final Logger logger = LoggerFactory.getLogger(RuleService.class);
     private final RuleSetRepository ruleSetRepository;
     private final ConditionResolver conditionResolver;
@@ -40,7 +48,7 @@ public class RuleService {
      * <p>
      * Rules are applied in order {@link Rule#getOrder()}
      */
-    private final Multimap<Class<?>, Entry<?>> createTriggers = HashMultimap.create(3, 8);
+    private final Multimap<Class<?>, Entry<?>> createTriggers = HashMultimap.create(EXPECTED_ENTITY_NUMBER, EXPECTED_ENTRIES_PER_KEY);
 
     /**
      * Creates entry from condition and actions

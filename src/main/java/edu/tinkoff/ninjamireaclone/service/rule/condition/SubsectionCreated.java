@@ -7,6 +7,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Represents a condition that checks if a subsection has been created with a specific parent ID.
+ * <p>
+ * Example usage: "subsection_created(1, 2, 3)"
+ * <p>
+ * Where 1, 2, 3 are parent IDs of sections.
+ */
 @RequiredArgsConstructor
 public class SubsectionCreated implements Condition<Section> {
     private final List<Long> parentIds;

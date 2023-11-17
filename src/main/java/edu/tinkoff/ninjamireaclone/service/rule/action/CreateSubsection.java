@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Implementation of the {@link Action} interface that creates a new subsection in a {@link Section}.
+ * <p>
+ * Example usage: "create_subsection(Example subsection name)"
+ */
 @RequiredArgsConstructor
 public class CreateSubsection implements Action<Section> {
     private final String name;
