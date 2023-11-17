@@ -27,7 +27,7 @@ public class TopicService {
      */
     public Topic createTopic(Topic topic, Long parentId) {
         init(topic, parentId);
-        return topicRepository.save(topic);
+        return topicRepository.saveAndFlush(topic);
     }
 
     /**
