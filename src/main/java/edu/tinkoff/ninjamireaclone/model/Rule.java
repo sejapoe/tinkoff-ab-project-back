@@ -17,7 +17,7 @@ public class Rule {
     @Column(name = "exec_order", unique = true)
     private Long order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "rule_set_id", nullable = false)
     private RuleSet ruleSet;
 

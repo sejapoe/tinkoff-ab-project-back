@@ -1,16 +1,31 @@
 package edu.tinkoff.ninjamireaclone.rule;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import edu.tinkoff.ninjamireaclone.exception.rule.RuleException;
+import edu.tinkoff.ninjamireaclone.model.QRuleSet;
+import edu.tinkoff.ninjamireaclone.model.Rule;
+import edu.tinkoff.ninjamireaclone.model.RuleSet;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.repository.RuleSetRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
 import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -20,25 +35,106 @@ public class RuleServiceTest {
     @Autowired
     private RuleSetRepository ruleSetRepository;
     @Autowired
-    private SectionService sectionService;
-    @Autowired
     private RuleService ruleService;
+    @Autowired
+    private SectionService sectionService;
 
+    @BeforeEach
+    @AfterEach
+    @Transactional
+    public void clear() {
+        ruleSetRepository.deleteAll(ruleSetRepository.findAll(QRuleSet.ruleSet.name.startsWith("[TEST]")));
+        ruleService.init();
+    }
 
     @Test
-    public void createSubsectionWhenSubsectionCreatedTest() {
+    public void createRuleSetWithWrongCondition() {
         // given
-        Section course1 = sectionRepository.findAll().stream().filter(section -> section.getName().equals("1 курс")).findAny().get();
-        Section algebra = new Section();
-        algebra.setName("Линейная алгебра");
-        algebra.setParent(course1);
+        RuleSet ruleSet = new RuleSet();
+        ruleSet.setName("[TEST] Тестовый рулсет");
+        ruleSet.setCondition("if unknown()");
+        Rule rule = new Rule();
+        rule.setOrder(0L);
+        rule.setAction("create_subsection(Тест)");
+        rule.setRuleSet(ruleSet);
+        ruleSet.setRules(List.of(rule));
 
         // when
-        Section result = sectionService.create(algebra);
+        Exception e = assertThrows(Exception.class, () -> ruleService.create(ruleSet));
 
         // then
-        assertThat(result.getName()).isEqualTo("Линейная алгебра");
-        assertThat(result.getSubsections()).size().isEqualTo(3);
-        assertThat(result.getSubsections().stream().map(Section::getName)).contains("Контрольные работы", "Конспекты семинаров", "Литература");
+        assertThat(ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("[TEST] Тестовый рулсет"))).isFalse();
+        assertThat(e).isInstanceOf(RuleException.class);
+        assertThat(e.getMessage()).isEqualTo("Unknown condition: \"unknown\"");
+    }
+
+    @Test
+    public void createRuleSetWithWrongAction() {
+        // given
+        Section root = sectionService.getRoot();
+        RuleSet ruleSet = new RuleSet();
+        ruleSet.setName("[TEST] Тестовый рулсет");
+        ruleSet.setCondition("if subsection_created(%d)".formatted(root.getId()));
+        Rule rule = new Rule();
+        rule.setOrder(0L);
+        rule.setAction("unknown()");
+        rule.setRuleSet(ruleSet);
+        ruleSet.setRules(List.of(rule));
+
+        // when
+        Exception e = assertThrows(Exception.class, () -> ruleService.create(ruleSet));
+
+        // then
+        assertThat(ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("[TEST] Тестовый рулсет"))).isFalse();
+        assertThat(e).isInstanceOf(RuleException.class);
+        assertThat(e.getMessage()).isEqualTo("Unknown action: \"unknown\"");
+    }
+
+    @Test
+    public void createValidRuleset() {
+        // given
+        Section root = sectionService.getRoot();
+        RuleSet ruleSet = new RuleSet();
+        ruleSet.setName("[TEST] Тестовый рулсет");
+        ruleSet.setCondition("if subsection_created(%d)".formatted(root.getId()));
+        Rule rule = new Rule();
+        rule.setOrder(0L);
+        rule.setAction("create_subsection(Тест)");
+        rule.setRuleSet(ruleSet);
+        ruleSet.setRules(List.of(rule));
+
+        // when
+        ruleService.create(ruleSet);
+
+        // then
+        assertThat(ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("[TEST] Тестовый рулсет"))).isTrue();
+    }
+
+    @Test
+    public void invalidRuleSetOnInit() {
+        // given
+        RuleSet ruleSet = new RuleSet();
+        ruleSet.setName("[TEST] Тестовый рулсет");
+        ruleSet.setCondition("if unknown()");
+        Rule rule = new Rule();
+        rule.setOrder(0L);
+        rule.setAction("create_subsection(Тест)");
+        rule.setRuleSet(ruleSet);
+        ruleSet.setRules(List.of(rule));
+        RuleSet saved = ruleSetRepository.save(ruleSet);
+
+        // capture logs
+        var logWatcher = new ListAppender<ILoggingEvent>();
+        logWatcher.start();
+        ((Logger) LoggerFactory.getLogger(RuleService.class)).addAppender(logWatcher);
+
+        // when
+        ruleService.init();
+
+        // then
+        assertThat(logWatcher.list).anySatisfy(iLoggingEvent -> {
+            assertThat(iLoggingEvent.getLevel()).isEqualTo(Level.ERROR);
+            assertThat(iLoggingEvent.getMessage()).isEqualTo("Failed register RuleSet[%d] \"%s\"".formatted(saved.getId(), saved.getName()));
+        });
     }
 }

@@ -82,6 +82,7 @@ public class RuleService {
      */
     @PostConstruct
     public void init() {
+        clear();
         ruleSetRepository.findAll().forEach(ruleSet -> {
             try {
                 registerRuleSet(ruleSet);
@@ -93,6 +94,13 @@ public class RuleService {
                         .log();
             }
         });
+    }
+
+    /**
+     * Clears triggers maps
+     */
+    private void clear() {
+        createTriggers.clear();
     }
 
     /**

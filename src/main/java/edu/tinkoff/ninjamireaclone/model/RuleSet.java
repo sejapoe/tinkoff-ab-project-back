@@ -20,7 +20,7 @@ public class RuleSet {
     private String name;
 
     @OrderBy("order asc")
-    @OneToMany(mappedBy = "ruleSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "ruleSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Rule> rules;
 
     /**
