@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2023-11-18-edit-update-delete-behaviour" author="JudexMars">
+        <dropForeignKeyConstraint baseTableName="section" constraintName="section_section_id_fk"/>
+        <addForeignKeyConstraint baseTableName="section" baseColumnNames="parent_id"
+                                 constraintName="section_section_id_fk" referencedTableName="section"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <dropForeignKeyConstraint baseTableName="topic" constraintName="topic_section_id_fk"/>
+        <addForeignKeyConstraint baseTableName="topic" baseColumnNames="parent_id"
+                                 constraintName="topic_section_id_fk" referencedTableName="section"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <dropForeignKeyConstraint baseTableName="post" constraintName="post_topic_id_fk"/>
+        <dropForeignKeyConstraint baseTableName="post" constraintName="post_account_id_fk"/>
+        <addForeignKeyConstraint baseTableName="post" baseColumnNames="parent_id"
+                                 constraintName="post_topic_id_fk" referencedTableName="topic"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="post" baseColumnNames="author_id"
+                                 constraintName="post_account_id_fk" referencedTableName="account"
+                                 referencedColumnNames="id" onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

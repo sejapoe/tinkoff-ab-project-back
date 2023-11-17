@@ -19,9 +19,9 @@
 
         <addForeignKeyConstraint baseTableName="attachment" baseColumnNames="post_id"
                                  constraintName="attachment_post_id_fk" referencedTableName="post"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
         <addForeignKeyConstraint baseTableName="attachment" baseColumnNames="document_id"
                                  constraintName="attachment_document_id_fk" referencedTableName="document"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

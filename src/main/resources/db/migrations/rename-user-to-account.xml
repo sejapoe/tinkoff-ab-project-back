@@ -12,6 +12,6 @@
         <addPrimaryKey tableName="account" columnNames="id"/>
         <addForeignKeyConstraint baseTableName="post" baseColumnNames="author_id" constraintName="post_account_id_fk"
                                  referencedTableName="account"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id" onDelete="SET NULL"/>
     </changeSet>
 </databaseChangeLog>
