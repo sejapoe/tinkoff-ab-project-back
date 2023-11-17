@@ -15,16 +15,37 @@ public class SectionService {
     private final SectionRepository sectionRepository;
     private final RuleService ruleService;
 
+    /**
+     * @param id section id
+     * @return section with given id
+     * @throws NotFoundException if section with given id is not found
+     */
     public Section get(Long id) {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Section with id %d is not found".formatted(id)));
     }
 
+    /**
+     * Creates section and handles it with rules
+     *
+     * @param section section to create
+     * @return created section
+     * @see RuleService#handleSectionCreated(Section)
+     */
     public Section create(Section section) {
         var saved = sectionRepository.save(section);
         return ruleService.handleSectionCreated(saved);
     }
 
+    /**
+     * Creates subsection and handles it with rules
+     *
+     * @param parentId parent section id
+     * @param name     section name
+     * @return created section
+     * @throws NotFoundException if parent section is not found
+     * @see SectionService#create(Section)
+     */
     public Section create(Long parentId, String name) {
         var parent = get(parentId);
         // check if parent writable
@@ -35,6 +56,14 @@ public class SectionService {
         return create(section);
     }
 
+    /**
+     * Updates section and handles it with rules
+     *
+     * @param id   section id
+     * @param name new section name
+     * @return updated section
+     * @throws NotFoundException if section with given id is not found
+     */
     public Section update(Long id, String name) {
         var section = get(id);
         section.setName(name);
@@ -42,11 +71,23 @@ public class SectionService {
         // ruleService.handleSectionUpdate
     }
 
+    /**
+     * Deletes section
+     *
+     * @param id section id
+     * @throws NotFoundException if section with given id is not found
+     */
     public void delete(Long id) {
         Section section = get(id);
         sectionRepository.delete(section);
     }
 
+    /**
+     * Returns root section (section without parent)
+     *
+     * @return root section
+     * @throws NotFoundException if root section is not found
+     */
     public Section getRoot() {
         return sectionRepository.findOne(QSection.section.parent.isNull()).orElseThrow(() ->
                 new NotFoundException("Root section is not found!"));
