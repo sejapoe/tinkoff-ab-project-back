@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2023-11-17-rename-user-to-account" author="JudexMars">
+        <dropForeignKeyConstraint baseTableName="post" constraintName="post_user_id_fk"/>
+        <dropPrimaryKey tableName="user" dropIndex="true"/>
+        <renameTable oldTableName="user" newTableName="account"/>
+        <renameSequence oldSequenceName="user_seq" newSequenceName="account_seq"/>
+        <addPrimaryKey tableName="account" columnNames="id"/>
+        <addForeignKeyConstraint baseTableName="post" baseColumnNames="author_id" constraintName="post_account_id_fk"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id" onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

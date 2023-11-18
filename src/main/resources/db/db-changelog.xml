@@ -8,8 +8,12 @@
 
     <include file="db/migrations/create-section.xml"/>
     <include file="db/migrations/create-topic.xml"/>
-    <include file="db/migrations/create-user.xml"/>
+    <include file="/db/migrations/create-user.xml"/>
     <include file="db/migrations/create-post.xml"/>
     <include file="db/migrations/create-document.xml"/>
+    <include file="/db/migrations/rename-user-to-account.xml"/>
+    <include file="db/migrations/edit-post.xml"/>
+    <include file="db/migrations/create-attachment.xml"/>
+    <include file="db/migrations/edit-update-delete-behaviour.xml"/>
 
 </databaseChangeLog>
