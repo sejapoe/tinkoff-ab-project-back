@@ -7,6 +7,7 @@ import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.SectionMapper;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,13 @@ public class SectionController {
     }
 
     @PostMapping
-    public ResponseEntity<ShortSectionResponseDto> createSection(@RequestBody CreateSectionRequestDto createSectionRequestDto) {
+    public ResponseEntity<ShortSectionResponseDto> createSection(@RequestBody @Valid CreateSectionRequestDto createSectionRequestDto) {
         Section section = sectionService.create(createSectionRequestDto.parentId(), createSectionRequestDto.name());
         return ResponseEntity.ok(sectionMapper.toShortDto(section));
     }
 
     @PutMapping
-    public ResponseEntity<ShortSectionResponseDto> updateSection(@RequestBody UpdateSectionRequestDto createSectionDto) {
+    public ResponseEntity<ShortSectionResponseDto> updateSection(@RequestBody @Valid UpdateSectionRequestDto createSectionDto) {
         Section section = sectionService.update(createSectionDto.id(), createSectionDto.name());
         return ResponseEntity.ok(sectionMapper.toShortDto(section));
     }

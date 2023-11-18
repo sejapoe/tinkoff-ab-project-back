@@ -1,7 +1,9 @@
 package edu.tinkoff.ninjamireaclone.dto.section.request;
 
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateSectionRequestDto(
-        Long id,
-        String name
+        @NotNull Long id,
+        @NotNull String name
 ) {
 }
