@@ -82,8 +82,8 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @PostMapping("/withattach")
-    public ResponseEntity<PostResponseDto> createWithAttachments(@RequestPart("data")CreatePostRequestDto requestDto,
-                                                                 @Size(max = 5) @RequestPart("file")List<MultipartFile> files) {
+    public ResponseEntity<PostResponseDto> createWithAttachments(@RequestPart("data") CreatePostRequestDto requestDto,
+                                                                 @Size(max = 5) @RequestPart("file") List<MultipartFile> files) {
         var post = postService
                 .createPostWithAttachments(postMapper.toPost(requestDto), requestDto.authorId(), requestDto.authorId(), files);
         return ResponseEntity.ok(postMapper.toPostResponseDto(post));

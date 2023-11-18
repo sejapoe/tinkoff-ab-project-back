@@ -18,7 +18,10 @@ public class Document {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    private String filename;
+
+    @Column(name = "original_name", nullable = false)
+    private String originalName;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)

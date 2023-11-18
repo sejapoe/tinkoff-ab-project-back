@@ -33,15 +33,20 @@ public class PostService {
     }
 
     private void init(Post post, Long authorId, Long parentId) {
-        if (nonNull(authorId)) {post.setAuthor(accountRepository.findById(authorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Пользователь", authorId)));}
-        if (nonNull(parentId)) {post.setParent(topicRepository.findById(parentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Топик", parentId)));}
+        if (nonNull(authorId)) {
+            post.setAuthor(accountRepository.findById(authorId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Пользователь", authorId)));
+        }
+        if (nonNull(parentId)) {
+            post.setParent(topicRepository.findById(parentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Топик", parentId)));
+        }
     }
 
     /**
      * Updates the post by id from 'post' object
-     * @param post object with updated fields
+     *
+     * @param post     object with updated fields
      * @param authorId id of the author account
      * @param parentId id of the parent topic
      * @return updated saved post
@@ -57,6 +62,7 @@ public class PostService {
 
     /**
      * Gets the post by id
+     *
      * @param id id of the post
      * @return found post
      */
@@ -66,6 +72,7 @@ public class PostService {
 
     /**
      * Deletes the post by id
+     *
      * @param id id of the post to be deleted
      * @return id of the deleted post
      */
@@ -77,10 +84,11 @@ public class PostService {
 
     /**
      * Creates (saves) new post
-     * @param post post to be saved
+     *
+     * @param post     post to be saved
      * @param authorId id of the author account
      * @param parentId id of the parent topic
-     * @param files files to be attached
+     * @param files    files to be attached
      * @return saved post
      */
     public Post createPostWithAttachments(Post post, Long authorId, Long parentId, List<MultipartFile> files) {

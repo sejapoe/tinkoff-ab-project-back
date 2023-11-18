@@ -20,11 +20,11 @@ public interface PostMapper {
 
     Post toPost(UpdatePostRequestDto requestDto);
 
-    @Mapping(target = "documentNames", source = "documents" , qualifiedByName = "documentNames")
+    @Mapping(target = "documentNames", source = "documents", qualifiedByName = "documentNames")
     PostResponseDto toPostResponseDto(Post post);
 
     @Named("documentNames")
     default List<String> documentsToDocumentNames(Set<Document> documents) {
-        return documents.stream().map(Document::getName).collect(Collectors.toList());
+        return documents.stream().map(Document::getFilename).collect(Collectors.toList());
     }
 }

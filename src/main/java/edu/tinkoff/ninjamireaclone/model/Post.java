@@ -38,8 +38,8 @@ public class Post {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",
-            joinColumns = { @JoinColumn(name = "post_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "document_id", referencedColumnName = "id") }
+            joinColumns = {@JoinColumn(name = "post_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "document_id", referencedColumnName = "id")}
     )
     private Set<Document> documents = new HashSet<>();
 

@@ -21,7 +21,8 @@ public class TopicService {
 
     /**
      * Creates (saves) new topic
-     * @param topic topic to be saved
+     *
+     * @param topic    topic to be saved
      * @param parentId id of the parent section
      * @return saved topic
      */
@@ -32,6 +33,7 @@ public class TopicService {
 
     /**
      * Deletes the topic by id
+     *
      * @param id id of the topic to be deleted
      * @return id of the deleted topic
      */
@@ -43,6 +45,7 @@ public class TopicService {
 
     /**
      * Gets the topic by id
+     *
      * @param id id of the topic
      * @return found topic
      */
@@ -52,7 +55,8 @@ public class TopicService {
 
     /**
      * Updates the topic by id from 'topic' object
-     * @param topic object with updated fields
+     *
+     * @param topic    object with updated fields
      * @param parentId id of the parent section
      * @return updated saved topic
      */
