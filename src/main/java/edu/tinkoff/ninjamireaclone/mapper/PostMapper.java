@@ -16,10 +16,21 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface PostMapper {
 
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "documents", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "author", ignore = true)
     Post toPost(CreatePostRequestDto requestDto);
 
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "documents", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "author", ignore = true)
     Post toPost(UpdatePostRequestDto requestDto);
 
+    @Mapping(target = "parentId", ignore = true)
+    @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "documentNames", source = "documents", qualifiedByName = "documentNames")
     PostResponseDto toPostResponseDto(Post post);
 
