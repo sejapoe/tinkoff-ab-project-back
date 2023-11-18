@@ -47,7 +47,7 @@ public class TopicService {
      * @return found topic
      */
     public Topic getTopic(Long id) {
-        return topicRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Автомобиль", id));
+        return topicRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Тема", id));
     }
 
     /**

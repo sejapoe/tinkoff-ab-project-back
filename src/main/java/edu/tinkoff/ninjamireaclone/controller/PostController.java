@@ -30,23 +30,6 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
 
-//    @Operation(description = "Создание поста")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "201", description = "Пост создан"),
-//            @ApiResponse(responseCode = "400", description = "Неверный формат данных")
-//    })
-//    @PostMapping
-//    public ResponseEntity<PostResponseDto> create(@RequestBody @Valid CreatePostRequestDto requestDto) {
-//        var post = postService.createPost(
-//                postMapper.toPost(requestDto),
-//                requestDto.documentIds(),
-//                requestDto.authorId(),
-//                requestDto.parentId());
-//        var responseDto = postMapper.toPostResponseDto(post);
-//        log.info("Создан пост " + responseDto.id());
-//        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-//    }
-
     @Operation(description = "Обновление поста")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Пост обновлен"),

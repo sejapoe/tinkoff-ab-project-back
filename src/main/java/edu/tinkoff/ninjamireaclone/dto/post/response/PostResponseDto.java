@@ -7,7 +7,8 @@ import java.util.List;
 
 public record PostResponseDto(
     long id,
-    long parent_id,
+    @JsonProperty("parent_id")
+    long parentId,
     String text,
     @JsonProperty("author_id")
     long authorId,
