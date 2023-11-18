@@ -10,15 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -81,11 +78,13 @@ public class PostController {
             @ApiResponse(responseCode = "201", description = "Пост создан"),
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
-    @PostMapping("/withattach")
-    public ResponseEntity<PostResponseDto> createWithAttachments(@RequestPart("data") CreatePostRequestDto requestDto,
-                                                                 @Size(max = 5) @RequestPart("file") List<MultipartFile> files) {
-        var post = postService
-                .createPostWithAttachments(postMapper.toPost(requestDto), requestDto.authorId(), requestDto.authorId(), files);
+    @PostMapping(value = "/withattach", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute CreatePostRequestDto requestDto) {
+        var post = postService.createPostWithAttachments(
+                postMapper.toPost(requestDto),
+                requestDto.authorId(),
+                requestDto.parentId(),
+                requestDto.files());
         return ResponseEntity.ok(postMapper.toPostResponseDto(post));
     }
 }

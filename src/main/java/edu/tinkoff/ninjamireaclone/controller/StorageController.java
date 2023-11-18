@@ -33,7 +33,9 @@ public class StorageController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"%s\"".formatted(file.getFilename()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"%s\"".formatted(
+                        storageService.getOriginalName(filename)
+                ))
                 .body(file);
     }
 

@@ -1,19 +1,22 @@
 package edu.tinkoff.ninjamireaclone.dto.post.request;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public record CreatePostRequestDto(
-        @JsonProperty("parent_id")
         @NotNull Long parentId,
-        @JsonProperty("author_id")
         @NotNull Long authorId,
 
         @Size(max = 200)
         @NotBlank
-        String text
+        String text,
+
+        @Size(max = 5)
+        List<MultipartFile> files
 ) {
 }

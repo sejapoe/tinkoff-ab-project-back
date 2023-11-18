@@ -6,6 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 
+/**
+ * The StorageService interface provides methods for initializing, storing, loading, and deleting files from a storage.
+ */
 public interface StorageService {
     /**
      * Initializes the storage service.
@@ -35,6 +38,14 @@ public interface StorageService {
      * @return the loaded file as a Resource object
      */
     Resource loadAsResource(String filename);
+
+    /**
+     * Returns the original name of the file without any modifications.
+     *
+     * @param filename the name of the file
+     * @return the original name of the file
+     */
+    String getOriginalName(String filename);
 
     /**
      * Deletes all files and directories from the storage.

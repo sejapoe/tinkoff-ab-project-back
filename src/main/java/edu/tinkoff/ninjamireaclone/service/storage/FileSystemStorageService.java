@@ -5,6 +5,7 @@ import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.DocumentType;
+import edu.tinkoff.ninjamireaclone.model.QDocument;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -129,6 +130,13 @@ public class FileSystemStorageService implements StorageService {
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Failed to read file: " + filename, e);
         }
+    }
+
+    @Override
+    public String getOriginalName(String filename) {
+        return documentRepository.findOne(QDocument.document.filename.eq(filename))
+                .map(Document::getOriginalName)
+                .orElseThrow(() -> new StorageFileNotFoundException("Failed to read file: " + filename));
     }
 
     /**

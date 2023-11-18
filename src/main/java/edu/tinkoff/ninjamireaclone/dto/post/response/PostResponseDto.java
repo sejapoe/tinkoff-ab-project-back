@@ -1,6 +1,7 @@
 package edu.tinkoff.ninjamireaclone.dto.post.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.tinkoff.ninjamireaclone.dto.document.response.DocumentResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +15,6 @@ public record PostResponseDto(
         long authorId,
         @JsonProperty("created_at")
         LocalDateTime createdAt,
-        @JsonProperty("document_names")
-        List<String> documentNames
+        List<DocumentResponseDto> documents
 ) {
 }
