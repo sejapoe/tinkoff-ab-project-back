@@ -11,5 +11,4 @@ class NinjaMireaCloneApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

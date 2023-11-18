@@ -1,13 +1,11 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.config.DataLoader;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
-import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
-import edu.tinkoff.ninjamireaclone.repository.PostRepository;
-import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
-import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
+import edu.tinkoff.ninjamireaclone.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@DirtiesContext
 @ActiveProfiles("test")
 public class PostServiceTest {
 
@@ -42,14 +42,26 @@ public class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private DataLoader dataLoader;
+    @Autowired
+    private RuleSetRepository ruleSetRepository;
+    @Autowired
+    private RuleRepository ruleRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @BeforeEach
     @AfterEach
+    @Transactional
     public void clear() {
         sectionRepository.deleteAll();
         accountRepository.deleteAll();
         topicRepository.deleteAll();
         postRepository.deleteAll();
+        documentRepository.deleteAll();
+        ruleRepository.deleteAll();
+        ruleSetRepository.deleteAll();
     }
 
     @Test
@@ -134,7 +146,7 @@ public class PostServiceTest {
 
         // when
         postCreated.setText("New text");
-        var postUpdated = postService.updatePost(postCreated, accountGiven.getId(), sectionGiven.getId());
+        var postUpdated = postService.updatePost(postCreated, accountGiven.getId(), topicGiven.getId());
         System.out.println("docs: " + postUpdated.getDocuments());
         System.out.println("created_at: " + postUpdated.getCreatedAt());
         // then

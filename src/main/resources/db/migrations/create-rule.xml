@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="2023-11-16-create-rule" author="Sejapoe">
+        <createSequence incrementBy="1" sequenceName="rule_seq" startValue="1"/>
+        <createSequence incrementBy="1" sequenceName="rule_set_seq" startValue="1"/>
+
+        <createTable remarks="Правило" tableName="rule">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_rule"/>
+            </column>
+            <column name="exec_order" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rule_set_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable remarks="Набор правил" tableName="rule_set">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_rule_set"/>
+            </column>
+            <column name="name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="condition" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="rule" baseColumnNames="rule_set_id" constraintName="rule_set_id_fk"
+                                 referencedTableName="rule_set"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

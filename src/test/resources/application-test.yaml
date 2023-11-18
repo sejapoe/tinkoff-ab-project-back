@@ -4,3 +4,5 @@ spring:
     url: jdbc:tc:postgresql:15:///test_db
   liquibase:
     change-log: classpath:db/db-changelog.xml
+storage:
+  location: /tmp/ninja-mirea-clone/storage

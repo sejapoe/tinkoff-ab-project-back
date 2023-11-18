@@ -2,8 +2,9 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
-import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
-import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
+import edu.tinkoff.ninjamireaclone.repository.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,29 @@ public class TopicServiceTest {
     private SectionRepository sectionRepository;
     @Autowired
     private TopicRepository topicRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
+    @Autowired
+    private RuleSetRepository ruleSetRepository;
+    @Autowired
+    private RuleRepository ruleRepository;
+
+    @BeforeEach
+    @AfterEach
+    @Transactional
+    public void clear() {
+        sectionRepository.deleteAll();
+        accountRepository.deleteAll();
+        topicRepository.deleteAll();
+        postRepository.deleteAll();
+        documentRepository.deleteAll();
+        ruleRepository.deleteAll();
+        ruleSetRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Создание топика")

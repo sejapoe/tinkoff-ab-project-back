@@ -39,7 +39,7 @@ public class FileSystemStorageService implements StorageService {
     public FileSystemStorageService(DocumentRepository documentRepository, StorageProperties storageProperties) {
         this.documentRepository = documentRepository;
 
-        if (storageProperties.getLocation().isBlank()) {
+        if (Objects.isNull(storageProperties.getLocation()) || storageProperties.getLocation().isBlank()) {
             throw new StorageException("File upload location can not be empty");
         }
 

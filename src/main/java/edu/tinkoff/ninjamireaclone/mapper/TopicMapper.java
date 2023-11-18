@@ -10,8 +10,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface TopicMapper {
 
+    @Mapping(target = "posts", ignore = true)
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Topic toTopic(CreateTopicRequestDto requestDto);
 
+    @Mapping(target = "posts", ignore = true)
+    @Mapping(target = "parent", ignore = true)
     Topic toTopic(UpdateTopicRequestDto requestDto);
 
     @Mapping(target = "parentId", source = "parent.id")
