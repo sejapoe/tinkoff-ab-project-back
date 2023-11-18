@@ -6,12 +6,14 @@ import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundExceptio
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@DirtiesContext
 @ActiveProfiles("test")
 public class StorageServiceTest {
     @Autowired
@@ -36,6 +39,7 @@ public class StorageServiceTest {
     private DocumentRepository documentRepository;
 
     @BeforeEach
+    @AfterEach
     public void clear() {
         storageService.deleteAll();
         storageService.init();
