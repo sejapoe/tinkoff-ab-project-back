@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -15,9 +18,15 @@ public class Document {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    private String filename;
+
+    @Column(name = "original_name", nullable = false)
+    private String originalName;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private DocumentType documentType;
+
+    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
 }

@@ -28,6 +28,13 @@ public class FileSystemStorageService implements StorageService {
     private final DocumentRepository documentRepository;
     private final Path rootLocation;
 
+    /**
+     * Constructor for the FileSystemStorageService class.
+     *
+     * @param documentRepository the document repository to be used for storing and retrieving documents
+     * @param storageProperties  the storage properties containing the file upload location
+     * @throws StorageException if the file upload location is empty
+     */
     @Autowired
     public FileSystemStorageService(DocumentRepository documentRepository, StorageProperties storageProperties) {
         this.documentRepository = documentRepository;
@@ -39,6 +46,9 @@ public class FileSystemStorageService implements StorageService {
         rootLocation = Paths.get(storageProperties.getLocation());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() {
         try {
@@ -48,8 +58,11 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void store(MultipartFile file) {
+    public Document store(MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file");
@@ -57,8 +70,9 @@ public class FileSystemStorageService implements StorageService {
 
             String filename = file.getOriginalFilename();
             if (Objects.isNull(filename)) {
-                filename = "";
+                throw new StorageException("Failed to store file with empty name");
             }
+            String originalFilename = filename;
 
             filename = UUID.randomUUID() + "-" + filename;
 
@@ -82,19 +96,26 @@ public class FileSystemStorageService implements StorageService {
                                 : DocumentType.FILE
                 );
 
-                document.setName(filename);
-                documentRepository.save(document);
+                document.setOriginalName(originalFilename);
+                document.setFilename(filename);
+                return documentRepository.save(document);
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file", e);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Resource loadAsResource(String filename) {
         try {
@@ -103,13 +124,16 @@ public class FileSystemStorageService implements StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException("Could not read file: " + filename);
+                throw new StorageFileNotFoundException("Failed to read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Failed to read file: " + filename, e);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteAll() {
         documentRepository.deleteAll();

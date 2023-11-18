@@ -26,7 +26,7 @@ public class Section {
 
     @OneToMany(
             mappedBy = "parent",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascType.REMOVE},
             fetch = FetchType.EAGER
     )
     private List<Section> subsections;
