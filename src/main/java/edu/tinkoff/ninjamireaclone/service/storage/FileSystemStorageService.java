@@ -62,7 +62,7 @@ public class FileSystemStorageService implements StorageService {
      * {@inheritDoc}
      */
     @Override
-    public void store(MultipartFile file) {
+    public Document store(MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file");
@@ -98,7 +98,7 @@ public class FileSystemStorageService implements StorageService {
 
                 document.setOriginalName(originalFilename);
                 document.setFilename(filename);
-                documentRepository.save(document);
+                return documentRepository.save(document);
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file", e);

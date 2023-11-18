@@ -22,10 +22,10 @@ public class Topic {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Section section;
+    private Section parent;
 
     @OneToMany(
-            mappedBy = "topic",
+            mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.EAGER
     )
