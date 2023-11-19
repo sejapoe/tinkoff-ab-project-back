@@ -17,5 +17,6 @@
     <include file="db/migrations/create-attachment.xml"/>
     <include file="db/migrations/edit-update-delete-behaviour.xml"/>
     <include file="db/migrations/modify-document.xml"/>
+    <include file="db/migrations/insert-anon-user.xml"/>
 
 </databaseChangeLog>
