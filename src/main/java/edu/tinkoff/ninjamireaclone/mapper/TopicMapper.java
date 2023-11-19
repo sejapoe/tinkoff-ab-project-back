@@ -2,12 +2,13 @@ package edu.tinkoff.ninjamireaclone.mapper;
 
 import edu.tinkoff.ninjamireaclone.dto.topic.request.CreateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
+import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.model.Topic;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PostMapper.class})
 public interface TopicMapper {
 
     @Mapping(target = "posts", ignore = true)
@@ -21,4 +22,6 @@ public interface TopicMapper {
 
     @Mapping(target = "parentId", source = "parent.id")
     TopicResponseDto toTopicResponseDto(Topic topic);
+
+    ShortTopicResponseDto toShortTopicResponseDto(Topic topic);
 }

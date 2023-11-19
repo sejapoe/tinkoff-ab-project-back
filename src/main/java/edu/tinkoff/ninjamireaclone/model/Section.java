@@ -30,4 +30,11 @@ public class Section {
             fetch = FetchType.EAGER
     )
     private List<Section> subsections;
+
+    @OneToMany(
+            mappedBy = "parent",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.EAGER
+    )
+    private List<Topic> topics;
 }
