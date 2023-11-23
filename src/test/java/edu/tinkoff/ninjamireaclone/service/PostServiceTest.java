@@ -6,6 +6,7 @@ import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.repository.*;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
@@ -202,6 +202,7 @@ public class PostServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Удаление поста")
     public void deletePost() {
         // given

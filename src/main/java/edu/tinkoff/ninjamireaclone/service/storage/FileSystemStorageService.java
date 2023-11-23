@@ -7,6 +7,7 @@ import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.DocumentType;
 import edu.tinkoff.ninjamireaclone.model.QDocument;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -63,6 +64,7 @@ public class FileSystemStorageService implements StorageService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Document store(MultipartFile file) {
         try {
             if (file.isEmpty()) {
@@ -133,6 +135,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    @Transactional
     public String getOriginalName(String filename) {
         return documentRepository.findOne(QDocument.document.filename.eq(filename))
                 .map(Document::getOriginalName)

@@ -7,6 +7,7 @@ import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class TopicService {
      * @param parentId id of the parent section
      * @return saved topic
      */
+    @Transactional
     public Topic createTopic(Topic topic, Long parentId) {
         init(topic, parentId);
         return topicRepository.saveAndFlush(topic);
@@ -43,6 +45,7 @@ public class TopicService {
      * @param id id of the topic to be deleted
      * @return id of the deleted topic
      */
+    @Transactional
     public Long deleteTopic(Long id) {
         var topic = getTopic(id);
         topicRepository.deleteById(id);
@@ -55,6 +58,7 @@ public class TopicService {
      * @param id id of the topic
      * @return found topic
      */
+    @Transactional
     public Topic getTopic(Long id) {
         return topicRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Тема", id));
     }
@@ -66,6 +70,7 @@ public class TopicService {
      * @param parentId id of the parent section
      * @return updated saved topic
      */
+    @Transactional
     public Topic updateTopic(Topic topic, Long parentId) {
         var found = getTopic(topic.getId());
         init(topic, parentId);

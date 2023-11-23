@@ -33,6 +33,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Получить корневой раздел")
     public void getRoot() {
         // when
@@ -44,6 +45,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Создать курс")
     public void createCourse() {
         // given
@@ -59,6 +61,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Создать предмет")
     public void createSubject() {
         // given
@@ -76,6 +79,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Удалить курс")
     public void deleteCourse() {
         // given
@@ -90,6 +94,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Обновить курс")
     public void updateCourse() {
         // given
@@ -106,6 +111,7 @@ public class SectionServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Получить раздел по ID")
     public void getSectionById() {
         // given

@@ -7,6 +7,7 @@ import edu.tinkoff.ninjamireaclone.model.*;
 import edu.tinkoff.ninjamireaclone.repository.RuleSetRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class DataLoader implements ApplicationRunner {
     private final RuleService ruleService;
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
         createCourses(getRoot());
         createRuleset(getRoot());
@@ -47,7 +50,8 @@ public class DataLoader implements ApplicationRunner {
         if (ruleSetRepository.exists(QRuleSet.ruleSet.name.eq("Создание секций"))) return;
 
         RuleSet ruleSet = new RuleSet();
-        String ids = root.getSubsections().stream()
+        Iterable<Section> courses = sectionRepository.findAll(QSection.section.parent.id.eq(root.getId()));
+        String ids = StreamSupport.stream(courses.spliterator(), false)
                 .map(section -> section.getId().toString())
                 .collect(Collectors.joining(", "));
 
