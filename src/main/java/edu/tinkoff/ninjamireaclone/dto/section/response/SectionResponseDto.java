@@ -1,14 +1,11 @@
 package edu.tinkoff.ninjamireaclone.dto.section.response;
 
-import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
-
-import java.util.List;
+import edu.tinkoff.ninjamireaclone.dto.section.request.SectionMultiPageResponseDto;
 
 public record SectionResponseDto(
         Long id,
         String name,
-        List<ShortSectionResponseDto> subsections,
-        List<TopicResponseDto> topics,
-        ShortSectionResponseDto parent
+        ShortSectionResponseDto parent,
+        SectionMultiPageResponseDto page
 ) {
 }

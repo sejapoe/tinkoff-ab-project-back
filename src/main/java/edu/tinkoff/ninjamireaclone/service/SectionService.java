@@ -2,10 +2,17 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import edu.tinkoff.ninjamireaclone.model.QSection;
+import edu.tinkoff.ninjamireaclone.model.QTopic;
 import edu.tinkoff.ninjamireaclone.model.Section;
+import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
+import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
+import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
+import edu.tinkoff.ninjamireaclone.utils.page.MultiPager;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +21,13 @@ public class SectionService {
 
     private final SectionRepository sectionRepository;
     private final RuleService ruleService;
+    private final TopicRepository topicRepository;
+    private MultiPager<Section, Topic, SectionRepository, TopicRepository> multiPager;
+
+    @PostConstruct
+    private void init() {
+        multiPager = new MultiPager<>(sectionRepository, topicRepository);
+    }
 
     /**
      * @param id section id
@@ -23,6 +37,13 @@ public class SectionService {
     public Section get(Long id) {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Section with id %d is not found".formatted(id)));
+    }
+
+    public MultiPage<Section, Topic> getMultiPage(Section section, Pageable pageable) {
+        return multiPager.findAll(pageable.getPageNumber(),
+                pageable.getPageSize(),
+                QSection.section.parent.id.eq(section.getId()),
+                QTopic.topic.parent.id.eq(section.getId()));
     }
 
     /**
