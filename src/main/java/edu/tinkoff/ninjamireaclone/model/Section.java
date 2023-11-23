@@ -27,14 +27,14 @@ public class Section {
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private List<Section> subsections;
 
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private List<Topic> topics;
 }
