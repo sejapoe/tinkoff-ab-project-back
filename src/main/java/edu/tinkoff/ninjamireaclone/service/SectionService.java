@@ -5,6 +5,7 @@ import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class SectionService {
      * @return section with given id
      * @throws NotFoundException if section with given id is not found
      */
+    @Transactional
     public Section get(Long id) {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Section with id %d is not found".formatted(id)));
@@ -32,6 +34,7 @@ public class SectionService {
      * @return created section
      * @see RuleService#handleSectionCreated(Section)
      */
+    @Transactional
     public Section create(Section section) {
         var saved = sectionRepository.save(section);
         return ruleService.handleSectionCreated(saved);
@@ -46,6 +49,7 @@ public class SectionService {
      * @throws NotFoundException if parent section is not found
      * @see SectionService#create(Section)
      */
+    @Transactional
     public Section create(Long parentId, String name) {
         var parent = get(parentId);
         // check if parent writable
@@ -64,6 +68,7 @@ public class SectionService {
      * @return updated section
      * @throws NotFoundException if section with given id is not found
      */
+    @Transactional
     public Section update(Long id, String name) {
         var section = get(id);
         section.setName(name);
@@ -77,6 +82,7 @@ public class SectionService {
      * @param id section id
      * @throws NotFoundException if section with given id is not found
      */
+    @Transactional
     public void delete(Long id) {
         Section section = get(id);
         sectionRepository.delete(section);
@@ -88,6 +94,7 @@ public class SectionService {
      * @return root section
      * @throws NotFoundException if root section is not found
      */
+    @Transactional
     public Section getRoot() {
         return sectionRepository.findOne(QSection.section.parent.isNull()).orElseThrow(() ->
                 new NotFoundException("Root section is not found!"));

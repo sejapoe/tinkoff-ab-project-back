@@ -6,6 +6,7 @@ import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundExceptio
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,7 @@ public class StorageServiceTest {
     }
 
     @Test
+    @Transactional
     public void storeFileTest() throws IOException {
         // given
         MultipartFile file = new MockMultipartFile(
@@ -66,6 +68,7 @@ public class StorageServiceTest {
     }
 
     @Test
+    @Transactional
     public void storeFileOutsideDirectoryTest() throws IOException {
         // given
         MultipartFile file = new MockMultipartFile(
@@ -88,6 +91,7 @@ public class StorageServiceTest {
     }
 
     @Test
+    @Transactional
     public void storeEmptyFileTest() throws IOException {
         // given
         MultipartFile file = new MockMultipartFile(
@@ -110,6 +114,7 @@ public class StorageServiceTest {
     }
 
     @Test
+    @Transactional
     public void loadFileAsResourceTest() {
         // given
         MultipartFile file = new MockMultipartFile(
@@ -131,6 +136,7 @@ public class StorageServiceTest {
     }
 
     @Test
+    @Transactional
     public void loadFileAsResourceNotFoundTest() {
         // given
         MultipartFile file = new MockMultipartFile(
