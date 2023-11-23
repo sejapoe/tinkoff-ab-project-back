@@ -7,6 +7,7 @@ import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,14 +44,7 @@ public class PostService {
         }
     }
 
-    /**
-     * Updates the post by id from 'post' object
-     *
-     * @param post     object with updated fields
-     * @param authorId id of the author account
-     * @param parentId id of the parent topic
-     * @return updated saved post
-     */
+    @Transactional
     public Post updatePost(Post post, Long authorId, Long parentId) {
         var found = getPost(post.getId());
         System.out.println("found: " + found.getCreatedAt());
@@ -60,37 +54,19 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    /**
-     * Gets the post by id
-     *
-     * @param id id of the post
-     * @return found post
-     */
+    @Transactional
     public Post getPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Пост", id));
     }
 
-    /**
-     * Deletes the post by id
-     *
-     * @param id id of the post to be deleted
-     * @return id of the deleted post
-     */
+    @Transactional
     public Long deletePost(Long id) {
         var post = getPost(id);
         postRepository.deleteById(id);
         return post.getId();
     }
 
-    /**
-     * Creates (saves) new post
-     *
-     * @param post     post to be saved
-     * @param authorId id of the author account
-     * @param parentId id of the parent topic
-     * @param files    files to be attached
-     * @return saved post
-     */
+    @Transactional
     public Post createPostWithAttachments(Post post, Long authorId, Long parentId, List<MultipartFile> files) {
         init(post, authorId, parentId);
         if (nonNull(files)) {

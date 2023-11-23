@@ -3,7 +3,10 @@ package edu.tinkoff.ninjamireaclone.service.rule;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.tinkoff.ninjamireaclone.exception.rule.RuleException;
-import edu.tinkoff.ninjamireaclone.model.*;
+import edu.tinkoff.ninjamireaclone.model.Rule;
+import edu.tinkoff.ninjamireaclone.model.RuleSet;
+import edu.tinkoff.ninjamireaclone.model.Section;
+import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.repository.RuleSetRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.service.rule.action.Action;
@@ -89,6 +92,7 @@ public class RuleService {
      * @see #registerRuleSet(RuleSet)
      */
     @PostConstruct
+    @Transactional
     public void init() {
         clear();
         ruleSetRepository.findAll().forEach(ruleSet -> {
