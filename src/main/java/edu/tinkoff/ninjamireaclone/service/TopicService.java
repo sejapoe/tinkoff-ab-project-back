@@ -1,11 +1,16 @@
 package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
+import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.QPost;
 import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +19,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
     private final SectionRepository sectionRepository;
+    private final PostRepository postRepository;
 
     private void init(Topic topic, Long parentId) {
         topic.setParent(sectionRepository
@@ -69,5 +75,9 @@ public class TopicService {
         var found = getTopic(topic.getId());
         init(topic, parentId);
         return topicRepository.save(topic);
+    }
+
+    public Page<Post> getTopicPosts(Topic topic, Pageable pageable) {
+        return postRepository.findAll(QPost.post.parent.id.eq(topic.getId()), pageable);
     }
 }

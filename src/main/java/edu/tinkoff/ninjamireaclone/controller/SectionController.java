@@ -1,12 +1,16 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.section.request.CreateSectionRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.section.request.UpdateSectionRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.SectionResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
+import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.SectionMapper;
 import edu.tinkoff.ninjamireaclone.model.Section;
+import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
+import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class SectionController {
     private final SectionService sectionService;
     private final SectionMapper sectionMapper;
+    private final PageMapper pageMapper;
 
     @Operation(description = "Получение корневого раздела")
     @ApiResponses({
@@ -33,9 +40,9 @@ public class SectionController {
             @ApiResponse(responseCode = "404", description = "Корневой раздел отсутствует")
     })
     @GetMapping
-    public ResponseEntity<SectionResponseDto> getRootSection() {
+    public ResponseEntity<SectionResponseDto> getRootSection(@ParameterObject PageRequestDto pageRequestDto) {
         Section section = sectionService.getRoot();
-        return ResponseEntity.ok(sectionMapper.toDto(section));
+        return ResponseEntity.ok(sectionToPageDto(section, pageMapper.fromRequestDto(pageRequestDto)));
     }
 
     @Operation(description = "Получение раздела по ID")
@@ -45,9 +52,14 @@ public class SectionController {
             @ApiResponse(responseCode = "404", description = "Раздел не найден")
     })
     @GetMapping("/{id:\\d+}")
-    public ResponseEntity<SectionResponseDto> getSection(@PathVariable Long id) {
+    public ResponseEntity<SectionResponseDto> getSection(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         Section section = sectionService.get(id);
-        return ResponseEntity.ok(sectionMapper.toDto(section));
+        return ResponseEntity.ok(sectionToPageDto(section, pageMapper.fromRequestDto(pageRequestDto)));
+    }
+
+    private SectionResponseDto sectionToPageDto(Section section, Pageable pageable) {
+        MultiPage<Section, Topic> multiPage = sectionService.getMultiPage(section, pageable);
+        return sectionMapper.toDto(section, multiPage);
     }
 
     @Operation(description = "Создание раздела")

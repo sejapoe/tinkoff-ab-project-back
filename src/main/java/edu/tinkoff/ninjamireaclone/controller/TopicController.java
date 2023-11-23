@@ -1,8 +1,11 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.CreateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
+import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
+import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.TopicMapper;
 import edu.tinkoff.ninjamireaclone.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,7 @@ public class TopicController {
 
     private final TopicService topicService;
     private final TopicMapper topicMapper;
+    private final PageMapper pageMapper;
 
     @Operation(description = "Создание топика")
     @ApiResponses({
@@ -34,9 +39,9 @@ public class TopicController {
     })
     @Schema(implementation = TopicResponseDto.class)
     @PostMapping
-    public ResponseEntity<TopicResponseDto> create(@RequestBody @Valid CreateTopicRequestDto requestDto) {
+    public ResponseEntity<ShortTopicResponseDto> create(@RequestBody @Valid CreateTopicRequestDto requestDto) {
         var topic = topicService.createTopic(topicMapper.toTopic(requestDto), requestDto.parentId());
-        var responseDto = topicMapper.toTopicResponseDto(topic);
+        var responseDto = topicMapper.toShortTopicResponseDto(topic);
         log.info("Создан топик " + responseDto.id());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -61,9 +66,9 @@ public class TopicController {
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
     @PutMapping
-    public ResponseEntity<TopicResponseDto> update(@RequestBody @Valid UpdateTopicRequestDto requestDto) {
+    public ResponseEntity<ShortTopicResponseDto> update(@RequestBody @Valid UpdateTopicRequestDto requestDto) {
         var topic = topicService.updateTopic(topicMapper.toTopic(requestDto), requestDto.parentId());
-        var responseDto = topicMapper.toTopicResponseDto(topic);
+        var responseDto = topicMapper.toShortTopicResponseDto(topic);
         log.info("Обновлен топик " + responseDto.id());
         return ResponseEntity.ok(responseDto);
     }
@@ -74,9 +79,10 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
-    @GetMapping
-    public ResponseEntity<TopicResponseDto> get(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicResponseDto> get(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         var topic = topicService.getTopic(id);
-        return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic));
+        var posts = topicService.getTopicPosts(topic, pageMapper.fromRequestDto(pageRequestDto));
+        return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic, posts));
     }
 }
