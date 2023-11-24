@@ -6,6 +6,7 @@ import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
+import edu.tinkoff.ninjamireaclone.mapper.PostMapperImpl;
 import edu.tinkoff.ninjamireaclone.mapper.TopicMapper;
 import edu.tinkoff.ninjamireaclone.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,7 @@ public class TopicController {
     private final TopicService topicService;
     private final TopicMapper topicMapper;
     private final PageMapper pageMapper;
+    private final PostMapperImpl postMapper;
 
     @Operation(description = "Создание топика")
     @ApiResponses({
@@ -38,9 +41,14 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @Schema(implementation = TopicResponseDto.class)
-    @PostMapping
-    public ResponseEntity<ShortTopicResponseDto> create(@RequestBody @Valid CreateTopicRequestDto requestDto) {
-        var topic = topicService.createTopic(topicMapper.toTopic(requestDto), requestDto.parentId());
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ShortTopicResponseDto> create(@ModelAttribute @Valid CreateTopicRequestDto requestDto) {
+        var topic = topicService.createTopicWithPost(topicMapper.toTopic(requestDto),
+                postMapper.toPost(requestDto),
+                requestDto.parentId(),
+                requestDto.authorId(),
+                requestDto.files()
+        );
         var responseDto = topicMapper.toShortTopicResponseDto(topic);
         log.info("Создан топик " + responseDto.id());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
