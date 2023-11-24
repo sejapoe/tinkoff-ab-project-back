@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 @RestControllerAdvice
 public class AppExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleClientError(NotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ProblemDetail handleClientError(NotFoundException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
 
