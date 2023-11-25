@@ -4,9 +4,7 @@ import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundExceptio
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,7 +60,7 @@ public class StorageController {
 
 
     @ExceptionHandler
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException e) {
-        return ResponseEntity.notFound().build();
+    public ProblemDetail handleStorageFileNotFound(StorageFileNotFoundException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
     }
 }

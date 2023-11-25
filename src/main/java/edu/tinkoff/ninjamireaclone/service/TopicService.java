@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class TopicService {
     private final TopicRepository topicRepository;
     private final SectionRepository sectionRepository;
     private final PostRepository postRepository;
+    private final PostService postService;
 
     private void init(Topic topic, Long parentId) {
         topic.setParent(sectionRepository
@@ -37,6 +41,13 @@ public class TopicService {
     public Topic createTopic(Topic topic, Long parentId) {
         init(topic, parentId);
         return topicRepository.saveAndFlush(topic);
+    }
+
+    @Transactional
+    public Topic createTopicWithPost(Topic topic, Post post, Long parentId, Long authorId, List<MultipartFile> files) {
+        var saved = createTopic(topic, parentId);
+        postService.createPostWithAttachments(post, authorId, saved.getId(), files);
+        return saved;
     }
 
     /**
