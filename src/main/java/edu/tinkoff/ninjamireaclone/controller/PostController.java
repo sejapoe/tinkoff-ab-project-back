@@ -79,7 +79,7 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @PostMapping(value = "/withattach", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute CreatePostRequestDto requestDto) {
+    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute @Valid CreatePostRequestDto requestDto) {
         var post = postService.createPostWithAttachments(
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
