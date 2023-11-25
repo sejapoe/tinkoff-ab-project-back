@@ -18,5 +18,6 @@
     <include file="db/migrations/edit-update-delete-behaviour.xml"/>
     <include file="db/migrations/modify-document.xml"/>
     <include file="db/migrations/insert-anon-user.xml"/>
+    <include file="db/migrations/drop-rule.xml"/>
 
 </databaseChangeLog>
