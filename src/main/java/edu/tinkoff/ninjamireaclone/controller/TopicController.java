@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +42,9 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @Schema(implementation = TopicResponseDto.class)
-    @PostMapping
-    public ResponseEntity<ShortTopicResponseDto> create(@RequestBody @Valid CreateTopicRequestDto requestDto) {
+    @PostMapping(consumes =
+            {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ShortTopicResponseDto> create(@ModelAttribute @Valid CreateTopicRequestDto requestDto) {
         var topic = topicService.createTopicWithPost(topicMapper.toTopic(requestDto),
                 postMapper.toPost(requestDto),
                 requestDto.parentId(),

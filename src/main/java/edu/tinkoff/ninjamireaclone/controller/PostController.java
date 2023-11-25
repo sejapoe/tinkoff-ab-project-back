@@ -96,7 +96,7 @@ public class PostController {
     })
     @IsUser
     @PostMapping(value = "/withattach", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute CreatePostRequestDto requestDto) {
+    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute @Valid CreatePostRequestDto requestDto) {
         if (checkFakeId(requestDto.authorId())) {
             throw new AccessDeniedException("Создание поста от чужого лица");
         }
