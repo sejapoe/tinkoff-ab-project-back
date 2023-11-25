@@ -30,10 +30,6 @@ public class TopicServiceTest {
     private PostRepository postRepository;
     @Autowired
     private DocumentRepository documentRepository;
-    @Autowired
-    private RuleSetRepository ruleSetRepository;
-    @Autowired
-    private RuleRepository ruleRepository;
 
     @BeforeEach
     @AfterEach
@@ -44,8 +40,6 @@ public class TopicServiceTest {
         topicRepository.deleteAll();
         postRepository.deleteAll();
         documentRepository.deleteAll();
-        ruleRepository.deleteAll();
-        ruleSetRepository.deleteAll();
     }
 
     @Test

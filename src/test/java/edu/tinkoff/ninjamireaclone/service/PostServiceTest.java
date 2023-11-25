@@ -45,10 +45,6 @@ public class PostServiceTest {
     @Autowired
     private DataLoader dataLoader;
     @Autowired
-    private RuleSetRepository ruleSetRepository;
-    @Autowired
-    private RuleRepository ruleRepository;
-    @Autowired
     private DocumentRepository documentRepository;
 
     @BeforeEach
@@ -60,8 +56,6 @@ public class PostServiceTest {
         topicRepository.deleteAll();
         postRepository.deleteAll();
         documentRepository.deleteAll();
-        ruleRepository.deleteAll();
-        ruleSetRepository.deleteAll();
     }
 
     @Test
