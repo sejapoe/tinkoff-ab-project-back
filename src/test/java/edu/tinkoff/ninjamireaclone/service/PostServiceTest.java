@@ -43,7 +43,9 @@ public class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private DataLoader dataLoader;
+    private RuleSetRepository ruleSetRepository;
+    @Autowired
+    private RuleRepository ruleRepository;
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -56,6 +58,8 @@ public class PostServiceTest {
         topicRepository.deleteAll();
         postRepository.deleteAll();
         documentRepository.deleteAll();
+        ruleRepository.deleteAll();
+        ruleSetRepository.deleteAll();
     }
 
     @Test
@@ -86,6 +90,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -131,6 +136,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -179,6 +185,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -223,6 +230,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();

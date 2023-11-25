@@ -1,9 +1,12 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.annotation.IsUser;
 import edu.tinkoff.ninjamireaclone.dto.post.request.CreatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.request.UpdatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.response.PostResponseDto;
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
+import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +31,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+    private final AccountService accountService;
 
     @Operation(description = "Обновление поста")
     @ApiResponses({
@@ -33,8 +39,13 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
+    @IsUser
     @PutMapping
     public ResponseEntity<PostResponseDto> update(@RequestBody @Valid UpdatePostRequestDto requestDto) {
+        if (checkFakeId(requestDto.authorId())) {
+            throw new AccessDeniedException("Редактирование чужого поста");
+        }
+
         var post = postService.updatePost(
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
@@ -51,8 +62,13 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
+    @IsUser
     @DeleteMapping
     public ResponseEntity<Long> delete(@RequestParam Long id) {
+        var post = postService.getPost(id);
+        if (checkFakeId(post.getAuthor().getId())) {
+            throw new AccessDeniedException("Удаление чужого поста");
+        }
         var postId = postService.deletePost(id);
         log.info("Удален пост " + postId);
         return ResponseEntity.ok(postId);
@@ -78,13 +94,27 @@ public class PostController {
             @ApiResponse(responseCode = "201", description = "Пост создан"),
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
+    @IsUser
     @PostMapping(value = "/withattach", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute @Valid CreatePostRequestDto requestDto) {
+    public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute CreatePostRequestDto requestDto) {
+        if (checkFakeId(requestDto.authorId())) {
+            throw new AccessDeniedException("Создание поста от чужого лица");
+        }
         var post = postService.createPostWithAttachments(
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
                 requestDto.parentId(),
                 requestDto.files());
         return ResponseEntity.ok(postMapper.toPostResponseDto(post));
+    }
+
+    private boolean checkFakeId(Long authorId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var author = accountService.getById(authorId);
+        if (!author.getName().equals(authentication.getName())) {
+            return authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority).noneMatch(s -> s.equals("ROLE_ADMIN"));
+        }
+        return false;
     }
 }

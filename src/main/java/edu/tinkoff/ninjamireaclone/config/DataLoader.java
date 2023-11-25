@@ -3,9 +3,14 @@ package edu.tinkoff.ninjamireaclone.config;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
+import edu.tinkoff.ninjamireaclone.model.QRole;
 import edu.tinkoff.ninjamireaclone.model.QSection;
+import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.model.Section;
+import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
+import edu.tinkoff.ninjamireaclone.repository.RuleSetRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
+import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -18,12 +23,17 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
+    private static final String[] subsectionNames = {"Конспекты семинаров", "Контрольные работы", "Литература"};
     private final SectionRepository sectionRepository;
+    private final RuleSetRepository ruleSetRepository;
+    private final RuleService ruleService;
+    private final RoleRepository roleRepository;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
         createCourses(getRoot());
+        createRoles();
     }
 
     private void createCourses(Section root) {
@@ -51,5 +61,18 @@ public class DataLoader implements ApplicationRunner {
                     root.setName("root");
                     return sectionRepository.save(root);
                 });
+    }
+
+    private void createRoles() {
+        if (!roleRepository.exists(QRole.role.name.eq("ROLE_USER"))) {
+            var defaultRole = new Role();
+            defaultRole.setName("ROLE_USER");
+            roleRepository.save(defaultRole);
+        }
+        if (!roleRepository.exists(QRole.role.name.eq("ROLE_ADMIN"))) {
+            var adminRole = new Role();
+            adminRole.setName("ROLE_ADMIN");
+            roleRepository.save(adminRole);
+        }
     }
 }
