@@ -1,6 +1,5 @@
 package edu.tinkoff.ninjamireaclone.service;
 
-import edu.tinkoff.ninjamireaclone.config.DataLoader;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.model.Section;
@@ -42,10 +41,7 @@ public class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
-    @Autowired
-    private RuleSetRepository ruleSetRepository;
-    @Autowired
-    private RuleRepository ruleRepository;
+
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -58,8 +54,6 @@ public class PostServiceTest {
         topicRepository.deleteAll();
         postRepository.deleteAll();
         documentRepository.deleteAll();
-        ruleRepository.deleteAll();
-        ruleSetRepository.deleteAll();
     }
 
     @Test

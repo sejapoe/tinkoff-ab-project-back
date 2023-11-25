@@ -8,9 +8,7 @@ import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
-import edu.tinkoff.ninjamireaclone.repository.RuleSetRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
-import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -23,10 +21,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
-    private static final String[] subsectionNames = {"Конспекты семинаров", "Контрольные работы", "Литература"};
+
     private final SectionRepository sectionRepository;
-    private final RuleSetRepository ruleSetRepository;
-    private final RuleService ruleService;
     private final RoleRepository roleRepository;
 
     @Override
