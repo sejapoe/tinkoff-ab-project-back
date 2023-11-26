@@ -25,6 +25,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.UUID;
 
+// Там другие команды уже с s3 начали знакомиться - можете тоже попробовать сделать реализацию.
+// Это НЕ обязательно к следующей встрече
 @Service
 public class FileSystemStorageService implements StorageService {
     private final DocumentRepository documentRepository;

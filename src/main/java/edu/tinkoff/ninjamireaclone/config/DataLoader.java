@@ -29,6 +29,9 @@ public class DataLoader implements ApplicationRunner {
     private void createCourses(Section root) {
         List<Section> subsections = root.getSubsections();
         if (Objects.nonNull(subsections) && !subsections.isEmpty()) return;
+        // 6 это число курсов в системе. Бизнесовая особенность проекта.
+        // лучше вынести в публичную статику т.к. завтра добавят еще и аспирантуру
+        // и если так, то будет хотя бы видно где в проекте идет речь об этой вещи
         for (int i = 1; i <= 6; i++) {
             Section course = new Section();
             course.setParent(root);
