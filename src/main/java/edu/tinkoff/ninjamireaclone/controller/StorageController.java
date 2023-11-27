@@ -14,6 +14,8 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class StorageController {
+
+    // лучше hashMap - если вдруг завтра добавят еще разрешенных типов файлов
     private static final List<String> imageExtensions = List.of("png", "jpg", "gif");
 
     private final StorageService storageService;

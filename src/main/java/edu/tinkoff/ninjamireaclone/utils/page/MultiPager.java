@@ -13,6 +13,14 @@ public class MultiPager<A1, A2, Repo1 extends JpaRepository<A1, ?> & QuerydslPre
     private final Repo2 repo2;
 
     public MultiPage<A1, A2> findAll(int pageNumber, int pageSize, Predicate predicate1, Predicate predicate2) {
+        /*
+        Если честно не реализовывал пагинацию самостоятельно прям с нуля.
+        Интересно посмотреть в какие запросы превращается это OffsetPageable.of... и repo1.count по предикату
+        На сколько вижу вызовы только из контроллера разделов, которых по идее так много может и не быть.
+        В целом решение хорошее если у тебя предикаты выборку ограничивают.
+        Я так подумал что кэш это уже если совсем большая нагрузка - но его и обновлять нужно будет
+            из всех мест добавления / удаления сущностей.
+         */
         long count1 = repo1.count(predicate1);
         long count2 = repo2.count(predicate2);
 

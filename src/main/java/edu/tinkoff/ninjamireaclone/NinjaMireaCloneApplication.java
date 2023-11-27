@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+// если вдруг на репо в гите еще нет CheckStyle или иного линтера -
+// попробуйте повесить и потом покажете, стригерился ли он на что-то или нет
 @SpringBootApplication
 @EnableConfigurationProperties({StorageProperties.class, JwtProperties.class})
 public class NinjaMireaCloneApplication {

@@ -43,7 +43,7 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
             subsection.setParent(section);
             subsection.setName(name);
             return subsection;
-        }).collect(Collectors.toCollection(ArrayList::new));
+        }).toList();
 
         section.setSubsections(subsections);
 
