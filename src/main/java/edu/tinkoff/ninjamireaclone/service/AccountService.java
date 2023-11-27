@@ -7,6 +7,8 @@ import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,7 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Get account by name
+     *
      * @param name account's name
      * @return account
      */
@@ -35,6 +38,7 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Get account by id
+     *
      * @param id id to be used
      * @return account
      */
@@ -44,6 +48,7 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Get {@link UserDetails} by account's name
+     *
      * @param username account's name
      * @return userDetails
      * @throws UsernameNotFoundException if the user cannot be found
@@ -56,24 +61,24 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Create new account
+     *
      * @param account account to be created
      * @return created account
      * @throws AccountAlreadyExistsException if account with such username already exists
      */
     public Account createAccount(Account account) throws AccountAlreadyExistsException {
-        try {
-            getByName(account.getName());
+        if (accountRepository.findByName(account.getName()).isPresent()) {
             throw new AccountAlreadyExistsException(account.getName());
-        } catch (ResourceNotFoundException ex) {
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
-            account.setRoles(List.of(roleService.getDefaultRole()));
-            return accountRepository.save(account);
         }
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setRoles(List.of(roleService.getDefaultRole()));
+        return accountRepository.save(account);
     }
 
     /**
      * Grant specified roles to the account
-     * @param id id of the account
+     *
+     * @param id    id of the account
      * @param roles roles to be assigned
      * @return updated account
      */
@@ -86,7 +91,8 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Remove specified roles from the account
-     * @param id id of the account
+     *
+     * @param id    id of the account
      * @param roles roles to be removed
      * @return updated account
      */
@@ -96,5 +102,21 @@ public class AccountService implements UserDetailsService {
         resultRoles.removeAll(roles);
         account.setRoles(resultRoles);
         return accountRepository.save(account);
+    }
+
+    /**
+     * Check if the provided id is not related to the current authenticated user
+     *
+     * @param id provided id
+     * @return true, if the id is fake
+     */
+    public boolean checkFakeId(Long id) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var author = getById(id);
+        if (!author.getName().equals(authentication.getName())) {
+            return authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority).noneMatch(s -> s.equals("ROLE_ADMIN"));
+        }
+        return false;
     }
 }

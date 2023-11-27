@@ -16,9 +16,10 @@ public class AuthService {
 
     /**
      * Generate JWT based on user information
+     *
      * @param userDetails core info of user
-     * @param username entered name
-     * @param password entered password
+     * @param username    entered name
+     * @param password    entered password
      * @return token
      */
     public String createAuthToken(UserDetails userDetails, String username, String password) {

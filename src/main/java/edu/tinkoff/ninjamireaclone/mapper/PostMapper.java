@@ -31,7 +31,8 @@ public interface PostMapper {
     @Mapping(target = "author", ignore = true)
     Post toPost(UpdatePostRequestDto requestDto);
 
-    @Mapping(target = "parentId", ignore = true)
-    @Mapping(target = "authorId", ignore = true)
+    @Mapping(target = "parentId", source = "parent.id")
+    @Mapping(target = "authorId", source = "author.id")
+    @Mapping(target = "authorName", source = "author.name")
     PostResponseDto toPostResponseDto(Post post);
 }
