@@ -1,6 +1,5 @@
 package edu.tinkoff.ninjamireaclone.service;
 
-import edu.tinkoff.ninjamireaclone.config.DataLoader;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.model.Section;
@@ -42,8 +41,7 @@ public class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
-    @Autowired
-    private DataLoader dataLoader;
+
     @Autowired
     private DocumentRepository documentRepository;
 
@@ -86,6 +84,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -131,6 +130,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -179,6 +179,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -223,6 +224,7 @@ public class PostServiceTest {
         topicGiven = topicRepository.save(topicGiven);
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();

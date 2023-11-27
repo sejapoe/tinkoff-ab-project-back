@@ -1,9 +1,12 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.annotation.IsUser;
 import edu.tinkoff.ninjamireaclone.dto.post.request.CreatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.request.UpdatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.response.PostResponseDto;
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
+import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,6 +29,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+    private final AccountService accountService;
 
     @Operation(description = "Обновление поста")
     @ApiResponses({
@@ -33,8 +37,13 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
+    @IsUser
     @PutMapping
     public ResponseEntity<PostResponseDto> update(@RequestBody @Valid UpdatePostRequestDto requestDto) {
+        if (accountService.checkFakeId(requestDto.authorId())) {
+            throw new AccessDeniedException("Редактирование чужого поста");
+        }
+
         var post = postService.updatePost(
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
@@ -51,8 +60,13 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
+    @IsUser
     @DeleteMapping
     public ResponseEntity<Long> delete(@RequestParam Long id) {
+        var post = postService.getPost(id);
+        if (accountService.checkFakeId(post.getAuthor().getId())) {
+            throw new AccessDeniedException("Удаление чужого поста");
+        }
         var postId = postService.deletePost(id);
         log.info("Удален пост " + postId);
         return ResponseEntity.ok(postId);
@@ -78,8 +92,12 @@ public class PostController {
             @ApiResponse(responseCode = "201", description = "Пост создан"),
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
+    @IsUser
     @PostMapping(value = "/withattach", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostResponseDto> createWithAttachments(@ModelAttribute @Valid CreatePostRequestDto requestDto) {
+        if (accountService.checkFakeId(requestDto.authorId())) {
+            throw new AccessDeniedException("Создание поста от чужого лица");
+        }
         var post = postService.createPostWithAttachments(
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),

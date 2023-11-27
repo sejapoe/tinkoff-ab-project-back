@@ -18,6 +18,9 @@
     <include file="db/migrations/edit-update-delete-behaviour.xml"/>
     <include file="db/migrations/modify-document.xml"/>
     <include file="db/migrations/insert-anon-user.xml"/>
+    <include file="db/migrations/create-role.xml"/>
+    <include file="db/migrations/add-password-column-to-account.xml"/>
+    <include file="db/migrations/create-account_role.xml"/>
     <include file="db/migrations/drop-rule.xml"/>
 
 </databaseChangeLog>
