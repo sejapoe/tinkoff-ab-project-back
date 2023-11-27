@@ -6,22 +6,22 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <include file="db/migrations/create-section.xml"/>
-    <include file="db/migrations/create-topic.xml"/>
-    <include file="db/migrations/create-user.xml"/>
-    <include file="db/migrations/create-post.xml"/>
-    <include file="db/migrations/create-document.xml"/>
-    <include file="db/migrations/create-rule.xml"/>
-    <include file="db/migrations/rename-user-to-account.xml"/>
-    <include file="db/migrations/edit-post.xml"/>
-    <include file="db/migrations/create-attachment.xml"/>
-    <include file="db/migrations/edit-update-delete-behaviour.xml"/>
-    <include file="db/migrations/modify-document.xml"/>
-    <include file="db/migrations/insert-anon-user.xml"/>
-    <include file="db/migrations/create-role.xml"/>
-    <include file="db/migrations/add-password-column-to-account.xml"/>
-    <include file="db/migrations/create-account_role.xml"/>
-    <include file="db/migrations/drop-rule.xml"/>
+    <include file="/db/migrations/2023-11-15-01-create-section.xml"/>
+    <include file="/db/migrations/2023-11-15-02-create-topic.xml"/>
+    <include file="/db/migrations/2023-11-15-03-create-user.xml"/>
+    <include file="/db/migrations/2023-11-15-04-create-post.xml"/>
+    <include file="/db/migrations/2023-11-15-05-create-document.xml"/>
+    <include file="/db/migrations/2023-11-16-create-rule.xml"/>
+    <include file="/db/migrations/2023-11-17-01-rename-user-to-account.xml"/>
+    <include file="/db/migrations/2023-11-17-02-edit-post.xml"/>
+    <include file="/db/migrations/2023-11-17-03-modify-document.xml"/>
+    <include file="/db/migrations/2023-11-18-01-create-attachment.xml"/>
+    <include file="/db/migrations/2023-11-18-02-edit-update-delete-behaviour.xml"/>
+    <include file="/db/migrations/2023-11-19-insert-anon-user.xml"/>
+    <include file="/db/migrations/2023-11-25-drop-rule.xml"/>
+    <include file="/db/migrations/2023-11-24-create-role.xml"/>
+    <include file="/db/migrations/2023-11-24-add-password-column-to-account.xml"/>
+    <include file="/db/migrations/2023-11-24-create-account-role.xml"/>
     <include file="/db/migrations/2023-11-27-create-action-rights.xml"/>
 
 </databaseChangeLog>

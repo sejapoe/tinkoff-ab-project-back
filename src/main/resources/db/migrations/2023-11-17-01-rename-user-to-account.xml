@@ -2,7 +2,8 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+                   logicalFilePath="db/migrations/rename-user-to-account.xml">
 
     <changeSet id="2023-11-17-rename-user-to-account" author="JudexMars">
         <dropForeignKeyConstraint baseTableName="post" constraintName="post_user_id_fk"/>

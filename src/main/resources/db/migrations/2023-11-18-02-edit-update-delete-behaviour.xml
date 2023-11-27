@@ -2,7 +2,8 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+                   logicalFilePath="db/migrations/edit-update-delete-behaviour.xml">
 
     <changeSet id="2023-11-18-edit-update-delete-behaviour" author="JudexMars">
         <dropForeignKeyConstraint baseTableName="section" constraintName="section_section_id_fk"/>
