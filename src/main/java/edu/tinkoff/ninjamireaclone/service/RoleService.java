@@ -13,6 +13,10 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role getDefaultRole() {
-        return roleRepository.findByName("ROLE_USER").orElseThrow(() -> new NoSuchRoleException("ROLE_USER"));
+        return getRoleByName("ROLE_USER");
+    }
+
+    public Role getRoleByName(String name) {
+        return roleRepository.findByName(name).orElseThrow(() -> new NoSuchRoleException(name));
     }
 }

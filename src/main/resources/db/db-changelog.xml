@@ -22,5 +22,6 @@
     <include file="db/migrations/add-password-column-to-account.xml"/>
     <include file="db/migrations/create-account_role.xml"/>
     <include file="db/migrations/drop-rule.xml"/>
+    <include file="/db/migrations/2023-11-27-create-action-rights.xml"/>
 
 </databaseChangeLog>
