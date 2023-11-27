@@ -7,8 +7,10 @@ import edu.tinkoff.ninjamireaclone.dto.section.response.SectionResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.SectionMapper;
+import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.service.SectionRightsService;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
 import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,7 @@ public class SectionController {
     private final SectionService sectionService;
     private final SectionMapper sectionMapper;
     private final PageMapper pageMapper;
+    private final SectionRightsService sectionRightsService;
 
     @Operation(description = "Получение корневого раздела")
     @ApiResponses({
@@ -59,7 +62,8 @@ public class SectionController {
 
     private SectionResponseDto sectionToPageDto(Section section, Pageable pageable) {
         MultiPage<Section, Topic> multiPage = sectionService.getMultiPage(section, pageable);
-        return sectionMapper.toDto(section, multiPage);
+        Rights rights = sectionRightsService.getRights(section);
+        return sectionMapper.toDto(section, multiPage, rights);
     }
 
     @Operation(description = "Создание раздела")

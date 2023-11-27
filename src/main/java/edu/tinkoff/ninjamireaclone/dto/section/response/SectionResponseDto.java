@@ -6,6 +6,7 @@ public record SectionResponseDto(
         Long id,
         String name,
         ShortSectionResponseDto parent,
-        SectionMultiPageResponseDto page
+        SectionMultiPageResponseDto page,
+        SectionRightsDto rights
 ) {
 }

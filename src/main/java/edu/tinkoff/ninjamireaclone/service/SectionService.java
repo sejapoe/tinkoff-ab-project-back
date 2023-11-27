@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.QTopic;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class SectionService {
@@ -23,6 +26,7 @@ public class SectionService {
     private final SectionRepository sectionRepository;
     private final RuleService ruleService;
     private final TopicRepository topicRepository;
+    private final SectionRightsService sectionRightsService;
     private MultiPager<Section, Topic, SectionRepository, TopicRepository> multiPager;
 
     @PostConstruct
@@ -57,6 +61,11 @@ public class SectionService {
      */
     @Transactional
     public Section create(Section section) {
+        if (Objects.nonNull(section.getParent())
+                && !sectionRightsService.getRights(section.getParent()).getCreateSubsections()) {
+            throw new AccessDeniedException("Вы не можете создавать подразделы здесь!");
+        }
+
         var saved = sectionRepository.save(section);
         return ruleService.handleSectionCreated(saved);
     }

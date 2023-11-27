@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.model.QPost;
@@ -24,6 +25,7 @@ public class TopicService {
     private final SectionRepository sectionRepository;
     private final PostRepository postRepository;
     private final PostService postService;
+    private final SectionRightsService sectionRightsService;
 
     private void init(Topic topic, Long parentId) {
         topic.setParent(sectionRepository
@@ -40,6 +42,11 @@ public class TopicService {
     @Transactional
     public Topic createTopic(Topic topic, Long parentId) {
         init(topic, parentId);
+
+        if (!sectionRightsService.getRights(topic.getParent()).getCreateTopics()) {
+            throw new AccessDeniedException("Вы не можете создавать топики здесь!");
+        }
+
         return topicRepository.saveAndFlush(topic);
     }
 
