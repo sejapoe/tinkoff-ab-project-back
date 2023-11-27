@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.repository.*;
@@ -10,14 +11,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
 public class TopicServiceTest {
-
+    @MockBean
+    private SectionRightsService sectionRightsService;
     @Autowired
     private TopicService topicService;
     @Autowired
@@ -30,6 +35,11 @@ public class TopicServiceTest {
     private PostRepository postRepository;
     @Autowired
     private DocumentRepository documentRepository;
+
+    @BeforeEach
+    public void initMocks() {
+        when(sectionRightsService.getRights(any())).thenReturn(new Rights(true, true));
+    }
 
     @BeforeEach
     @AfterEach

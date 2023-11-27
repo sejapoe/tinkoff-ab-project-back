@@ -4,6 +4,7 @@ import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
+import edu.tinkoff.ninjamireaclone.repository.SectionRightsRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +37,14 @@ public class AccountServiceTest {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private SectionRightsRepository sectionRightsRepository;
 
     @BeforeEach
     @AfterEach
     @Transactional
     public void clear() {
+        sectionRightsRepository.deleteAll();
         roleRepository.deleteAll();
         accountRepository.deleteAll();
     }
