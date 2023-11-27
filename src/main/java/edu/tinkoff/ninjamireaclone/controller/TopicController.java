@@ -1,12 +1,13 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
 import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.CreateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
-import edu.tinkoff.ninjamireaclone.mapper.PostMapperImpl;
+import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
 import edu.tinkoff.ninjamireaclone.mapper.TopicMapper;
 import edu.tinkoff.ninjamireaclone.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,8 +33,8 @@ public class TopicController {
 
     private final TopicService topicService;
     private final TopicMapper topicMapper;
+    private final PostMapper postMapper;
     private final PageMapper pageMapper;
-    private final PostMapperImpl postMapper;
 
     @Operation(description = "Создание топика")
     @ApiResponses({
@@ -41,7 +42,8 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @Schema(implementation = TopicResponseDto.class)
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes =
+            {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ShortTopicResponseDto> create(@ModelAttribute @Valid CreateTopicRequestDto requestDto) {
         var topic = topicService.createTopicWithPost(topicMapper.toTopic(requestDto),
                 postMapper.toPost(requestDto),
@@ -60,6 +62,7 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
+    @IsAdmin
     @DeleteMapping
     public ResponseEntity<Long> delete(@RequestParam Long id) {
         var topicId = topicService.deleteTopic(id);
@@ -73,6 +76,7 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
+    @IsAdmin
     @PutMapping
     public ResponseEntity<ShortTopicResponseDto> update(@RequestBody @Valid UpdateTopicRequestDto requestDto) {
         var topic = topicService.updateTopic(topicMapper.toTopic(requestDto), requestDto.parentId());

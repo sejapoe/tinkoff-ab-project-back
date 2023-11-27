@@ -13,6 +13,8 @@ public record PostResponseDto(
         String text,
         @JsonProperty("author_id")
         long authorId,
+        @JsonProperty("author_name")
+        String authorName,
         @JsonProperty("created_at")
         LocalDateTime createdAt,
         List<DocumentResponseDto> documents
