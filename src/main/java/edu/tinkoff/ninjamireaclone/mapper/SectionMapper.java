@@ -3,6 +3,7 @@ package edu.tinkoff.ninjamireaclone.mapper;
 import edu.tinkoff.ninjamireaclone.dto.section.request.SectionMultiPageResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.SectionResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
+import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.Topic;
 import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
@@ -15,7 +16,9 @@ public interface SectionMapper {
     @Mapping(target = "name", source = "section.name")
     @Mapping(target = "parent", source = "section.parent")
     @Mapping(target = "page", source = "multiPage")
-    SectionResponseDto toDto(Section section, MultiPage<Section, Topic> multiPage);
+    @Mapping(target = "rights.canCreateTopics", source = "rights.createTopics")
+    @Mapping(target = "rights.canCreateSubsections", source = "rights.createSubsections")
+    SectionResponseDto toDto(Section section, MultiPage<Section, Topic> multiPage, Rights rights);
 
     @Mapping(target = "subsections", source = "multiPage.content1")
     @Mapping(target = "topics", source = "multiPage.content2")

@@ -1,8 +1,10 @@
 package edu.tinkoff.ninjamireaclone.section;
 
 import edu.tinkoff.ninjamireaclone.model.QSection;
+import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
+import edu.tinkoff.ninjamireaclone.service.SectionRightsService;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -11,19 +13,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext
 @ActiveProfiles("test")
 public class SectionServiceTest {
+    @MockBean
+    SectionRightsService sectionRightsService;
     @Autowired
     private SectionRepository sectionRepository;
     @Autowired
     private SectionService sectionService;
+
+    @BeforeEach
+    public void initMocks() {
+        when(sectionRightsService.getRights(any())).thenReturn(new Rights(true, true));
+    }
 
     @BeforeEach
     @AfterEach

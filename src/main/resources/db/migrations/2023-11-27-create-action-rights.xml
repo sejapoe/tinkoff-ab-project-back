@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="2023-11-27-01-create-acton-rights" author="sejapoe (generated)">
+        <createSequence incrementBy="1" sequenceName="section_rights_seq" startValue="1"/>
+
+        <createTable tableName="section_rights">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_section_rights"/>
+            </column>
+            <column name="section_id" type="BIGINT"/>
+            <column name="role_id" type="BIGINT"/>
+            <column name="create_subsections" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_topics" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="section_rights"
+                                 constraintName="FK_SECTION_RIGHTS_ON_ROLE" referencedColumnNames="id"
+                                 referencedTableName="role"/>
+        <addForeignKeyConstraint baseColumnNames="section_id" baseTableName="section_rights"
+                                 constraintName="FK_SECTION_RIGHTS_ON_SECTION" referencedColumnNames="id"
+                                 referencedTableName="section"/>
+    </changeSet>
+</databaseChangeLog>
