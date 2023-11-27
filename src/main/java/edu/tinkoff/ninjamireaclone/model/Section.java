@@ -41,6 +41,7 @@ public class Section {
     @OneToMany(
             mappedBy = "section",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true,
             fetch = FetchType.LAZY
     )
     private List<SectionRights> sectionRights;
