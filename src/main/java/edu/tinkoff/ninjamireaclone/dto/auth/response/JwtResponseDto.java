@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record JwtResponseDto(
         @JsonProperty("account_id")
         Long accountId,
+        String username,
         String token
 ) {
 }
