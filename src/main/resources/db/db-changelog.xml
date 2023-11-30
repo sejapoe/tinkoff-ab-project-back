@@ -23,5 +23,6 @@
     <include file="/db/migrations/2023-11-24-add-password-column-to-account.xml"/>
     <include file="/db/migrations/2023-11-24-create-account-role.xml"/>
     <include file="/db/migrations/2023-11-27-create-action-rights.xml"/>
+    <include file="/db/migrations/2023-12-01-01-init-quartz.xml"/>
 
 </databaseChangeLog>

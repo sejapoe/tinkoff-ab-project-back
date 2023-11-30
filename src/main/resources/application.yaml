@@ -14,5 +14,31 @@ spring:
     multipart:
       max-file-size: 5MB # max single file size
       max-request-size: 20MB # max summary file size
+
+  quartz:
+    job-store-type: jdbc #Указываем, что будем хранить информацию о джобах в БД, а не в памяти
+    jdbc:
+      initialize-schema: never #Мы будем инициализировать схему БД вручную, поэтому ставим never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO #Используев AUTO, для того, чтобы каждый новый инстанс Scheduler`a имел уникальное название.
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate #Указываем диалект для запросов к БД
+            useProperties: false #Указываем, что все данные в БД будут храниться в качестве строк, а не в двоичном формате
+            tablePrefix: QRTZ_  #Префикс таблиц в БД
+            clusterCheckinInterval: 5000 #Указываем частоту сверки инстанса Scheduler с остальными инстансами в кластере
+            isClustered: true #Включаем режим работы в кластере
+          threadPool: #Указываем настройки для создания пула поток, на котором будут выполняться джобы
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    auto-startup: false #Выключаем автоматический старт для scheduler, т.к. запуск будет выполнен вручную
+
 storage:
   location: /tmp/ninja-mirea-clone/storage
+
+scheduler:
+  permanent-jobs-group-name: PERMANENT
+  print-job-cron: "*/3 * * * * ?" #${PRINT_JOB_CRON:0 0 * * * ?}
