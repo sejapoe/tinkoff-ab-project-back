@@ -1,6 +1,7 @@
 package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
+import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.QTopic;
@@ -87,6 +88,11 @@ public class SectionService {
         Section section = new Section();
         section.setName(name);
         section.setParent(parent);
+
+        if (parent.getSubsections().stream().anyMatch(subsection -> subsection.getName().equals(name))) {
+            throw new ConflictException("Имя подраздела должно быть уникальным");
+        }
+
         return create(section);
     }
 

@@ -1,6 +1,7 @@
 package edu.tinkoff.ninjamireaclone.exception.handler;
 
 import edu.tinkoff.ninjamireaclone.exception.AccountAlreadyExistsException;
+import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.NoSuchRoleException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,10 @@ public class AppExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ProblemDetail handleBadCredentials(BadCredentialsException badCredentialsException) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, badCredentialsException.getMessage());
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ProblemDetail handleConflict(ConflictException conflictException) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, conflictException.getMessage());
     }
 }
