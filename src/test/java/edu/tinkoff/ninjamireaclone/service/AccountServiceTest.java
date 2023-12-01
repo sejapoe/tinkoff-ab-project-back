@@ -194,7 +194,6 @@ public class AccountServiceTest {
     }
 
     @Test
-    @Transactional
     public void deleteAccount() {
         // given
         Account accountGiven = new Account();
