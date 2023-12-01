@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="2023-12-01-03-add-addition-fields-to-account" author="Sejapoe">
+        <addColumn tableName="account">
+            <column name="description" value="" type="varchar(1023)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avatar_id" type="bigint"/>
+            <column name="gender" value="NOT_SPECIFIED" type="varchar(32)"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="avatar_id"
+                                 constraintName="FK_ACCOUNT_AVATAR_ON_DOCUMENT"
+                                 referencedTableName="document"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
