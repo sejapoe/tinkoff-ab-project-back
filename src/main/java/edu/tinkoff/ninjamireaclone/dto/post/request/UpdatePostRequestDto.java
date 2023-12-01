@@ -14,6 +14,9 @@ public record UpdatePostRequestDto(
 
         @Size(max = 200)
         @NotBlank
-        String text
+        String text,
+
+        @JsonProperty("is_anonymous")
+        boolean isAnonymous
 ) {
 }

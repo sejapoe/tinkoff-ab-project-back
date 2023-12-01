@@ -16,3 +16,4 @@ spring:
       max-request-size: 20MB # max summary file size
 storage:
   location: /tmp/ninja-mirea-clone/storage
+

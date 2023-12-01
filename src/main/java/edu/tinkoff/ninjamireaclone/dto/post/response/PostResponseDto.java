@@ -11,6 +11,8 @@ public record PostResponseDto(
         @JsonProperty("parent_id")
         long parentId,
         String text,
+        @JsonProperty("is_author")
+        boolean isAuthor,
         @JsonProperty("author_id")
         long authorId,
         @JsonProperty("author_name")

@@ -119,4 +119,13 @@ public class AccountService implements UserDetailsService {
         }
         return false;
     }
+
+    /**
+     * @return current user id or -1 if unauthenticated
+     */
+    public long getCurrentUserId() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) return -1;
+        return getByName(authentication.getName()).getId();
+    }
 }
