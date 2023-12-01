@@ -1,9 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Post;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.*;
 import edu.tinkoff.ninjamireaclone.repository.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -85,6 +82,9 @@ public class PostServiceTest {
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
+        accountGiven.setDisplayName("Astarion");
+        accountGiven.setDescription("Cool vampire");
+        accountGiven.setGender(Gender.APACHE_HELICOPTER);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -131,6 +131,9 @@ public class PostServiceTest {
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
+        accountGiven.setDisplayName("Astarion");
+        accountGiven.setDescription("Cool vampire");
+        accountGiven.setGender(Gender.APACHE_HELICOPTER);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -180,6 +183,9 @@ public class PostServiceTest {
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
+        accountGiven.setDisplayName("Astarion");
+        accountGiven.setDescription("Cool vampire");
+        accountGiven.setGender(Gender.APACHE_HELICOPTER);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -225,6 +231,9 @@ public class PostServiceTest {
         var accountGiven = new Account();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
+        accountGiven.setDisplayName("Astarion");
+        accountGiven.setDescription("Cool vampire");
+        accountGiven.setGender(Gender.APACHE_HELICOPTER);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
