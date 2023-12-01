@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @DirtiesContext
@@ -62,6 +63,7 @@ public class AccountServiceTest {
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -88,6 +90,7 @@ public class AccountServiceTest {
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -115,6 +118,7 @@ public class AccountServiceTest {
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -142,6 +146,7 @@ public class AccountServiceTest {
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
@@ -169,6 +174,7 @@ public class AccountServiceTest {
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
@@ -194,6 +200,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -204,7 +213,8 @@ public class AccountServiceTest {
 
         // then
         var accounts = accountRepository.findAll();
-        assertEquals(0, accounts.size());
+        assertEquals(1, accounts.size());
+        assertFalse(accounts.get(0).isEnabled());
     }
 
     @Test
@@ -214,9 +224,15 @@ public class AccountServiceTest {
         Account accountGivenA = new Account();
         accountGivenA.setName("Alistair");
         accountGivenA.setPassword("qwerty");
+        accountGivenA.setDisplayName("Alistair");
+        accountGivenA.setDescription("");
+        accountGivenA.setEnabled(true);
         Account accountGivenB = new Account();
         accountGivenB.setName("Ketheric");
         accountGivenB.setPassword("123");
+        accountGivenB.setDisplayName("Ketheric");
+        accountGivenB.setEnabled(true);
+        accountGivenB.setDescription("");
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);

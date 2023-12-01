@@ -79,6 +79,7 @@ public class AccountService implements UserDetailsService {
         }
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRoles(List.of(roleService.getDefaultRole()));
+        account.setEnabled(true);
         return accountRepository.save(account);
     }
 
@@ -174,7 +175,8 @@ public class AccountService implements UserDetailsService {
      */
     public Long deleteAccount(Long id) {
         var account = getById(id);
-        accountRepository.deleteById(id);
+        account.setEnabled(false);
+        accountRepository.save(account);
         return account.getId();
     }
 }

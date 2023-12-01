@@ -85,6 +85,7 @@ public class PostServiceTest {
         accountGiven.setDisplayName("Astarion");
         accountGiven.setDescription("Cool vampire");
         accountGiven.setGender(Gender.APACHE_HELICOPTER);
+        accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -134,6 +135,7 @@ public class PostServiceTest {
         accountGiven.setDisplayName("Astarion");
         accountGiven.setDescription("Cool vampire");
         accountGiven.setGender(Gender.APACHE_HELICOPTER);
+        accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -186,6 +188,7 @@ public class PostServiceTest {
         accountGiven.setDisplayName("Astarion");
         accountGiven.setDescription("Cool vampire");
         accountGiven.setGender(Gender.APACHE_HELICOPTER);
+        accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
@@ -234,6 +237,7 @@ public class PostServiceTest {
         accountGiven.setDisplayName("Astarion");
         accountGiven.setDescription("Cool vampire");
         accountGiven.setGender(Gender.APACHE_HELICOPTER);
+        accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
         var postGiven = new Post();
