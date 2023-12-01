@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.config.SchedulerProperties;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.Post;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +29,7 @@ public class PostService {
     private final AccountRepository accountRepository;
     private final TopicRepository topicRepository;
     private final StorageService storageService;
+    private final SchedulerProperties schedulerProperties;
 
     private void attachDocuments(Post post, Set<Document> documents) {
         for (var d : documents) {
@@ -77,5 +81,26 @@ public class PostService {
             attachDocuments(post, documents);
         }
         return postRepository.saveAndFlush(post);
+    }
+
+    @Transactional
+    public List<Post> cleanUpComments() {
+        var allTopics = topicRepository.findAll();
+        var deletedPosts = new ArrayList<Post>();
+        for (var topic : allTopics) {
+            var posts = topic.getPosts();
+            if (posts.isEmpty()) { continue; }
+            var openingPost = posts.get(0);
+            var oldPosts = posts.stream()
+                    .filter(p -> p.getCreatedAt()
+                            .plusMonths(schedulerProperties.getCleanUpCommentsMonthsInterval())
+                            .isBefore(LocalDateTime.now()) && !p.equals(openingPost))
+                    .toList();
+            posts.removeAll(oldPosts);
+            topic.setPosts(posts);
+            topicRepository.save(topic);
+            deletedPosts.addAll(oldPosts);
+        }
+        return deletedPosts;
     }
 }

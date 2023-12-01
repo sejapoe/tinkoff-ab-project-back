@@ -37,6 +37,9 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
     @ManyToOne(
             fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}
@@ -89,8 +92,8 @@ public class Account implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+//    @Override
+//    public boolean isEnabled() {
+//        return getEnabled();
+//    }
 }

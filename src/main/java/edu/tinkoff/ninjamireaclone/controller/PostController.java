@@ -75,7 +75,7 @@ public class PostController {
 
     @Operation(description = "Получение поста")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Пост создан"),
+            @ApiResponse(responseCode = "200", description = "Пост найден"),
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
