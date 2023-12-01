@@ -3,7 +3,7 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
-logicalFilePath="db/migrations/create-post.xml">
+                   logicalFilePath="db/migrations/create-post.xml">
 
     <changeSet id="2023-11-15-create-post" author="JudexMars">
         <createTable remarks="Посты" tableName="post">

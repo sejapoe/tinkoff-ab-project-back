@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,7 @@ public class AccountController {
         var account = accountService.getById(id);
         var responseDto = accountMapper.toAccountResponseDto(account);
         log.info("Получен аккаунт " + responseDto.id());
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        return ResponseEntity.ok(responseDto);
     }
 
     @Operation(description = "Получение всех аккаунтов")
@@ -54,7 +53,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
     })
     @IsAdmin
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<PageResponseDto<AccountResponseDto>> getAll(@ParameterObject PageRequestDto pageRequestDto) {
         var accounts = accountService.getAll(pageMapper.fromRequestDto(pageRequestDto));
         var response = accountMapper.toPageResponseDto(accounts);
@@ -85,7 +84,8 @@ public class AccountController {
     @PatchMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AccountResponseDto> updateAccount(@ModelAttribute UpdateAccountRequestDto updateAccountRequestDto) {
         if (accountService.checkFakeId(updateAccountRequestDto.id())) {
-            throw new AccessDeniedException("Редактирование чужого профиля"); }
+            throw new AccessDeniedException("Редактирование чужого профиля");
+        }
         Account account = accountMapper.toAccount(updateAccountRequestDto);
         Account updated = accountService.update(account, updateAccountRequestDto.avatar());
         return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));

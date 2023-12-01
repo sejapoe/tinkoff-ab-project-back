@@ -38,7 +38,7 @@ public class Account implements UserDetails {
     private Gender gender;
 
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    private boolean enabled;
 
     @ManyToOne(
             fetch = FetchType.EAGER,
@@ -92,8 +92,8 @@ public class Account implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return getEnabled();
-    }
+//    @Override
+//    public boolean isEnabled() {
+//        return getEnabled();
+//    }
 }

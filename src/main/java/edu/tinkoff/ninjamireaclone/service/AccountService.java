@@ -161,6 +161,7 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Get all accounts
+     *
      * @param pageable pagination properties
      * @return page of accounts
      */
@@ -170,6 +171,7 @@ public class AccountService implements UserDetailsService {
 
     /**
      * Delete account by id
+     *
      * @param id id of the account to be deleted
      * @return the account's id
      */
