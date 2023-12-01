@@ -17,6 +17,8 @@ public record CreatePostRequestDto(
         String text,
 
         @Size(max = 5)
-        List<MultipartFile> files
+        List<MultipartFile> files,
+
+        boolean isAnonymous
 ) {
 }

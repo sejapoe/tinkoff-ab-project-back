@@ -35,6 +35,9 @@ public class Post {
     @JoinColumn(name = "parent_id")
     private Topic parent;
 
+    @Column(name = "is_anonymous", nullable = false)
+    private boolean isAnonymous;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",

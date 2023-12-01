@@ -48,7 +48,7 @@ public class PostController {
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
                 requestDto.parentId());
-        var responseDto = postMapper.toPostResponseDto(post);
+        var responseDto = postMapper.toPostResponseDto(post, accountService.getCurrentUserId());
         log.info("Обновлен пост " + responseDto.id());
         return ResponseEntity.ok(responseDto);
     }
@@ -82,7 +82,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostResponseDto> get(@RequestParam Long id) {
         var post = postService.getPost(id);
-        var responseDto = postMapper.toPostResponseDto(post);
+        var responseDto = postMapper.toPostResponseDto(post, accountService.getCurrentUserId());
         log.info("Получен пост " + responseDto.id());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -103,6 +103,6 @@ public class PostController {
                 requestDto.authorId(),
                 requestDto.parentId(),
                 requestDto.files());
-        return ResponseEntity.ok(postMapper.toPostResponseDto(post));
+        return ResponseEntity.ok(postMapper.toPostResponseDto(post, accountService.getCurrentUserId()));
     }
 }
