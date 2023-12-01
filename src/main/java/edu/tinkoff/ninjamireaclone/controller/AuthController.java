@@ -7,11 +7,13 @@ import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.SignUpException;
 import edu.tinkoff.ninjamireaclone.mapper.AccountMapper;
 import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +34,8 @@ public class AuthController {
     public ResponseEntity<JwtResponseDto> login(@RequestBody JwtRequestDto requestDto) {
         var userDetails = accountService.loadUserByUsername(requestDto.name());
         var accountId = ((Account) userDetails).getId();
-        return ResponseEntity.ok(new JwtResponseDto(accountId,
-                ((Account) userDetails).getName(),
-                authService.createAuthToken(userDetails, requestDto.name(), requestDto.password())));
+        JwtResponseDto jwtResponseDto = getResponseDto((Account) userDetails, requestDto.name(), requestDto.password());
+        return ResponseEntity.ok(jwtResponseDto);
     }
 
     @PostMapping("/signup")
@@ -43,9 +44,18 @@ public class AuthController {
             throw new SignUpException("Пароли не совпадают");
         }
         Account createdAccount = accountService.createAccount(accountMapper.toAccount(requestDto));
-        return ResponseEntity.ok(new JwtResponseDto(createdAccount.getId(),
-                createdAccount.getName(),
-                authService.createAuthToken(createdAccount, requestDto.name(), requestDto.password())));
+        JwtResponseDto jwtResponseDto = getResponseDto(createdAccount, requestDto.name(), requestDto.password());
+        return ResponseEntity.ok(jwtResponseDto);
+    }
+
+    @NotNull
+    private JwtResponseDto getResponseDto(Account account, String name, String password) {
+        return new JwtResponseDto(
+                account.getId(),
+                account.getName(),
+                authService.createAuthToken(account, name, password),
+                account.getRoles().stream().map(Role::getName).toList()
+        );
     }
 
     @ExceptionHandler(AccessDeniedException.class)

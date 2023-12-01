@@ -10,7 +10,9 @@ import edu.tinkoff.ninjamireaclone.service.storage.FileSystemStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -166,7 +168,7 @@ public class AccountService implements UserDetailsService {
      * @return page of accounts
      */
     public Page<Account> getAll(Pageable pageable) {
-        return accountRepository.findAll(pageable);
+        return accountRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id")));
     }
 
     /**

@@ -12,6 +12,7 @@ public record AccountResponseDto(
         String displayName,
         String description,
         Gender gender,
-        DocumentResponseDto avatar
+        DocumentResponseDto avatar,
+        boolean enabled
 ) {
 }
