@@ -9,6 +9,7 @@ import edu.tinkoff.ninjamireaclone.model.QDocument;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@Profile("test")
 public class FileSystemStorageService implements StorageService {
     private final DocumentRepository documentRepository;
     private final Path rootLocation;
