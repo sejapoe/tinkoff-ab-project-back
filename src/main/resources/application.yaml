@@ -35,10 +35,13 @@ spring:
             threadCount: 10
             threadsInheritContextClassLoaderOfInitializingThread: true
     auto-startup: false #Выключаем автоматический старт для scheduler, т.к. запуск будет выполнен вручную
+  profiles:
+    include: prod
 
 storage:
   location: /tmp/ninja-mirea-clone/storage
 
 scheduler:
   permanent-jobs-group-name: PERMANENT
-  print-job-cron: "*/3 * * * * ?" #${PRINT_JOB_CRON:0 0 * * * ?}
+  clean-up-comments-job-cron: "*/3 * * * * ?"
+#  clean-up-comments-job-cron: ${CLEAN_UP_JOB_CRON:0 0 * * * ?}

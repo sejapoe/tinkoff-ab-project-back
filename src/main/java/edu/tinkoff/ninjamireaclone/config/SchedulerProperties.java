@@ -7,5 +7,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "scheduler")
 public class SchedulerProperties {
     private String permanentJobsGroupName;
-    private String printJobCron;
+    private String cleanUpCommentsJobCron;
 }

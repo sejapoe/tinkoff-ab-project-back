@@ -8,26 +8,26 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class PrintJobConfig {
+public class CleanUpCommentsJobConfig {
     private final SchedulerProperties schedulerProperties;
 
     @Bean
-    public JobDetail printJobDetail() {
+    public JobDetail cleanUpCommentsJobDetail() {
         return JobBuilder
-                .newJob(PrintJob.class)
-                .withIdentity("printJob", schedulerProperties.getPermanentJobsGroupName())
+                .newJob(CleanUpCommentsJob.class)
+                .withIdentity("cleanUpCommentsJob", schedulerProperties.getPermanentJobsGroupName())
                 .storeDurably()
                 .requestRecovery(true)
                 .build();
     }
 
     @Bean
-    public Trigger printTrigger() {
+    public Trigger cleanUpCommentsJobTrigger() {
         return TriggerBuilder
                 .newTrigger()
-                .forJob(printJobDetail())
-                .withIdentity("printJobTrigger", schedulerProperties.getPermanentJobsGroupName())
-                .withSchedule(CronScheduleBuilder.cronSchedule(schedulerProperties.getPrintJobCron()))
+                .forJob(cleanUpCommentsJobDetail())
+                .withIdentity("cleanUpCommentsJobTrigger", schedulerProperties.getPermanentJobsGroupName())
+                .withSchedule(CronScheduleBuilder.cronSchedule(schedulerProperties.getCleanUpCommentsJobCron()))
                 .build();
     }
 }
