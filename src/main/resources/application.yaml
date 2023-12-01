@@ -43,5 +43,5 @@ storage:
 
 scheduler:
   permanent-jobs-group-name: PERMANENT
-  clean-up-comments-job-cron: "*/3 * * * * ?"
+  clean-up-comments-job-cron: "* */15 * * * ?"
 #  clean-up-comments-job-cron: ${CLEAN_UP_JOB_CRON:0 0 * * * ?}
