@@ -14,6 +14,7 @@ spring:
     multipart:
       max-file-size: 5MB # max single file size
       max-request-size: 20MB # max summary file size
+  profiles:
+    include: prod
 storage:
   location: /tmp/ninja-mirea-clone/storage
-

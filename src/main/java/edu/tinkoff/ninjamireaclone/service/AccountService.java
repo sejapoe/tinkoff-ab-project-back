@@ -9,6 +9,8 @@ import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.FileSystemStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -77,6 +79,7 @@ public class AccountService implements UserDetailsService {
         }
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRoles(List.of(roleService.getDefaultRole()));
+        account.setEnabled(true);
         return accountRepository.save(account);
     }
 
@@ -154,5 +157,28 @@ public class AccountService implements UserDetailsService {
             account.setAvatar(storageService.store(avatar));
         }
         return accountRepository.save(account);
+    }
+
+    /**
+     * Get all accounts
+     *
+     * @param pageable pagination properties
+     * @return page of accounts
+     */
+    public Page<Account> getAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
+
+    /**
+     * Delete account by id
+     *
+     * @param id id of the account to be deleted
+     * @return the account's id
+     */
+    public Long deleteAccount(Long id) {
+        var account = getById(id);
+        account.setEnabled(false);
+        accountRepository.save(account);
+        return account.getId();
     }
 }
