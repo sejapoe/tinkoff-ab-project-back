@@ -1,11 +1,15 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
 import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
+import edu.tinkoff.ninjamireaclone.annotation.IsUser;
+import edu.tinkoff.ninjamireaclone.dto.account.request.UpdateAccountRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.account.response.AccountResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.common.PageResponseDto;
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.AccountMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
+import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
-import edu.tinkoff.ninjamireaclone.dto.account.request.UpdateAccountRequestDto;
-import edu.tinkoff.ninjamireaclone.model.Account;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +40,8 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Аккаунт не найден")
     })
-    @GetMapping
-    public ResponseEntity<AccountResponseDto> get(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountResponseDto> get(@PathVariable Long id) {
         var account = accountService.getById(id);
         var responseDto = accountMapper.toAccountResponseDto(account);
         log.info("Получен аккаунт " + responseDto.id());
@@ -73,11 +75,19 @@ public class AccountController {
         return ResponseEntity.ok(accountId);
     }
 
-
+    @Operation(description = "Редактирование аккаунта")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Аккаунт изменен"),
+            @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
+            @ApiResponse(responseCode = "404", description = "Аккаунт не найден")
+    })
+    @IsUser
     @PatchMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AccountResponseDto> updateAccount(@ModelAttribute UpdateAccountRequestDto updateAccountRequestDto) {
+        if (accountService.checkFakeId(updateAccountRequestDto.id())) {
+            throw new AccessDeniedException("Редактирование чужого профиля"); }
         Account account = accountMapper.toAccount(updateAccountRequestDto);
         Account updated = accountService.update(account, updateAccountRequestDto.avatar());
-        return ResponseEntity.ok(accountMapper.toAccountDto(updated));
+        return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));
     }
 }
