@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.config.SchedulerProperties;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.Post;
@@ -28,6 +29,7 @@ public class PostService {
     private final AccountRepository accountRepository;
     private final TopicRepository topicRepository;
     private final StorageService storageService;
+    private final SchedulerProperties schedulerProperties;
 
     private void attachDocuments(Post post, Set<Document> documents) {
         for (var d : documents) {
@@ -90,7 +92,9 @@ public class PostService {
             if (posts.isEmpty()) { continue; }
             var openingPost = posts.get(0);
             var oldPosts = posts.stream()
-                    .filter(p -> p.getCreatedAt().plusYears(2).isBefore(LocalDateTime.now()) && !p.equals(openingPost))
+                    .filter(p -> p.getCreatedAt()
+                            .plusMonths(schedulerProperties.getCleanUpCommentsMonthsInterval())
+                            .isBefore(LocalDateTime.now()) && !p.equals(openingPost))
                     .toList();
             posts.removeAll(oldPosts);
             topic.setPosts(posts);

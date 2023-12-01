@@ -8,4 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SchedulerProperties {
     private String permanentJobsGroupName;
     private String cleanUpCommentsJobCron;
+    private Long cleanUpCommentsMonthsInterval;
 }
