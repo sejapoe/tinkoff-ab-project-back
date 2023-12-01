@@ -7,6 +7,8 @@ import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -127,5 +129,25 @@ public class AccountService implements UserDetailsService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) return -1;
         return getByName(authentication.getName()).getId();
+    }
+
+    /**
+     * Get all accounts
+     * @param pageable pagination properties
+     * @return page of accounts
+     */
+    public Page<Account> getAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
+
+    /**
+     * Delete account by id
+     * @param id id of the account to be deleted
+     * @return the account's id
+     */
+    public Long deleteAccount(Long id) {
+        var account = getById(id);
+        accountRepository.deleteById(id);
+        return account.getId();
     }
 }

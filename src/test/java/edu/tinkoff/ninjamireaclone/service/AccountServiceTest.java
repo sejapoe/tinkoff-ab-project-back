@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -168,5 +169,48 @@ public class AccountServiceTest {
         // then
         var expected = Set.of(defaultRole);
         assertEquals(expected, new HashSet<>(account.getRoles()));
+    }
+
+    @Test
+    @Transactional
+    public void deleteAccount() {
+        // given
+        Account accountGiven = new Account();
+        accountGiven.setName("Alistair");
+        accountGiven.setPassword("qwerty");
+        var defaultRole = new Role();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+        accountGiven = accountService.createAccount(accountGiven);
+
+        // when
+        accountService.deleteAccount(accountGiven.getId());
+
+        // then
+        var accounts = accountRepository.findAll();
+        assertEquals(0, accounts.size());
+    }
+
+    @Test
+    @Transactional
+    public void getAllAccounts() {
+        // given
+        Account accountGivenA = new Account();
+        accountGivenA.setName("Alistair");
+        accountGivenA.setPassword("qwerty");
+        Account accountGivenB = new Account();
+        accountGivenB.setName("Ketheric");
+        accountGivenB.setPassword("123");
+        var defaultRole = new Role();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+        accountService.createAccount(accountGivenA);
+        accountService.createAccount(accountGivenB);
+
+        // when
+        var page = accountService.getAll(Pageable.ofSize(5));
+
+        // then
+        assertEquals(2, page.getTotalElements());
     }
 }
