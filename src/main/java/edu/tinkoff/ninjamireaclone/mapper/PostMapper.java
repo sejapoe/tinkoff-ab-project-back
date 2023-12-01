@@ -38,6 +38,6 @@ public interface PostMapper {
     @Mapping(target = "parentId", source = "post.parent.id")
     @Mapping(target = "isAuthor", expression = "java(post.getAuthor().getId() == userId)")
     @Mapping(target = "authorId", expression = "java(post.isAnonymous() ? -1L : post.getAuthor().getId())")
-    @Mapping(target = "authorName", expression = "java(post.isAnonymous() ? \"Аноним\" : post.getAuthor().getName())")
+    @Mapping(target = "authorName", expression = "java(post.isAnonymous() ? \"Аноним\" : post.getAuthor().getDisplayName())")
     PostResponseDto toPostResponseDto(Post post, @Context Long userId);
 }

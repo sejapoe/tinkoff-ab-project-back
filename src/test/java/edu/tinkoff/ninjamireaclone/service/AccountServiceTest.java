@@ -1,6 +1,7 @@
 package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.Gender;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
@@ -58,6 +59,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -81,6 +85,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -105,6 +112,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -129,6 +139,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
@@ -153,6 +166,9 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);

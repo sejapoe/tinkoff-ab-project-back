@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
+import edu.tinkoff.ninjamireaclone.dto.account.request.UpdateAccountRequestDto;
+import edu.tinkoff.ninjamireaclone.model.Account;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,5 +71,13 @@ public class AccountController {
         var accountId = accountService.deleteAccount(id);
         log.info("Удален аккаунт " + accountId);
         return ResponseEntity.ok(accountId);
+    }
+
+
+    @PatchMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<AccountResponseDto> updateAccount(@ModelAttribute UpdateAccountRequestDto updateAccountRequestDto) {
+        Account account = accountMapper.toAccount(updateAccountRequestDto);
+        Account updated = accountService.update(account, updateAccountRequestDto.avatar());
+        return ResponseEntity.ok(accountMapper.toAccountDto(updated));
     }
 }
