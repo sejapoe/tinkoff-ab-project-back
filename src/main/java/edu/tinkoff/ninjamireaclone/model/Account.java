@@ -24,8 +24,28 @@ public class Account implements UserDetails {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "display_name")
+    private String displayName;
+
     @Column(name = "password")
     private String password;
+
+    @Column(name = "description", length = 1023, nullable = false)
+    private String description;
+
+    @Column(name = "gender", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
+    @ManyToOne(
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+    )
+    @JoinColumn(name = "avatar_id")
+    private Document avatar;
 
     @OneToMany(
             mappedBy = "author",
@@ -72,8 +92,8 @@ public class Account implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+//    @Override
+//    public boolean isEnabled() {
+//        return getEnabled();
+//    }
 }

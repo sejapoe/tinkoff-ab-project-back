@@ -33,6 +33,7 @@ public class AuthController {
         var userDetails = accountService.loadUserByUsername(requestDto.name());
         var accountId = ((Account) userDetails).getId();
         return ResponseEntity.ok(new JwtResponseDto(accountId,
+                ((Account) userDetails).getName(),
                 authService.createAuthToken(userDetails, requestDto.name(), requestDto.password())));
     }
 
@@ -43,6 +44,7 @@ public class AuthController {
         }
         Account createdAccount = accountService.createAccount(accountMapper.toAccount(requestDto));
         return ResponseEntity.ok(new JwtResponseDto(createdAccount.getId(),
+                createdAccount.getName(),
                 authService.createAuthToken(createdAccount, requestDto.name(), requestDto.password())));
     }
 

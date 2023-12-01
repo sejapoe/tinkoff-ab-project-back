@@ -9,6 +9,7 @@ import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
 import edu.tinkoff.ninjamireaclone.mapper.TopicMapper;
+import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,6 +36,7 @@ public class TopicController {
     private final TopicMapper topicMapper;
     private final PostMapper postMapper;
     private final PageMapper pageMapper;
+    private final AccountService accountService;
 
     @Operation(description = "Создание топика")
     @ApiResponses({
@@ -95,6 +97,6 @@ public class TopicController {
     public ResponseEntity<TopicResponseDto> get(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         var topic = topicService.getTopic(id);
         var posts = topicService.getTopicPosts(topic, pageMapper.fromRequestDto(pageRequestDto));
-        return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic, posts));
+        return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic, posts, accountService.getCurrentUserId()));
     }
 }

@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <include file="/db/migrations/2023-11-15-01-create-section.xml"/>
     <include file="/db/migrations/2023-11-15-02-create-topic.xml"/>
@@ -23,6 +23,11 @@
     <include file="/db/migrations/2023-11-24-add-password-column-to-account.xml"/>
     <include file="/db/migrations/2023-11-24-create-account-role.xml"/>
     <include file="/db/migrations/2023-11-27-create-action-rights.xml"/>
+    <include file="/db/migrations/2023-11-30-01-unique-subsections-constraint.xml"/>
+    <include file="/db/migrations/2023-12-01-02-add-anonymous-to-post.xml"/>
+    <include file="/db/migrations/2023-12-01-03-add-addition-fields-to-account.xml"/>
+    <include file="/db/migrations/2023-12-01-04-add-displayName-field-to-account.xml"/>
+    <include file="/db/migrations/2023-12-01-05-add-enabled-field.xml"/>
     <include file="/db/migrations/2023-12-01-01-init-quartz.xml"/>
 
 </databaseChangeLog>

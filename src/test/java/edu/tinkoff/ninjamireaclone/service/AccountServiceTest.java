@@ -1,6 +1,7 @@
 package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.Gender;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @DirtiesContext
@@ -57,6 +60,10 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -80,6 +87,10 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -104,6 +115,10 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
@@ -128,6 +143,10 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
@@ -152,6 +171,10 @@ public class AccountServiceTest {
         Account accountGiven = new Account();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setGender(Gender.NOT_SPECIFIED);
+        accountGiven.setEnabled(true);
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
@@ -168,5 +191,57 @@ public class AccountServiceTest {
         // then
         var expected = Set.of(defaultRole);
         assertEquals(expected, new HashSet<>(account.getRoles()));
+    }
+
+    @Test
+    public void deleteAccount() {
+        // given
+        Account accountGiven = new Account();
+        accountGiven.setName("Alistair");
+        accountGiven.setPassword("qwerty");
+        accountGiven.setDisplayName("Alistair");
+        accountGiven.setDescription("");
+        accountGiven.setEnabled(true);
+        var defaultRole = new Role();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+        accountGiven = accountService.createAccount(accountGiven);
+
+        // when
+        accountService.deleteAccount(accountGiven.getId());
+
+        // then
+        var accounts = accountRepository.findAll();
+        assertEquals(1, accounts.size());
+        assertFalse(accounts.get(0).isEnabled());
+    }
+
+    @Test
+    @Transactional
+    public void getAllAccounts() {
+        // given
+        Account accountGivenA = new Account();
+        accountGivenA.setName("Alistair");
+        accountGivenA.setPassword("qwerty");
+        accountGivenA.setDisplayName("Alistair");
+        accountGivenA.setDescription("");
+        accountGivenA.setEnabled(true);
+        Account accountGivenB = new Account();
+        accountGivenB.setName("Ketheric");
+        accountGivenB.setPassword("123");
+        accountGivenB.setDisplayName("Ketheric");
+        accountGivenB.setEnabled(true);
+        accountGivenB.setDescription("");
+        var defaultRole = new Role();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+        accountService.createAccount(accountGivenA);
+        accountService.createAccount(accountGivenB);
+
+        // when
+        var page = accountService.getAll(Pageable.ofSize(5));
+
+        // then
+        assertEquals(2, page.getTotalElements());
     }
 }

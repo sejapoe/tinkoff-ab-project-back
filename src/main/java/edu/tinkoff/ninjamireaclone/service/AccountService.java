@@ -1,12 +1,16 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.AccountAlreadyExistsException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
+import edu.tinkoff.ninjamireaclone.service.storage.FileSystemStorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +18,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final FileSystemStorageService storageService;
 
     /**
      * Get account by name
@@ -72,6 +79,7 @@ public class AccountService implements UserDetailsService {
         }
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRoles(List.of(roleService.getDefaultRole()));
+        account.setEnabled(true);
         return accountRepository.save(account);
     }
 
@@ -118,5 +126,59 @@ public class AccountService implements UserDetailsService {
                     .map(GrantedAuthority::getAuthority).noneMatch(s -> s.equals("ROLE_ADMIN"));
         }
         return false;
+    }
+
+    /**
+     * @return current user id or -1 if unauthenticated
+     */
+    public long getCurrentUserId() {
+        try {
+            return getCurrentUser().getId();
+        } catch (AccessDeniedException e) {
+            return -1L;
+        }
+    }
+
+    public Account getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            return getByName(authentication.getName());
+        } catch (ResourceNotFoundException e) {
+            throw new AccessDeniedException("Вы не авторизованы");
+        }
+    }
+
+    public Account update(Account updater, MultipartFile avatar) {
+        var account = getById(updater.getId());
+        account.setDisplayName(updater.getDisplayName());
+        account.setDescription(updater.getDescription());
+        account.setGender(updater.getGender());
+        if (Objects.nonNull(avatar)) {
+            account.setAvatar(storageService.store(avatar));
+        }
+        return accountRepository.save(account);
+    }
+
+    /**
+     * Get all accounts
+     *
+     * @param pageable pagination properties
+     * @return page of accounts
+     */
+    public Page<Account> getAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
+
+    /**
+     * Delete account by id
+     *
+     * @param id id of the account to be deleted
+     * @return the account's id
+     */
+    public Long deleteAccount(Long id) {
+        var account = getById(id);
+        account.setEnabled(false);
+        accountRepository.save(account);
+        return account.getId();
     }
 }
