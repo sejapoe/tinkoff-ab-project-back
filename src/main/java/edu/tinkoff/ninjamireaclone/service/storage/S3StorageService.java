@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Service
-@Profile("prod")
 @Slf4j
+@Profile("prod")
+@Service
 @RequiredArgsConstructor
 public class S3StorageService implements StorageService {
     private final StorageProperties storageProperties;
