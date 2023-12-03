@@ -83,13 +83,21 @@ public class PostService {
         return postRepository.saveAndFlush(post);
     }
 
+    /**
+     * Пусть возвращает агрегированную метрику того, сколько удалено.
+     * Перенести логику на сторону бд.
+     * Колоночка isRoot?
+     * Сделать N транзакций.
+     */
     @Transactional
     public List<Post> cleanUpComments() {
         var allTopics = topicRepository.findAll();
         var deletedPosts = new ArrayList<Post>();
         for (var topic : allTopics) {
             var posts = topic.getPosts();
-            if (posts.isEmpty()) { continue; }
+            if (posts.isEmpty()) {
+                continue;
+            }
             var openingPost = posts.get(0);
             var oldPosts = posts.stream()
                     .filter(p -> p.getCreatedAt()
