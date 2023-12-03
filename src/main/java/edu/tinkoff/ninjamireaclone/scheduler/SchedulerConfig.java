@@ -3,11 +3,9 @@ package edu.tinkoff.ninjamireaclone.scheduler;
 import edu.tinkoff.ninjamireaclone.config.SchedulerProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -49,6 +47,10 @@ public class SchedulerConfig {
             if (!scheduler.checkExists(trigger.getKey())) {
                 scheduler.scheduleJob(trigger);
             } else {
+                if (trigger instanceof CronTriggerImpl) {
+                    CronTrigger triggerInDb = (CronTrigger) scheduler.getTrigger(trigger.getKey());
+                    ((CronTriggerImpl) trigger).setCronExpression(triggerInDb.getCronExpression());
+                }
                 scheduler.rescheduleJob(trigger.getKey(), trigger);
             }
         }
