@@ -27,7 +27,7 @@ spring:
           jobStore:
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate #Указываем диалект для запросов к БД
             useProperties: false #Указываем, что все данные в БД будут храниться в качестве строк, а не в двоичном формате
-            tablePrefix: QRTZ_  #Префикс таблиц в БД
+            tablePrefix: QRTZ_  #Префикс таблиц в БД  (да он и так там дефотный по ммоей памяти)
             clusterCheckinInterval: 5000 #Указываем частоту сверки инстанса Scheduler с остальными инстансами в кластере
             isClustered: true #Включаем режим работы в кластере
           threadPool: #Указываем настройки для создания пула поток, на котором будут выполняться джобы

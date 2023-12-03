@@ -51,6 +51,7 @@ public class Post {
         document.getPosts().add(this);
     }
 
+    // unused
     public void removeDocument(Document document) {
         this.documents.remove(document);
         document.getPosts().remove(this);

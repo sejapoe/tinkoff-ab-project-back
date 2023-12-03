@@ -58,6 +58,7 @@ public class TopicController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // аннотация @IsAdmin ограничивает доступ только до 1-ого админа? а если завтра нужно будет через этот delete другим юзерас редачить свои записи?
     @Operation(description = "Удаление топика")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Топик удален"),
