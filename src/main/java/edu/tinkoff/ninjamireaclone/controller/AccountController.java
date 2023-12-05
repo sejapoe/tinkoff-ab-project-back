@@ -88,6 +88,7 @@ public class AccountController {
         }
         Account account = accountMapper.toAccount(updateAccountRequestDto);
         Account updated = accountService.update(account, updateAccountRequestDto.avatar());
+        log.info("Изменен аккаунт " + updated.getId());
         return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));
     }
 }

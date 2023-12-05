@@ -8,6 +8,7 @@ import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class PostService {
     private final TopicRepository topicRepository;
     private final StorageService storageService;
     private final SchedulerProperties schedulerProperties;
+    private final EntityManager entityManager;
 
     private void attachDocuments(Post post, Set<Document> documents) {
         for (var d : documents) {
@@ -89,7 +91,9 @@ public class PostService {
         var deletedPosts = new ArrayList<Post>();
         for (var topic : allTopics) {
             var posts = topic.getPosts();
-            if (posts.isEmpty()) { continue; }
+            if (posts.isEmpty()) {
+                continue;
+            }
             var openingPost = posts.get(0);
             var oldPosts = posts.stream()
                     .filter(p -> p.getCreatedAt()
