@@ -13,6 +13,10 @@ public record PostResponseDto(
         String text,
         @JsonProperty("is_author")
         boolean isAuthor,
+
+        @JsonProperty("is_anonymous")
+        boolean isAnonymous,
+        
         @JsonProperty("author_id")
         long authorId,
         @JsonProperty("author_name")

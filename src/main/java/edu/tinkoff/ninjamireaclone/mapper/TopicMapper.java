@@ -25,7 +25,7 @@ public interface TopicMapper {
 
     @Mapping(target = "parentId", source = "topic.parent.id")
     @Mapping(target = "posts", source = "posts")
-    TopicResponseDto toTopicResponseDto(Topic topic, Page<Post> posts, @Context Long userId);
+    TopicResponseDto toTopicResponseDto(Topic topic, Page<Post> posts, @Context Long userId, @Context boolean isAdmin);
 
     ShortTopicResponseDto toShortTopicResponseDto(Topic topic);
 }

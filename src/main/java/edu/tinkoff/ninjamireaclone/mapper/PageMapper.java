@@ -5,6 +5,7 @@ import edu.tinkoff.ninjamireaclone.dto.common.PageResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
@@ -26,6 +27,6 @@ public class PageMapper {
     }
 
     public Pageable fromRequestDto(PageRequestDto dto) {
-        return PageRequest.of(dto.pageNumber(), dto.forPage());
+        return PageRequest.of(dto.pageNumber(), dto.forPage(), Sort.by("id"));
     }
 }
