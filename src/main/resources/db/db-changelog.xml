@@ -29,5 +29,6 @@
     <include file="/db/migrations/2023-12-01-04-add-displayName-field-to-account.xml"/>
     <include file="/db/migrations/2023-12-01-05-add-enabled-field.xml"/>
     <include file="/db/migrations/2023-12-01-01-init-quartz.xml"/>
+    <include file="/db/migrations/2023-12-05-01-add-op-to-post.xml"/>
 
 </databaseChangeLog>
