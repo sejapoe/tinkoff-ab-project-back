@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import java.text.ParseException;
+
 @RestControllerAdvice
 public class AppExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
@@ -41,5 +43,10 @@ public class AppExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ProblemDetail handleConflict(ConflictException conflictException) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, conflictException.getMessage());
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ProblemDetail handleParseException(ParseException parseException) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, parseException.getMessage());
     }
 }

@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.quartz.CronTrigger;
@@ -25,6 +26,7 @@ public class SettingsService {
     public CronTrigger updateTrigger(String key, String group, String cron) {
         var triggerKey = new TriggerKey(key, group);
         var trigger = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
+        if (trigger == null) throw new NotFoundException("Триггер не найден: " + key);
         trigger.setCronExpression(cron);
         scheduler.rescheduleJob(triggerKey, trigger);
         return trigger;

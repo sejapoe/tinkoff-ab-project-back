@@ -35,9 +35,10 @@ public interface PostMapper {
     @Mapping(target = "anonymous", source = "isAnonymous")
     Post toPost(UpdatePostRequestDto requestDto);
 
+    @Mapping(target = "isAnonymous", source = "post.anonymous")
     @Mapping(target = "parentId", source = "parent.id")
     @Mapping(target = "isAuthor", expression = "java(post.getAuthor().getId() == userId)")
-    @Mapping(target = "authorId", expression = "java(post.isAnonymous() ? -1L : post.getAuthor().getId())")
-    @Mapping(target = "authorName", expression = "java(post.isAnonymous() ? \"Аноним\" : post.getAuthor().getDisplayName())")
-    PostResponseDto toPostResponseDto(Post post, @Context Long userId);
+    @Mapping(target = "authorId", expression = "java(!isAdmin && post.isAnonymous() ? -1L : post.getAuthor().getId())")
+    @Mapping(target = "authorName", expression = "java(!isAdmin && post.isAnonymous() ? \"Аноним\" : post.getAuthor().getDisplayName())")
+    PostResponseDto toPostResponseDto(Post post, @Context Long userId, @Context boolean isAdmin);
 }
