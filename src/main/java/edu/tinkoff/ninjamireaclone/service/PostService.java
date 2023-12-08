@@ -89,7 +89,9 @@ public class PostService {
         var deletedPosts = new ArrayList<Post>();
         for (var topic : allTopics) {
             var posts = topic.getPosts();
-            if (posts.isEmpty()) { continue; }
+            if (posts.isEmpty()) {
+                continue;
+            }
             var openingPost = posts.get(0);
             var oldPosts = posts.stream()
                     .filter(p -> p.getCreatedAt()
