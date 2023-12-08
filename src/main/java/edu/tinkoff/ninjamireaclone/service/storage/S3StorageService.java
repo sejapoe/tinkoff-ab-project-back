@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service.storage;
 
+import com.google.common.collect.Streams;
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
@@ -7,34 +8,37 @@ import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.DocumentType;
 import edu.tinkoff.ninjamireaclone.model.QDocument;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
+import io.minio.*;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.MinioException;
+import io.minio.messages.DeleteObject;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
-@Profile("prod")
 @Service
 @RequiredArgsConstructor
 public class S3StorageService implements StorageService {
     private final StorageProperties storageProperties;
-    private final S3Client s3Client;
+    private final MinioClient minioClient;
     private final DocumentRepository documentRepository;
     private String bucketName;
 
+    @SneakyThrows
     @Override
     public void init() {
         bucketName = storageProperties.getBucketName();
@@ -43,14 +47,19 @@ public class S3StorageService implements StorageService {
             throw new StorageException("You should specify bucket name to use S3 storage");
         }
 
-        boolean doesBucketExists = s3Client.listBuckets().buckets().stream().anyMatch(bucket -> bucket.name().equals(bucketName));
+        boolean doesBucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         if (!doesBucketExists) {
-            throw new StorageException("Bucket with given name does not exists in S3");
+            minioClient.makeBucket(MakeBucketArgs.builder()
+                    .bucket(bucketName)
+                    .build()
+            );
+//            throw new StorageException("Bucket with given name does not exists in S3");
         }
 
         log.info("S3 storage has successfully initialized");
     }
 
+    @SneakyThrows
     @Override
     public Document store(MultipartFile file) {
         try {
@@ -66,15 +75,15 @@ public class S3StorageService implements StorageService {
 
             filename = UUID.randomUUID() + "-" + filename;
 
-            PutObjectResponse putObjectResponse = s3Client.putObject(
-                    PutObjectRequest.builder()
+            ObjectWriteResponse putObjectResponse = minioClient.putObject(
+                    PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .key(filename)
-                            .build(),
-                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+                            .object(filename)
+                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .build()
             );
 
-            log.debug(putObjectResponse.checksumCRC32());
+            log.debug(putObjectResponse.object());
 
             Document document = new Document();
 
@@ -98,17 +107,25 @@ public class S3StorageService implements StorageService {
         return null;
     }
 
+    @SneakyThrows
     @Override
     public Resource loadAsResource(String filename) {
-        var bytes = s3Client.getObjectAsBytes(
-                GetObjectRequest.builder()
-                        .bucket(bucketName)
-                        .key(filename)
-                        .build()
-        );
+        try {
+            var bytes = minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(filename)
+                            .build()
+            ).readAllBytes();
 
-
-        return new ByteArrayResource(bytes.asByteArray());
+            return new ByteArrayResource(bytes);
+        } catch (ErrorResponseException e) {
+            if (e.errorResponse().code().equals("NoSuchKey")) {
+                throw new StorageFileNotFoundException("Failed to read file: " + filename);
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Override
@@ -121,23 +138,29 @@ public class S3StorageService implements StorageService {
 
     @Override
     public void deleteAll() {
-        List<S3Object> listObjects = s3Client
-                .listObjects(
-                        ListObjectsRequest.builder()
-                                .bucket(bucketName)
-                                .build())
-                .contents();
+        var objects = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .build()
+        );
 
-        List<ObjectIdentifier> objectIdentifiers = listObjects.stream()
-                .map(S3Object::key)
-                .map(s -> ObjectIdentifier.builder().key(s).build())
+
+        List<DeleteObject> deleteObjects = Streams.stream(objects)
+                .map(itemResult -> {
+                    try {
+                        return itemResult.get().objectName();
+                    } catch (MinioException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(DeleteObject::new)
                 .toList();
 
-        s3Client.deleteObjects(DeleteObjectsRequest.builder().delete(
-                        Delete.builder()
-                                .objects(objectIdentifiers)
-                                .build())
-                .build()
+        minioClient.removeObjects(
+                RemoveObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .objects(deleteObjects)
+                        .build()
         );
     }
 }

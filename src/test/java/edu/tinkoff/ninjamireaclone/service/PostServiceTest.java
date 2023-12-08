@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.model.*;
 import edu.tinkoff.ninjamireaclone.repository.*;
 import jakarta.transaction.Transactional;
@@ -19,10 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-@DirtiesContext
-@ActiveProfiles("test")
-public class PostServiceTest {
+public class PostServiceTest extends AbstractBaseTest {
 
     @Autowired
     private PostService postService;

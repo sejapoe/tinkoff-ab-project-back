@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.section;
 
+import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.Section;
@@ -21,10 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@DirtiesContext
-@ActiveProfiles("test")
-public class SectionServiceTest {
+public class SectionServiceTest extends AbstractBaseTest {
     @MockBean
     SectionRightsService sectionRightsService;
     @Autowired

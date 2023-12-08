@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Gender;
 import edu.tinkoff.ninjamireaclone.model.Role;
@@ -27,10 +28,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@SpringBootTest
-@DirtiesContext
-@ActiveProfiles("test")
-public class AccountServiceTest {
+public class AccountServiceTest extends AbstractBaseTest {
 
     @Autowired
     private AccountService accountService;

@@ -1,33 +1,17 @@
 package edu.tinkoff.ninjamireaclone.config;
 
+import io.minio.MinioClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-
-import java.net.URI;
 
 @Configuration
-@Profile("prod")
 public class StorageConfig {
     @Bean
-    public AwsCredentials credentials(StorageProperties storageProperties) {
-        return AwsBasicCredentials.create(
-                storageProperties.getAccessKey(),
-                storageProperties.getSecretKey()
-        );
-    }
-
-    @Bean
-    public S3Client s3Client(AwsCredentials awsCredentials) {
-        return S3Client
-                .builder()
-                .credentialsProvider(() -> awsCredentials)
-                .endpointOverride(URI.create("https://storage.yandexcloud.net"))
-                .region(Region.of("ru-central-1"))
+    public MinioClient minioClient(StorageProperties storageProperties) {
+        return MinioClient.builder()
+                .credentials(storageProperties.getAccessKey(), storageProperties.getSecretKey())
+                .region(storageProperties.getRegion())
+                .endpoint(storageProperties.getEndpoint())
                 .build();
     }
 }
