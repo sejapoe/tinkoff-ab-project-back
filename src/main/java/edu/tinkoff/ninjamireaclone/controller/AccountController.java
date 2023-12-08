@@ -91,4 +91,22 @@ public class AccountController {
         log.info("Изменен аккаунт " + updated.getId());
         return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));
     }
+
+    @Operation(description = "Повышение пользователя")
+    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
+    @PatchMapping("/{id}/promote")
+    public ResponseEntity<AccountResponseDto> promote(@PathVariable Long id) {
+        var account = accountService.promote(id);
+        log.info("Аккаунт " + account.getId() + " стал модератором");
+        return ResponseEntity.ok(accountMapper.toAccountResponseDto(account));
+    }
+
+    @Operation(description = "Повышение пользователя")
+    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
+    @PatchMapping("/{id}/demote")
+    public ResponseEntity<AccountResponseDto> demote(@PathVariable Long id) {
+        var account = accountService.demote(id);
+        log.info("Аккаунт " + account.getId() + " перестал быть модератором");
+        return ResponseEntity.ok(accountMapper.toAccountResponseDto(account));
+    }
 }

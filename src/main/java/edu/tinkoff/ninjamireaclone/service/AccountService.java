@@ -2,6 +2,7 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.AccountAlreadyExistsException;
+import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Role;
@@ -186,5 +187,33 @@ public class AccountService implements UserDetailsService {
         account.setEnabled(false);
         accountRepository.save(account);
         return account.getId();
+    }
+
+    public Account promote(Long id) {
+        var account = getById(id);
+
+        List<Role> roles = account.getRoles();
+        Role roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
+
+        if (roles.contains(roleModerator)) {
+            throw new ConflictException("Пользователь %s уже является модератором".formatted(account.getName()));
+        }
+
+        roles.add(roleModerator);
+        return accountRepository.save(account);
+    }
+
+    public Account demote(Long id) {
+        var account = getById(id);
+
+        List<Role> roles = account.getRoles();
+        Role roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
+
+        if (!roles.contains(roleModerator)) {
+            throw new ConflictException("Пользователь %s не является модератором".formatted(account.getName()));
+        }
+
+        roles.remove(roleModerator);
+        return accountRepository.save(account);
     }
 }
