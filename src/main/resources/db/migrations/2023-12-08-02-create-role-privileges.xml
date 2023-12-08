@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="2023-12-08-02-create-role-privileges" author="Sejapoe">
+        <createTable remarks="Связка ролей и привелегий" tableName="role_privilege">
+            <column name="privilege_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_privileges_pk"/>
+            </column>
+
+            <column name="role_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_privileges_pk"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="role_privilege" baseColumnNames="privilege_id"
+                                 constraintName="role_privilege_privilege_id_fk"
+                                 referencedTableName="privilege"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="role_privilege" baseColumnNames="role_id"
+                                 constraintName="role_privilege_role_id_fk"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

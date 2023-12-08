@@ -31,5 +31,9 @@
     <include file="/db/migrations/2023-12-01-01-init-quartz.xml"/>
     <include file="/db/migrations/2023-12-05-01-add-op-to-post.xml"/>
     <include file="/db/migrations/2023-12-05-02-set-op-for-posts.xml"/>
+    <include file="/db/migrations/2023-12-08-01-create-privileges.xml"/>
+    <include file="/db/migrations/2023-12-08-02-create-role-privileges.xml"/>
+    <include file="/db/migrations/2023-12-09-01-modify-create-action-rights-fk.xml"/>
+    <include file="/db/migrations/2023-12-09-02-delegate-id-generation-to-database.xml"/>
 
 </databaseChangeLog>

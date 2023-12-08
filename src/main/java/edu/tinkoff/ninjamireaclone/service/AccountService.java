@@ -120,14 +120,18 @@ public class AccountService implements UserDetailsService {
      * @param id provided id
      * @return true, if the id is fake
      */
-    public boolean checkFakeId(Long id) {
+    public boolean checkFakeId(Long id, String requiredAuthority) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var author = getById(id);
         if (!author.getName().equals(authentication.getName())) {
             return authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority).noneMatch(s -> s.equals("ROLE_ADMIN"));
+                    .map(GrantedAuthority::getAuthority).noneMatch(s -> s.equals(requiredAuthority));
         }
         return false;
+    }
+
+    public boolean checkFakeId(Long id) {
+        return checkFakeId(id, "ROLE_SUPER_ADMIN");
     }
 
     /**

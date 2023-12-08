@@ -2,6 +2,7 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Gender;
+import edu.tinkoff.ninjamireaclone.model.Privilege;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -22,8 +23,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -119,8 +120,11 @@ public class AccountServiceTest {
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
+        var defaultPrivilege = new Privilege();
+        defaultPrivilege.setName("DEFAULT");
         var defaultRole = new Role();
         defaultRole.setName("ROLE_USER");
+        defaultRole.setPrivileges(new ArrayList<>(List.of(defaultPrivilege)));
         roleRepository.save(defaultRole);
 
         accountGiven = accountService.createAccount(accountGiven);
@@ -130,10 +134,7 @@ public class AccountServiceTest {
 
         // then
         assertEquals(accountGiven.getName(), userDetails.getUsername());
-        assertEquals(accountGiven
-                .getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList()), userDetails.getAuthorities());
+        assertThat(userDetails.getAuthorities()).map(GrantedAuthority::getAuthority).containsAll(List.of("ROLE_USER", "DEFAULT"));
     }
 
     @Test

@@ -19,14 +19,9 @@ public class SectionRights {
     private Section section;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "privilege_id")
+    private Privilege privilege;
 
     @Embedded
     private Rights rights;
-//    @Column(name = "create_subsections", nullable = false)
-//    private Boolean createSubsections;
-//
-//    @Column(name = "create_topics", nullable = false)
-//    private Boolean createTopics;
 }
