@@ -6,7 +6,7 @@ import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Account;
 import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
-import edu.tinkoff.ninjamireaclone.service.storage.FileSystemStorageService;
+import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final FileSystemStorageService storageService;
+    private final StorageService storageService;
 
     /**
      * Get account by name

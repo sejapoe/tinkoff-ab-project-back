@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.model.*;
 import edu.tinkoff.ninjamireaclone.repository.*;
 import jakarta.transaction.Transactional;
@@ -8,10 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
@@ -19,10 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-@DirtiesContext
-@ActiveProfiles("test")
-public class PostServiceTest {
+public class PostServiceTest extends AbstractBaseTest {
 
     @Autowired
     private PostService postService;
