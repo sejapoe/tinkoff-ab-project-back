@@ -42,6 +42,13 @@ spring:
 
 scheduler:
   permanent-jobs-group-name: PERMANENT
-  clean-up-comments-job-cron: "* */15 * * * ?"
+  clean-up-comments-job-cron: "0 */15 * * * ?"
   clean-up-comments-months-interval: 24
-#  clean-up-comments-job-cron: ${CLEAN_UP_JOB_CRON:0 0 * * * ?}
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        #        transaction: DEBUG
+#        orm:
+#          jpa: DEBUG

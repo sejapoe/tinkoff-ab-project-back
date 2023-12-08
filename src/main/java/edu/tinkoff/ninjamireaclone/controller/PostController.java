@@ -6,6 +6,8 @@ import edu.tinkoff.ninjamireaclone.dto.post.request.UpdatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.response.PostResponseDto;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
+import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +50,8 @@ public class PostController {
                 postMapper.toPost(requestDto),
                 requestDto.authorId(),
                 requestDto.parentId());
-        var responseDto = postMapper.toPostResponseDto(post, accountService.getCurrentUserId());
+
+        var responseDto = getPostResponseDto(post);
         log.info("Обновлен пост " + responseDto.id());
         return ResponseEntity.ok(responseDto);
     }
@@ -82,7 +85,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostResponseDto> get(@RequestParam Long id) {
         var post = postService.getPost(id);
-        var responseDto = postMapper.toPostResponseDto(post, accountService.getCurrentUserId());
+        var responseDto = getPostResponseDto(post);
         log.info("Получен пост " + responseDto.id());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -103,6 +106,15 @@ public class PostController {
                 requestDto.authorId(),
                 requestDto.parentId(),
                 requestDto.files());
-        return ResponseEntity.ok(postMapper.toPostResponseDto(post, accountService.getCurrentUserId()));
+        return ResponseEntity.ok(getPostResponseDto(post));
+    }
+
+    private PostResponseDto getPostResponseDto(Post post) {
+        Account currentUser = accountService.getCurrentUser();
+        return postMapper.toPostResponseDto(
+                post,
+                currentUser.getId(),
+                currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+        );
     }
 }

@@ -1,6 +1,5 @@
 package edu.tinkoff.ninjamireaclone.scheduler.job;
 
-import edu.tinkoff.ninjamireaclone.model.Post;
 import edu.tinkoff.ninjamireaclone.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ public class CleanUpCommentsJob extends QuartzJobBean {
     @Override
     protected void executeInternal(@NotNull JobExecutionContext context) {
         var deletedComments = postService.cleanUpComments();
-        log.info("Удалены комментарии:");
-        log.info(deletedComments.stream().map(Post::getText).toList().toString());
+        log.info("Удалены комментарии: " + deletedComments);
     }
 }
