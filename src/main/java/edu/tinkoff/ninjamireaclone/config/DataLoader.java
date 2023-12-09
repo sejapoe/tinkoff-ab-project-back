@@ -44,6 +44,7 @@ public class DataLoader implements ApplicationRunner {
         initRoles();
         initRoot();
         initCourses();
+        initNewsRoot();
         initAdmin();
     }
 
@@ -174,6 +175,15 @@ public class DataLoader implements ApplicationRunner {
 
         rights.setPrivilege(createSubjectPrivilege);
         sectionRightsRepository.save(rights);
+    }
+
+    private void initNewsRoot() {
+        if (sectionRepository.existsById(NEWS_ROOT_ID)) return;
+
+        entityManager.createNativeQuery("INSERT INTO section (id, name) VALUES (?, ?)")
+                .setParameter(1, NEWS_ROOT_ID)
+                .setParameter(2, "news_root")
+                .executeUpdate();
     }
 
     private void initAdmin() {
