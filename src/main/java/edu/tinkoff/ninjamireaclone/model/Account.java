@@ -1,8 +1,7 @@
 package edu.tinkoff.ninjamireaclone.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "account")
 public class Account implements UserDetails {
 
