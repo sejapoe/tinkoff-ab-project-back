@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long>, QuerydslPredicateExecutor<Section> {
+    Section findByParent_Id(Long id);
 }

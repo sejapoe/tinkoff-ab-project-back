@@ -29,7 +29,7 @@ public class Topic {
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private List<Post> posts;

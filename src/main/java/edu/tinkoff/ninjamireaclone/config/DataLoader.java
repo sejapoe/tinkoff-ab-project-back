@@ -20,7 +20,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
-
+    public static final long NEWS_ROOT_ID = -2;
     public static final int NUM_COURSES = 6;
     private final SectionRepository sectionRepository;
     private final RoleRepository roleRepository;
