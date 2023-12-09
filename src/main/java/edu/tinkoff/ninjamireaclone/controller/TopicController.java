@@ -72,21 +72,6 @@ public class TopicController {
         return ResponseEntity.ok(topicId);
     }
 
-//    @Operation(description = "Обновление топика")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Топик обновлен"),
-//            @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
-//            @ApiResponse(responseCode = "404", description = "Топик не найден")
-//    })
-//    @PreAuthorize("hasAuthority('DELETE_TOPIC')")
-//    @PutMapping
-//    public ResponseEntity<ShortTopicResponseDto> update(@RequestBody @Valid UpdateTopicRequestDto requestDto) {
-//        var topic = topicService.updateTopic(topicMapper.toTopic(requestDto), requestDto.parentId());
-//        var responseDto = topicMapper.toShortTopicResponseDto(topic);
-//        log.info("Обновлен топик " + responseDto.id());
-//        return ResponseEntity.ok(responseDto);
-//    }
-
     @Operation(description = "Получение топика")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Топик получен"),

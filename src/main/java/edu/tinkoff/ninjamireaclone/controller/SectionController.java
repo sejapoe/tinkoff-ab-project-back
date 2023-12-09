@@ -81,19 +81,6 @@ public class SectionController {
         return ResponseEntity.ok(sectionMapper.toShortDto(section));
     }
 
-//    @Operation(description = "Обновление раздела")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Раздел обновлен",
-//                    content = @Content(schema = @Schema(implementation = SectionResponseDto.class))),
-//            @ApiResponse(responseCode = "400", description = "Неправильный формат данных"),
-//            @ApiResponse(responseCode = "404", description = "Родительский раздел не найден")
-//    })
-//    @PutMapping
-//    public ResponseEntity<ShortSectionResponseDto> updateSection(@RequestBody @Valid UpdateSectionRequestDto createSectionDto) {
-//        Section section = sectionService.update(createSectionDto.id(), createSectionDto.name());
-//        return ResponseEntity.ok(sectionMapper.toShortDto(section));
-//    }
-
     @Operation(description = "Удаление раздела")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Раздел удален"),
