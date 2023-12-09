@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.model.Privilege;
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.SectionRights;
 import edu.tinkoff.ninjamireaclone.repository.SectionRightsRepository;
@@ -18,11 +18,11 @@ public class SectionRightsService {
     private final SectionRightsRepository sectionRightsRepository;
     private final RoleService roleService;
 
-    private Optional<SectionRights> getRightsForRole(Section section, Role role) {
-        Optional<SectionRights> sectionRights = sectionRightsRepository.findBySectionAndRole(section, role);
+    private Optional<SectionRights> getRightsForRole(Section section, Privilege privilege) {
+        Optional<SectionRights> sectionRights = sectionRightsRepository.findBySectionAndPrivilege(section, privilege);
         while (sectionRights.isEmpty() && Objects.nonNull(section.getParent())) {
             section = section.getParent();
-            sectionRights = sectionRightsRepository.findBySectionAndRole(section, role);
+            sectionRights = sectionRightsRepository.findBySectionAndPrivilege(section, privilege);
         }
         return sectionRights;
     }
@@ -34,10 +34,11 @@ public class SectionRightsService {
                 .getAuthorities()
                 .stream()
                 .map(grantedAuthority -> {
-                            if (grantedAuthority.getAuthority().equals("ROLE_ANONYMOUS")) {
+                    if (grantedAuthority.getAuthority().startsWith("ROLE_")) {
+                        //  pass roles, because we now use privileges in section rights
                                 return Optional.<SectionRights>empty();
                             }
-                            var role = roleService.getRoleByName(grantedAuthority.getAuthority());
+                    var role = roleService.getPrivilegeByName(grantedAuthority.getAuthority());
                             return getRightsForRole(section, role);
                         }
                 )

@@ -6,6 +6,7 @@ import edu.tinkoff.ninjamireaclone.exception.NoSuchRoleException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,5 +49,10 @@ public class AppExceptionHandler {
     @ExceptionHandler(ParseException.class)
     public ProblemDetail handleParseException(ParseException parseException) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, parseException.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 }

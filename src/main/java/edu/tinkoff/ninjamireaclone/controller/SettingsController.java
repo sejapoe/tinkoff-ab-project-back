@@ -1,6 +1,5 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
-import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
 import edu.tinkoff.ninjamireaclone.dto.settings.request.UpdateTriggerRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.settings.response.TriggerResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.SettingsMapper;
@@ -10,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ public class SettingsController {
     private final SettingsMapper settingsMapper;
 
     @PutMapping("/job")
-    @IsAdmin
+    @PreAuthorize("hasAuthority('MANAGE_JOBS')")
     public ResponseEntity<TriggerResponseDto> updateTrigger(@RequestBody @Valid UpdateTriggerRequestDto requestDto)
     {
         var trigger = settingsService.updateTrigger(requestDto.triggerKey(), requestDto.group(), requestDto.cron());
