@@ -31,8 +31,11 @@ public class DataLoader implements ApplicationRunner {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private Section root;
+    private Section newsRoot;
+
     private Privilege defaultPrivilege;
     private Privilege createSubjectPrivilege;
+    private Privilege createNewsPrivilege;
 
     private Role userRole;
     private Role moderatorRole;
@@ -65,7 +68,7 @@ public class DataLoader implements ApplicationRunner {
         createSubjectPrivilege = createPrivilegeIfDoesntExists("CREATE_SUBJECT");
         var deleteSubjectPrivilege = createPrivilegeIfDoesntExists("DELETE_SUBJECT");
 
-        var createNewsPrivilege = createPrivilegeIfDoesntExists("CREATE_NEWS");
+        createNewsPrivilege = createPrivilegeIfDoesntExists("CREATE_NEWS");
 
         // user based privileges
         var banUserPrivilege = createPrivilegeIfDoesntExists("BAN_USER");
@@ -178,12 +181,29 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void initNewsRoot() {
-        if (sectionRepository.existsById(NEWS_ROOT_ID)) return;
+        newsRoot = sectionRepository.findById(NEWS_ROOT_ID).orElseGet(() -> {
+            entityManager.createNativeQuery("INSERT INTO section (id, name) VALUES (?, ?)")
+                    .setParameter(1, NEWS_ROOT_ID)
+                    .setParameter(2, "news_root")
+                    .executeUpdate();
 
-        entityManager.createNativeQuery("INSERT INTO section (id, name) VALUES (?, ?)")
-                .setParameter(1, NEWS_ROOT_ID)
-                .setParameter(2, "news_root")
-                .executeUpdate();
+            return sectionRepository.getReferenceById(NEWS_ROOT_ID);
+        });
+
+        initNewsRootRights();
+    }
+
+    private void initNewsRootRights() {
+        if (sectionRightsRepository.existsBySection_Id(NEWS_ROOT_ID)) {
+            return;
+        }
+
+        var rights = SectionRights.builder()
+                .rights(new Rights(true, false))
+                .section(newsRoot)
+                .privilege(createNewsPrivilege)
+                .build();
+        sectionRightsRepository.save(rights);
     }
 
     private void initAdmin() {
