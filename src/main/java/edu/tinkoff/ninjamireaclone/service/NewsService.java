@@ -9,6 +9,7 @@ import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import edu.tinkoff.ninjamireaclone.model.*;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
+import edu.tinkoff.ninjamireaclone.repository.SectionRightsRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import jakarta.persistence.EntityManager;
@@ -33,25 +34,29 @@ public class NewsService {
     private final StorageService storageService;
     private final AccountService accountService;
     private final PostRepository postRepository;
+    private final RoleService roleService;
+    private final SectionRightsRepository sectionRightsRepository;
 
     @Transactional
     public Section createNews(String title, String text, List<MultipartFile> files) {
         var rootPost = createRootPost(text, files);
         var rootTopic = createRootTopic(title, rootPost);
 
-//         todo: when new role system merged
-//        var createCommentPrivilege = accountService.create
-//
-//        var sectionRights = new SectionRights();
-//        sectionRights.setSection(section);
-//
+        rootPost.setParent(rootTopic);
 
         var section = Section.builder()
                 .name(title)
+                .parent(getNewsRoot())
                 .topics(Lists.newArrayList(rootTopic))
                 .build();
 
-        return sectionRepository.save(section);
+        rootTopic.setParent(section);
+
+        var savedSection = sectionRepository.save(section);
+
+        initNewsRights(savedSection);
+
+        return savedSection;
     }
 
     private Topic createRootTopic(String title, Post rootPost) {
@@ -73,8 +78,21 @@ public class NewsService {
                 .author(currentUser)
                 .text(text)
                 .isAnonymous(false)
+                .isOpening(true)
                 .documents(documents)
                 .build();
+    }
+
+    private void initNewsRights(Section savedSection) {
+        var createCommentPrivilege = roleService.getPrivilegeByName("CREATE_COMMENT");
+
+        var sectionRights = SectionRights.builder()
+                .rights(new Rights(false, true))
+                .privilege(createCommentPrivilege)
+                .section(savedSection)
+                .build();
+
+        sectionRightsRepository.save(sectionRights);
     }
 
     @Transactional
@@ -93,7 +111,7 @@ public class NewsService {
         var section = sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("News with id %s is not found".formatted(id)));
 
-        if (section.getParent().getId() != DataLoader.NEWS_ROOT_ID) {
+        if (Objects.isNull(section.getParent()) || section.getParent().getId() != DataLoader.NEWS_ROOT_ID) {
             throw new NotFoundException("Section you are trying to get is not news");
         }
 
@@ -101,7 +119,7 @@ public class NewsService {
     }
 
     @Transactional
-    public Topic getRootTopic(Section news) {
+    public Topic getNewsRootTopic(Section news) {
         var queryFactory = new JPAQueryFactory(entityManager);
         var rootTopic = queryFactory
                 .selectFrom(QTopic.topic)
@@ -111,6 +129,7 @@ public class NewsService {
 
         if (Objects.isNull(rootTopic)
                 || !rootTopic.getName().equals(news.getName())
+                || rootTopic.getPosts().isEmpty()
         ) {
             throw new ConflictException("News is corrupted");
         }
@@ -119,9 +138,14 @@ public class NewsService {
     }
 
     @Transactional
+    public Post getNewsRootTopicPost(Section news) {
+        return getNewsRootTopic(news).getPosts().get(0);
+    }
+
+    @Transactional
     public Page<Topic> getComments(Long newsId, Pageable pageable) {
         var news = getNews(newsId);
-        var rootTopic = getRootTopic(news);
+        var rootTopic = getNewsRootTopic(news);
 
         var predicate = ExpressionUtils.and(
                 QTopic.topic.id.ne(rootTopic.getId()),
@@ -154,7 +178,7 @@ public class NewsService {
 
         try {
             var news = getNews(topic.getParent().getId());
-            var rootTopic = getRootTopic(news);
+            var rootTopic = getNewsRootTopic(news);
 
             if (topic.getId().equals(rootTopic.getId())) {
                 throw new ConflictException("It is a root topic");
@@ -183,13 +207,19 @@ public class NewsService {
     }
 
     @Transactional
-    public Topic createComment(Long newsId, String text) {
+    public Page<Post> getThread(Long threadId, Pageable pageable) {
+        return getThread(getThread(threadId), pageable);
+    }
+
+    @Transactional
+    public Topic createComment(Long newsId, String text, boolean isAnonymous) {
         var account = accountService.getCurrentUser();
         var news = getNews(newsId);
 
         var post = Post.builder()
                 .author(account)
                 .text(text)
+                .isAnonymous(isAnonymous)
                 .build();
 
         var topic = Topic.builder()
@@ -198,18 +228,21 @@ public class NewsService {
                 .posts(Lists.newArrayList(post))
                 .build();
 
+        post.setParent(topic);
+
         return topicRepository.save(topic);
     }
 
     @Transactional
-    public Post createThreadComment(Long threadId, String text) {
+    public Post createThreadComment(Long threadId, String text, boolean isAnonymous) {
         var account = accountService.getCurrentUser();
         var thread = getThread(threadId);
 
         var post = Post.builder()
+                .parent(thread)
                 .author(account)
                 .text(text)
-                .parent(thread)
+                .isAnonymous(isAnonymous)
                 .build();
 
         return postRepository.save(post);

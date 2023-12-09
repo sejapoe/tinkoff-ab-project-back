@@ -40,6 +40,9 @@ public class Post {
     @Column(name = "is_anonymous", nullable = false)
     private boolean isAnonymous;
 
+    @Column(name = "op", nullable = false)
+    private boolean isOpening;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",
