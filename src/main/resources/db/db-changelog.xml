@@ -34,5 +34,9 @@
     <include file="/db/migrations/2023-12-08-01-create-rev-info.xml"/>
     <include file="/db/migrations/2023-12-08-02-create-post-audit.xml"/>
     <include file="/db/migrations/2023-12-08-03-add-updated_at-to-post.xml"/>
+    <include file="/db/migrations/2023-12-08-01-create-privileges.xml"/>
+    <include file="/db/migrations/2023-12-08-02-create-role-privileges.xml"/>
+    <include file="/db/migrations/2023-12-09-01-modify-create-action-rights-fk.xml"/>
+    <include file="/db/migrations/2023-12-09-02-delegate-id-generation-to-database.xml"/>
 
 </databaseChangeLog>

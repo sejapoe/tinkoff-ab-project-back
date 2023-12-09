@@ -1,9 +1,7 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
-import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
 import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.CreateTopicRequestDto;
-import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
@@ -24,6 +22,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/topic")
@@ -45,8 +44,8 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных")
     })
     @Schema(implementation = TopicResponseDto.class)
-    @PostMapping(consumes =
-            {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAuthority('CREATE_TOPIC')")
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ShortTopicResponseDto> create(@ModelAttribute @Valid CreateTopicRequestDto requestDto) {
         var topic = topicService.createTopicWithPost(topicMapper.toTopic(requestDto),
                 postMapper.toPost(requestDto),
@@ -65,27 +64,12 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
-    @IsAdmin
+    @PreAuthorize("hasAuthority('DELETE_TOPIC')")
     @DeleteMapping
     public ResponseEntity<Long> delete(@RequestParam Long id) {
         var topicId = topicService.deleteTopic(id);
         log.info("Удален топик " + topicId);
         return ResponseEntity.ok(topicId);
-    }
-
-    @Operation(description = "Обновление топика")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Топик обновлен"),
-            @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
-            @ApiResponse(responseCode = "404", description = "Топик не найден")
-    })
-    @IsAdmin
-    @PutMapping
-    public ResponseEntity<ShortTopicResponseDto> update(@RequestBody @Valid UpdateTopicRequestDto requestDto) {
-        var topic = topicService.updateTopic(topicMapper.toTopic(requestDto), requestDto.parentId());
-        var responseDto = topicMapper.toShortTopicResponseDto(topic);
-        log.info("Обновлен топик " + responseDto.id());
-        return ResponseEntity.ok(responseDto);
     }
 
     @Operation(description = "Получение топика")
@@ -94,6 +78,7 @@ public class TopicController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Топик не найден")
     })
+    @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping("/{id}")
     public ResponseEntity<TopicResponseDto> get(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         var topic = topicService.getTopic(id);

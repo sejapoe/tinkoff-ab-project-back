@@ -2,7 +2,6 @@ package edu.tinkoff.ninjamireaclone.controller;
 
 import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.section.request.CreateSectionRequestDto;
-import edu.tinkoff.ninjamireaclone.dto.section.request.UpdateSectionRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.SectionResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
@@ -24,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,6 +42,7 @@ public class SectionController {
                     content = @Content(schema = @Schema(implementation = SectionResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Корневой раздел отсутствует")
     })
+    @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping
     public ResponseEntity<SectionResponseDto> getRootSection(@ParameterObject PageRequestDto pageRequestDto) {
         Section section = sectionService.getRoot();
@@ -54,6 +55,7 @@ public class SectionController {
                     content = @Content(schema = @Schema(implementation = SectionResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Раздел не найден")
     })
+    @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<SectionResponseDto> getSection(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         Section section = sectionService.get(id);
@@ -79,20 +81,7 @@ public class SectionController {
         return ResponseEntity.ok(sectionMapper.toShortDto(section));
     }
 
-    @Operation(description = "Обновление раздела")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Раздел обновлен",
-                    content = @Content(schema = @Schema(implementation = SectionResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "Неправильный формат данных"),
-            @ApiResponse(responseCode = "404", description = "Родительский раздел не найден")
-    })
-    @PutMapping
-    public ResponseEntity<ShortSectionResponseDto> updateSection(@RequestBody @Valid UpdateSectionRequestDto createSectionDto) {
-        Section section = sectionService.update(createSectionDto.id(), createSectionDto.name());
-        return ResponseEntity.ok(sectionMapper.toShortDto(section));
-    }
-
-    @Operation(description = "Обновление раздела")
+    @Operation(description = "Удаление раздела")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Раздел удален"),
             @ApiResponse(responseCode = "404", description = "Раздел не найден")

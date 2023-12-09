@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.config.DataLoader;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
@@ -132,7 +133,7 @@ public class SectionService {
      */
     @Transactional
     public Section getRoot() {
-        return sectionRepository.findOne(QSection.section.parent.isNull()).orElseThrow(() ->
+        return sectionRepository.findById(DataLoader.ROOT_ID).orElseThrow(() ->
                 new NotFoundException("Root section is not found!"));
     }
 }

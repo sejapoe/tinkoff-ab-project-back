@@ -1,7 +1,5 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
-import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
-import edu.tinkoff.ninjamireaclone.annotation.IsUser;
 import edu.tinkoff.ninjamireaclone.dto.account.request.UpdateAccountRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.account.response.AccountResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.common.PageRequestDto;
@@ -20,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,6 +38,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Аккаунт не найден")
     })
+    @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponseDto> get(@PathVariable Long id) {
         var account = accountService.getById(id);
@@ -52,7 +52,7 @@ public class AccountController {
             @ApiResponse(responseCode = "200", description = "Аккаунт найден"),
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
     })
-    @IsAdmin
+    @PreAuthorize("hasAuthority('AUDIT_USER')")
     @GetMapping
     public ResponseEntity<PageResponseDto<AccountResponseDto>> getAll(@ParameterObject PageRequestDto pageRequestDto) {
         var accounts = accountService.getAll(pageMapper.fromRequestDto(pageRequestDto));
@@ -66,7 +66,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Аккаунт не найден")
     })
-    @IsAdmin
+    @PreAuthorize("hasAuthority('BAN_USER')")
     @DeleteMapping
     public ResponseEntity<Long> delete(@RequestParam Long id) {
         var accountId = accountService.deleteAccount(id);
@@ -80,7 +80,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Неверный формат данных"),
             @ApiResponse(responseCode = "404", description = "Аккаунт не найден")
     })
-    @IsUser
+    @PreAuthorize("hasAuthority('DEFAULT')")
     @PatchMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AccountResponseDto> updateAccount(@ModelAttribute UpdateAccountRequestDto updateAccountRequestDto) {
         if (accountService.checkFakeId(updateAccountRequestDto.id())) {
@@ -90,5 +90,23 @@ public class AccountController {
         Account updated = accountService.update(account, updateAccountRequestDto.avatar());
         log.info("Изменен аккаунт " + updated.getId());
         return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));
+    }
+
+    @Operation(description = "Повышение пользователя")
+    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
+    @PatchMapping("/{id}/promote")
+    public ResponseEntity<AccountResponseDto> promote(@PathVariable Long id) {
+        var account = accountService.promote(id);
+        log.info("Аккаунт " + account.getId() + " стал модератором");
+        return ResponseEntity.ok(accountMapper.toAccountResponseDto(account));
+    }
+
+    @Operation(description = "Повышение пользователя")
+    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
+    @PatchMapping("/{id}/demote")
+    public ResponseEntity<AccountResponseDto> demote(@PathVariable Long id) {
+        var account = accountService.demote(id);
+        log.info("Аккаунт " + account.getId() + " перестал быть модератором");
+        return ResponseEntity.ok(accountMapper.toAccountResponseDto(account));
     }
 }

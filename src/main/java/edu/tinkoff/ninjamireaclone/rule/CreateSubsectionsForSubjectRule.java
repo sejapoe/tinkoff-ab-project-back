@@ -1,7 +1,6 @@
 package edu.tinkoff.ninjamireaclone.rule;
 
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Role;
 import edu.tinkoff.ninjamireaclone.model.Section;
 import edu.tinkoff.ninjamireaclone.model.SectionRights;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
@@ -42,7 +41,8 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
         if (!section.getParent().getName().endsWith("курс")
                 || !Objects.isNull(section.getParent().getParent().getParent())) return section;
 
-        Role userRole = roleService.getDefaultRole();
+        var createTopicPrivilege = roleService.getPrivilegeByName("CREATE_TOPIC");
+        var defaultPrivilege = roleService.getDefaultPrivilege();
 
         log.info("Creating subsections for `%s`".formatted(section.getName()));
 
@@ -52,7 +52,7 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
             subsection.setName(name);
 
             var sectionRights = new SectionRights();
-            sectionRights.setRole(userRole);
+            sectionRights.setPrivilege(createTopicPrivilege);
             sectionRights.setRights(new Rights(false, true));
             sectionRights.setSection(subsection);
 
@@ -64,7 +64,7 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
         section.setSubsections(subsections);
 
         var sectionRights = new SectionRights();
-        sectionRights.setRole(userRole);
+        sectionRights.setPrivilege(defaultPrivilege);
         sectionRights.setRights(new Rights(false, false));
         sectionRights.setSection(section);
         section.setSectionRights(new ArrayList<>(List.of(sectionRights)));
