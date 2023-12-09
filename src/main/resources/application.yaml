@@ -2,6 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/test_db
     driver-class-name: org.postgresql.Driver
+    username: postgres
   liquibase:
     change-log: classpath:db/db-changelog.xml
   jpa:
@@ -38,8 +39,6 @@ spring:
   profiles:
     include: prod
 
-storage:
-  location: /tmp/ninja-mirea-clone/storage
 
 scheduler:
   permanent-jobs-group-name: PERMANENT
