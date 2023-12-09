@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="2023-12-09-01-remove-old-create-action-rights-fk" author="Sejapoe">
+        <dropForeignKeyConstraint baseTableName="section_rights" constraintName="FK_SECTION_RIGHTS_ON_ROLE"/>
+
+        <renameColumn tableName="section_rights" oldColumnName="role_id" newColumnName="privilege_id"/>
+    </changeSet>
+
+    <changeSet id="2023-12-09-02-add-create-action-rights-fk" author="Sejapoe">
+        <sql>
+            UPDATE section_rights
+            SET privilege_id=null;
+        </sql>
+
+        <addForeignKeyConstraint baseColumnNames="privilege_id" baseTableName="section_rights"
+                                 constraintName="FK_SECTION_RIGHTS_ON_PRIVILEGE" referencedColumnNames="id"
+                                 referencedTableName="privilege"/>
+    </changeSet>
+</databaseChangeLog>

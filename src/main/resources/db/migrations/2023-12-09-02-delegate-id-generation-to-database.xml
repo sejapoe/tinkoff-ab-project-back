@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="2023-12-09-02-delegate-id-generation-to-database" author="Sejapoe">
+        <sql>
+            ALTER TABLE section
+                ALTER COLUMN id
+                    SET DEFAULT nextval('section_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE topic
+                ALTER COLUMN id
+                    SET DEFAULT nextval('topic_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE account
+                ALTER COLUMN id
+                    SET DEFAULT nextval('account_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE post
+                ALTER COLUMN id
+                    SET DEFAULT nextval('post_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE document
+                ALTER COLUMN id
+                    SET DEFAULT nextval('document_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE role
+                ALTER COLUMN id
+                    SET DEFAULT nextval('role_seq'::regclass);
+        </sql>
+        <sql>
+            ALTER TABLE section_rights
+                ALTER COLUMN id
+                    SET DEFAULT nextval('section_rights_seq'::regclass);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
