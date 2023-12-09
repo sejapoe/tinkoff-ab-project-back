@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2023-12-08-03-add-updated_at-to-post" author="JudexMars">
+        <addColumn tableName="post">
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <sql>
+           update post
+           set updated_at = created_at
+           where updated_at is null
+        </sql>
+    </changeSet>
+</databaseChangeLog>

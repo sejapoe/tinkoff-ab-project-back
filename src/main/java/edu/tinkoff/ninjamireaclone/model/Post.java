@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -12,6 +16,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Audited
+@AuditTable(value = "post_audit")
 @Table(name = "post")
 public class Post {
 
@@ -23,21 +29,30 @@ public class Post {
     @Column(name = "text")
     private String text;
 
+    @NotAudited
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Account author;
 
+    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Topic parent;
 
+    @NotAudited
     @Column(name = "is_anonymous", nullable = false)
     private boolean isAnonymous;
 
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",
