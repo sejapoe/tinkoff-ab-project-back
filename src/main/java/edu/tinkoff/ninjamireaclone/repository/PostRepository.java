@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, QuerydslPredi
             WITH deleted AS (DELETE FROM post WHERE id in (
                 SELECT id
                 FROM post
-                WHERE created_at + interval '2 years' < current_timestamp
+                WHERE op=false and created_at + interval '2 years' < current_timestamp
                 FETCH FIRST :amount ROWS ONLY
             ) RETURNING *)
             SELECT COUNT(*) FROM deleted;""",
