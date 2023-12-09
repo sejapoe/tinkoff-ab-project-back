@@ -1,8 +1,8 @@
 package edu.tinkoff.ninjamireaclone.controller;
 
+import edu.tinkoff.ninjamireaclone.annotation.IsAdmin;
 import edu.tinkoff.ninjamireaclone.dto.audit.PostAuditResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.AuditMapper;
-import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.AuditService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +23,8 @@ public class AuditController {
 
     private final AuditService auditService;
     private final AuditMapper auditMapper;
-    private final AccountService accountService;
 
+    @IsAdmin
     @GetMapping
     public List<PostAuditResponseDto> getRevisions(@RequestParam Long id) {
         return auditService.getRevisions(id).stream().map(auditMapper::toPostAuditResponseDto).toList();
