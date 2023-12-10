@@ -34,11 +34,11 @@ public class SectionRightsService {
                 .getAuthorities()
                 .stream()
                 .map(grantedAuthority -> {
-                    if (grantedAuthority.getAuthority().startsWith("ROLE_")) {
-                        //  pass roles, because we now use privileges in section rights
+                            if (grantedAuthority.getAuthority().startsWith("ROLE_")) {
+                                //  pass roles, because we now use privileges in section rights
                                 return Optional.<SectionRights>empty();
                             }
-                    var role = roleService.getPrivilegeByName(grantedAuthority.getAuthority());
+                            var role = roleService.getPrivilegeByName(grantedAuthority.getAuthority());
                             return getRightsForRole(section, role);
                         }
                 )

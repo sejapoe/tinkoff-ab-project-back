@@ -23,6 +23,9 @@ public record PostResponseDto(
         String authorName,
         @JsonProperty("created_at")
         LocalDateTime createdAt,
+        @JsonProperty("updated_at")
+        LocalDateTime updatedAt,
+        boolean modified,
         List<DocumentResponseDto> documents
 ) {
 }

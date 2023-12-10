@@ -27,8 +27,7 @@ public class SettingsController {
 
     @PutMapping("/job")
     @PreAuthorize("hasAuthority('MANAGE_JOBS')")
-    public ResponseEntity<TriggerResponseDto> updateTrigger(@RequestBody @Valid UpdateTriggerRequestDto requestDto)
-    {
+    public ResponseEntity<TriggerResponseDto> updateTrigger(@RequestBody @Valid UpdateTriggerRequestDto requestDto) {
         var trigger = settingsService.updateTrigger(requestDto.triggerKey(), requestDto.group(), requestDto.cron());
         log.info("Изменены настройки триггера: " + trigger.getKey());
         return ResponseEntity.ok(settingsMapper.toTriggerResponseDto(trigger));
