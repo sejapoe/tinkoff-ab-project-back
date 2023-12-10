@@ -53,12 +53,13 @@ public interface PostMapper {
     PostResponseDto toPostResponseDto(Post post, @Context Long userId, @Context boolean isAdmin);
 
     default boolean getModified(Post post) {
+        if (post.getUpdatedAt() == null) { return false; }
         return !post.getCreatedAt().truncatedTo(ChronoUnit.SECONDS)
                 .equals(post.getUpdatedAt().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Named("toSeconds")
     default LocalDateTime toSeconds(LocalDateTime time) {
-        return time.truncatedTo(ChronoUnit.SECONDS);
+        return time != null ? time.truncatedTo(ChronoUnit.SECONDS): null;
     }
 }

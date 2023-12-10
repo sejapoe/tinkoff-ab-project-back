@@ -8,8 +8,8 @@
         <sql>
             UPDATE post p
             SET op = true
-            WHERE (id, parent_id) IN (SELECT DISTINCT
-            ON (parent_id) id, parent_id
+            WHERE (id, parent_id) IN (
+                SELECT DISTINCT ON (parent_id) id, parent_id
             FROM post
             ORDER BY parent_id, id
                 );

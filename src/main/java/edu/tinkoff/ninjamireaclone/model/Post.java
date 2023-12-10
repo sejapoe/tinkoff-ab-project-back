@@ -58,6 +58,7 @@ public class Post {
     @Column(name = "op", nullable = false)
     private boolean isOpening;
 
+    @NotAudited
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",
@@ -69,10 +70,5 @@ public class Post {
     public void addDocument(Document document) {
         this.documents.add(document);
         document.getPosts().add(this);
-    }
-
-    public void removeDocument(Document document) {
-        this.documents.remove(document);
-        document.getPosts().remove(this);
     }
 }
