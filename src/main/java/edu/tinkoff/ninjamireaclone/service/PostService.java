@@ -48,7 +48,6 @@ public class PostService {
     @Transactional
     public Post updatePost(Post post, Long authorId, Long parentId) {
         var found = getPost(post.getId());
-        System.out.println("found: " + found.getCreatedAt());
         post.setCreatedAt(found.getCreatedAt());
         post.setDocuments(found.getDocuments());
         init(post, authorId, parentId);

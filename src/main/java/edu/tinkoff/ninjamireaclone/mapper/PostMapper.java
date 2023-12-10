@@ -8,6 +8,10 @@ import edu.tinkoff.ninjamireaclone.model.Post;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Mapper(componentModel = "spring")
 public interface PostMapper {
@@ -35,10 +39,23 @@ public interface PostMapper {
     @Mapping(target = "anonymous", source = "isAnonymous")
     Post toPost(UpdatePostRequestDto requestDto);
 
-    @Mapping(target = "isAnonymous", source = "post.anonymous")
+    @Mapping(target = "isAnonymous", source = "anonymous")
     @Mapping(target = "parentId", source = "parent.id")
     @Mapping(target = "isAuthor", expression = "java(post.getAuthor().getId() == userId)")
     @Mapping(target = "authorId", expression = "java(!isAdmin && post.isAnonymous() ? -1L : post.getAuthor().getId())")
     @Mapping(target = "authorName", expression = "java(!isAdmin && post.isAnonymous() ? \"Аноним\" : post.getAuthor().getDisplayName())")
+    @Mapping(target = "modified", expression = "java(getModified(post))")
+    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "toSeconds")
+    @Mapping(target = "updatedAt", source = "updatedAt", qualifiedByName = "toSeconds")
     PostResponseDto toPostResponseDto(Post post, @Context Long userId, @Context boolean isAdmin);
+
+    default boolean getModified(Post post) {
+        return !post.getCreatedAt().truncatedTo(ChronoUnit.SECONDS)
+                .equals(post.getUpdatedAt().truncatedTo(ChronoUnit.SECONDS));
+    }
+
+    @Named("toSeconds")
+    default LocalDateTime toSeconds(LocalDateTime time) {
+        return time.truncatedTo(ChronoUnit.SECONDS);
+    }
 }

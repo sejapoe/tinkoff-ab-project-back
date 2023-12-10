@@ -16,7 +16,7 @@ public record PostResponseDto(
 
         @JsonProperty("is_anonymous")
         boolean isAnonymous,
-        
+
         @JsonProperty("author_id")
         long authorId,
         @JsonProperty("author_name")
@@ -25,6 +25,7 @@ public record PostResponseDto(
         LocalDateTime createdAt,
         @JsonProperty("updated_at")
         LocalDateTime updatedAt,
+        boolean modified,
         List<DocumentResponseDto> documents
 ) {
 }

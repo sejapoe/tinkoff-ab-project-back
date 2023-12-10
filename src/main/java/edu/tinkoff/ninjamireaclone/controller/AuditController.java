@@ -27,6 +27,6 @@ public class AuditController {
     @PreAuthorize("hasAuthority('AUDIT_COMMENT')")
     @GetMapping
     public List<PostAuditResponseDto> getRevisions(@RequestParam Long id) {
-        return auditService.getRevisions(id).stream().map(auditMapper::toPostAuditResponseDto).toList();
+        return auditService.getPostRevisions(id).stream().map(auditMapper::toPostAuditResponseDto).toList();
     }
 }

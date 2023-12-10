@@ -7,7 +7,7 @@
     <changeSet id="2023-12-08-02-create-post-audit" author="JudexMars">
         <createTable tableName="post_audit">
             <column name="id" type="bigint">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="post_audit_pk" />
+                <constraints nullable="false" primaryKey="true" primaryKeyName="post_audit_pk"/>
             </column>
             <column name="rev" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="post_audit_pk" referencedTableName="revinfo"

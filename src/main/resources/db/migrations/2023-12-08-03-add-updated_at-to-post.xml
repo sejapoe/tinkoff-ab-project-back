@@ -11,9 +11,9 @@
             </column>
         </addColumn>
         <sql>
-           update post
-           set updated_at = created_at
-           where updated_at is null
+            update post
+            set updated_at = created_at
+            where updated_at is null
         </sql>
     </changeSet>
 </databaseChangeLog>

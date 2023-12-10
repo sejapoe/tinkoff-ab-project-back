@@ -17,9 +17,10 @@ public class SettingsService {
 
     /**
      * Update job trigger
-     * @param key key of the trigger
+     *
+     * @param key   key of the trigger
      * @param group group of the trigger
-     * @param cron new cron expression
+     * @param cron  new cron expression
      * @return updated trigger
      */
     @SneakyThrows
