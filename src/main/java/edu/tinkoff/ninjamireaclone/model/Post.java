@@ -1,8 +1,7 @@
 package edu.tinkoff.ninjamireaclone.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.AuditTable;
@@ -18,6 +17,9 @@ import java.util.Set;
 @Setter
 @Audited
 @AuditTable(value = "post_audit")
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "post")
 public class Post {
 
@@ -53,6 +55,9 @@ public class Post {
     private boolean isAnonymous;
 
     @NotAudited
+    @Column(name = "op", nullable = false)
+    private boolean isOpening;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "attachment",
