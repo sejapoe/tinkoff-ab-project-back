@@ -1,6 +1,5 @@
 package edu.tinkoff.ninjamireaclone.service;
 
-import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.AccountAlreadyExistsException;
 import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
@@ -26,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -139,11 +139,7 @@ public class AccountService implements UserDetailsService {
      * @return current user id or -1 if unauthenticated
      */
     public long getCurrentUserId() {
-        try {
-            return getCurrentUser().getId();
-        } catch (AccessDeniedException e) {
-            return -1L;
-        }
+        return Optional.ofNullable(getCurrentUser()).map(Account::getId).orElse(-1L);
     }
 
     public Account getCurrentUser() {
@@ -151,7 +147,8 @@ public class AccountService implements UserDetailsService {
         try {
             return getByName(authentication.getName());
         } catch (ResourceNotFoundException e) {
-            throw new AccessDeniedException("Вы не авторизованы");
+            return null;
+//            throw new AccessDeniedException("Вы не авторизованы");
         }
     }
 

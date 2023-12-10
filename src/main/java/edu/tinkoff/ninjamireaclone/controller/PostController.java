@@ -40,17 +40,9 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Пост не найден")
     })
     @PreAuthorize("hasAuthority('DEFAULT')")
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<PostResponseDto> update(@RequestBody @Valid UpdatePostRequestDto requestDto) {
-        if (accountService.checkFakeId(requestDto.authorId())) {
-            throw new AccessDeniedException("Редактирование чужого поста");
-        }
-
-        var post = postService.updatePost(
-                postMapper.toPost(requestDto),
-                requestDto.authorId(),
-                requestDto.parentId());
-
+        var post = postService.updatePost(requestDto.id(), requestDto.text());
         var responseDto = getPostResponseDto(post);
         log.info("Обновлен пост " + responseDto.id());
         return ResponseEntity.ok(responseDto);
@@ -127,8 +119,8 @@ public class PostController {
         Account currentUser = accountService.getCurrentUser();
         return postMapper.toPostResponseDto(
                 post,
-                currentUser.getId(),
-                currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                accountService.getCurrentUserId(),
+                currentUser != null && currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
         );
     }
 }

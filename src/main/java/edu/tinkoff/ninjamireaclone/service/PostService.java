@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.Post;
@@ -27,6 +28,7 @@ public class PostService {
     private final TopicRepository topicRepository;
     private final StorageService storageService;
     private final TransactionExecutorService transactionExecutorService;
+    private final AccountService accountService;
 
     private void attachDocuments(Post post, Set<Document> documents) {
         for (var d : documents) {
@@ -89,5 +91,4 @@ public class PostService {
         }
         return totalDeleted;
     }
-
 }
