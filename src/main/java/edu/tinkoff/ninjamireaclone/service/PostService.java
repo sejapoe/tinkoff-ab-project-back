@@ -57,6 +57,20 @@ public class PostService {
     }
 
     @Transactional
+    public Post updatePost(Long id, String text) {
+        var post = getPost(id);
+
+        if (accountService.checkFakeId(post.getAuthor().getId())) {
+            throw new AccessDeniedException("Редактирование чужого поста");
+        }
+
+        if (post.getText().equals(text)) return post;
+
+        post.setText(text);
+        return postRepository.save(post);
+    }
+
+    @Transactional
     public Post getPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Пост", id));
     }
