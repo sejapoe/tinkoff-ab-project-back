@@ -247,4 +247,38 @@ public class PostServiceTest extends AbstractBaseTest {
         assertEquals(postCreated.getId(), deleted);
         assertEquals(0, postRepository.findAll().size());
     }
+
+    @Test
+    @Transactional
+    public void cleanUpZeroComments() {
+        // given
+        var sectionGiven = new Section();
+        sectionGiven.setName("Root");
+        sectionGiven = sectionRepository.save(sectionGiven);
+        var topicGiven = new Topic();
+        topicGiven.setName("Main");
+        topicGiven.setParent(sectionGiven);
+        topicGiven = topicRepository.save(topicGiven);
+        var accountGiven = new Account();
+        accountGiven.setName("Astarion");
+        accountGiven.setPassword("12345");
+        accountGiven.setDisplayName("Astarion");
+        accountGiven.setDescription("Cool vampire");
+        accountGiven.setGender(Gender.APACHE_HELICOPTER);
+        accountGiven.setEnabled(true);
+        accountGiven = accountRepository.save(accountGiven);
+
+        var postGiven = new Post();
+        postGiven.setText("Sample");
+
+        for (int i = 0; i < 3; i++) {
+            postService.createPostWithAttachments(postGiven, accountGiven.getId(), topicGiven.getId(), null);
+        }
+
+        // when
+        var result = postService.cleanUpComments();
+
+        // then
+        assertEquals(0, result);
+    }
 }
