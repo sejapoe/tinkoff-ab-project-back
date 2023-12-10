@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CreateSubsectionsForSubjectRule implements Rule<Section> {
 
-    private static final String[] subsectionNames = {"Конспекты семинаров", "Контрольные работы", "Литература"};
+    private static final String[] subsectionNames = {"Конспекты семинаров", "Контрольные работы", "Литература", "Экзамен"};
     private final SectionRepository sectionRepository;
     private final RoleService roleService;
 
