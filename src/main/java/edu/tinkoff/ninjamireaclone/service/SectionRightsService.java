@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -19,12 +18,7 @@ public class SectionRightsService {
     private final RoleService roleService;
 
     private Optional<SectionRights> getRightsForRole(Section section, Privilege privilege) {
-        Optional<SectionRights> sectionRights = sectionRightsRepository.findBySectionAndPrivilege(section, privilege);
-        while (sectionRights.isEmpty() && Objects.nonNull(section.getParent())) {
-            section = section.getParent();
-            sectionRights = sectionRightsRepository.findBySectionAndPrivilege(section, privilege);
-        }
-        return sectionRights;
+        return sectionRightsRepository.findBySectionAndPrivilege(section, privilege);
     }
 
 
