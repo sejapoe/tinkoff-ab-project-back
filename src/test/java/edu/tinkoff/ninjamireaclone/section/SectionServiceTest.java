@@ -80,9 +80,9 @@ public class SectionServiceTest extends AbstractBaseTest {
 
         // then
         assertThat(result.getName()).isEqualTo("[TEST] Линейная алгебра");
-        assertThat(result.getSubsections()).size().isEqualTo(3);
+        assertThat(result.getSubsections()).size().isEqualTo(4);
         assertThat(result.getSubsections().stream().map(Section::getName))
-                .contains("Контрольные работы", "Конспекты семинаров", "Литература");
+                .contains("Контрольные работы", "Конспекты семинаров", "Литература", "Экзамен");
     }
 
     @Test
