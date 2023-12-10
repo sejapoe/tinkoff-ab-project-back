@@ -1,13 +1,10 @@
 package edu.tinkoff.ninjamireaclone.security;
 
-import edu.tinkoff.ninjamireaclone.config.JwtRequestFilter;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -44,19 +41,9 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN)))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .anonymous(httpSecurityAnonymousConfigurer ->
+                        httpSecurityAnonymousConfigurer.authorities("VIEW").init(http))
                 .build();
-    }
-
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("""
-                        ROLE_ADMIN > ROLE_MODERATOR
-                        ROLE_MODERATOR > ROLE_USER
-                        ROLE_USER > ROLE_ANONYMOUS
-                        ROLE_ANONYMOUS > VIEW
-                """);
-        return roleHierarchy;
     }
 
     @Bean

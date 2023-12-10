@@ -1,8 +1,7 @@
 package edu.tinkoff.ninjamireaclone.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -12,6 +11,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "post")
 public class Post {
 
@@ -37,6 +39,9 @@ public class Post {
 
     @Column(name = "is_anonymous", nullable = false)
     private boolean isAnonymous;
+
+    @Column(name = "op", nullable = false)
+    private boolean isOpening;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

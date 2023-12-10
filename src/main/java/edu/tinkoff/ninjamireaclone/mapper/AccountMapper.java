@@ -5,6 +5,7 @@ import edu.tinkoff.ninjamireaclone.dto.account.response.AccountResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.auth.request.SignUpRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.common.PageResponseDto;
 import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
@@ -32,4 +33,8 @@ public interface AccountMapper {
     AccountResponseDto toAccountResponseDto(Account account);
 
     PageResponseDto<AccountResponseDto> toPageResponseDto(Page<Account> page);
+
+    default String roleToString(Role role) {
+        return role.getName();
+    }
 }

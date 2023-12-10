@@ -18,7 +18,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
-
+    public static final long NEWS_ROOT_ID = -2L;
     public static final long ROOT_ID = -1L;
     public static final int NUM_COURSES = 6;
 
@@ -31,8 +31,11 @@ public class DataLoader implements ApplicationRunner {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private Section root;
+    private Section newsRoot;
+
     private Privilege defaultPrivilege;
     private Privilege createSubjectPrivilege;
+    private Privilege createNewsPrivilege;
 
     private Role userRole;
     private Role moderatorRole;
@@ -44,6 +47,7 @@ public class DataLoader implements ApplicationRunner {
         initRoles();
         initRoot();
         initCourses();
+        initNewsRoot();
         initAdmin();
     }
 
@@ -64,7 +68,7 @@ public class DataLoader implements ApplicationRunner {
         createSubjectPrivilege = createPrivilegeIfDoesntExists("CREATE_SUBJECT");
         var deleteSubjectPrivilege = createPrivilegeIfDoesntExists("DELETE_SUBJECT");
 
-        var createNewsPrivilege = createPrivilegeIfDoesntExists("CREATE_NEWS");
+        createNewsPrivilege = createPrivilegeIfDoesntExists("CREATE_NEWS");
 
         // user based privileges
         var banUserPrivilege = createPrivilegeIfDoesntExists("BAN_USER");
@@ -173,6 +177,32 @@ public class DataLoader implements ApplicationRunner {
         rights.setSection(course);
 
         rights.setPrivilege(createSubjectPrivilege);
+        sectionRightsRepository.save(rights);
+    }
+
+    private void initNewsRoot() {
+        newsRoot = sectionRepository.findById(NEWS_ROOT_ID).orElseGet(() -> {
+            entityManager.createNativeQuery("INSERT INTO section (id, name) VALUES (?, ?)")
+                    .setParameter(1, NEWS_ROOT_ID)
+                    .setParameter(2, "news_root")
+                    .executeUpdate();
+
+            return sectionRepository.getReferenceById(NEWS_ROOT_ID);
+        });
+
+        initNewsRootRights();
+    }
+
+    private void initNewsRootRights() {
+        if (sectionRightsRepository.existsBySection_Id(NEWS_ROOT_ID)) {
+            return;
+        }
+
+        var rights = SectionRights.builder()
+                .rights(new Rights(true, false))
+                .section(newsRoot)
+                .privilege(createNewsPrivilege)
+                .build();
         sectionRightsRepository.save(rights);
     }
 

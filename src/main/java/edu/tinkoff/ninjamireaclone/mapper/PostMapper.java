@@ -17,7 +17,8 @@ public interface PostMapper {
     @Mapping(target = "documents", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "author", ignore = true)
-    @Mapping(target = "anonymous", source = "isAnonymous")
+    @Mapping(target = "isAnonymous", source = "isAnonymous")
+    @Mapping(target = "isOpening", expression = "java(false)")
     Post toPost(CreatePostRequestDto requestDto);
 
     @Mapping(target = "parent", ignore = true)
@@ -25,14 +26,16 @@ public interface PostMapper {
     @Mapping(target = "documents", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "author", ignore = true)
-    @Mapping(target = "anonymous", expression = "java(false)")
+    @Mapping(target = "isAnonymous", expression = "java(false)")
+    @Mapping(target = "isOpening", expression = "java(true)")
     Post toPost(CreateTopicRequestDto requestDto);
 
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "documents", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "author", ignore = true)
-    @Mapping(target = "anonymous", source = "isAnonymous")
+    @Mapping(target = "isAnonymous", source = "isAnonymous")
+    @Mapping(target = "isOpening", expression = "java(false)")
     Post toPost(UpdatePostRequestDto requestDto);
 
     @Mapping(target = "isAnonymous", source = "post.anonymous")
