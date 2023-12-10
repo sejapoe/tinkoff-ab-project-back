@@ -1,4 +1,4 @@
-package edu.tinkoff.ninjamireaclone.config;
+package edu.tinkoff.ninjamireaclone.security;
 
 import edu.tinkoff.ninjamireaclone.utils.jwt.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
