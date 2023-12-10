@@ -87,7 +87,7 @@ public class TopicController {
         return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic,
                 posts,
                 accountService.getCurrentUserId(),
-                currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                currentUser != null && currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
         ));
     }
 }

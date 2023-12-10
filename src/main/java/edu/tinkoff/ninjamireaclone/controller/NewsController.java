@@ -83,8 +83,8 @@ public class NewsController {
             return newsMapper.toNewsCommentResponseDto(
                     comment,
                     post,
-                    account.getId(),
-                    account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                    accountService.getCurrentUserId(),
+                    account != null && account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
             );
         });
 
@@ -102,8 +102,8 @@ public class NewsController {
         var responseDto = pageMapper.toResponseDto(threadComments, post ->
                 postMapper.toPostResponseDto(
                         post,
-                        account.getId(),
-                        account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                        accountService.getCurrentUserId(),
+                        account != null && account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
                 )
         );
 
@@ -127,8 +127,8 @@ public class NewsController {
         var responseDto = newsMapper.toNewsCommentResponseDto(
                 comment,
                 post,
-                account.getId(),
-                account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                accountService.getCurrentUserId(),
+                account != null && account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
         );
 
         return ResponseEntity.ok(responseDto);
@@ -149,8 +149,8 @@ public class NewsController {
 
         var responseDto = postMapper.toPostResponseDto(
                 comment,
-                account.getId(),
-                account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                accountService.getCurrentUserId(),
+                account != null && account.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_MODERATOR"))
         );
 
         return ResponseEntity.ok(responseDto);

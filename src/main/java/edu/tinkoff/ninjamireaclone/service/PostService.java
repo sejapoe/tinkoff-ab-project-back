@@ -1,5 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.Document;
 import edu.tinkoff.ninjamireaclone.model.Post;
@@ -27,6 +28,7 @@ public class PostService {
     private final TopicRepository topicRepository;
     private final StorageService storageService;
     private final TransactionExecutorService transactionExecutorService;
+    private final AccountService accountService;
 
     private void attachDocuments(Post post, Set<Document> documents) {
         for (var d : documents) {
@@ -51,6 +53,20 @@ public class PostService {
         post.setCreatedAt(found.getCreatedAt());
         post.setDocuments(found.getDocuments());
         init(post, authorId, parentId);
+        return postRepository.save(post);
+    }
+
+    @Transactional
+    public Post updatePost(Long id, String text) {
+        var post = getPost(id);
+
+        if (accountService.checkFakeId(post.getAuthor().getId())) {
+            throw new AccessDeniedException("Редактирование чужого поста");
+        }
+
+        if (post.getText().equals(text)) return post;
+
+        post.setText(text);
         return postRepository.save(post);
     }
 
@@ -89,5 +105,4 @@ public class PostService {
         }
         return totalDeleted;
     }
-
 }
