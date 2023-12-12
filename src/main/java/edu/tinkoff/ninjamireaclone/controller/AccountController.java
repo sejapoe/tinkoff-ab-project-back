@@ -7,7 +7,7 @@ import edu.tinkoff.ninjamireaclone.dto.common.PageResponseDto;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.AccountMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
-import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -86,8 +86,8 @@ public class AccountController {
         if (accountService.checkFakeId(updateAccountRequestDto.id())) {
             throw new AccessDeniedException("Редактирование чужого профиля");
         }
-        Account account = accountMapper.toAccount(updateAccountRequestDto);
-        Account updated = accountService.update(account, updateAccountRequestDto.avatar());
+        AccountEntity account = accountMapper.toAccount(updateAccountRequestDto);
+        AccountEntity updated = accountService.update(account, updateAccountRequestDto.avatar());
         log.info("Изменен аккаунт " + updated.getId());
         return ResponseEntity.ok(accountMapper.toAccountResponseDto(updated));
     }

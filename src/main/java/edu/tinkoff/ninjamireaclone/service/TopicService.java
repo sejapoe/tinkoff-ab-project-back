@@ -2,9 +2,9 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
-import edu.tinkoff.ninjamireaclone.model.Post;
-import edu.tinkoff.ninjamireaclone.model.QPost;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
+import edu.tinkoff.ninjamireaclone.model.QPostEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
@@ -27,7 +27,7 @@ public class TopicService {
     private final PostService postService;
     private final SectionRightsService sectionRightsService;
 
-    private void init(Topic topic, Long parentId) {
+    private void init(TopicEntity topic, Long parentId) {
         topic.setParent(sectionRepository
                 .findById(parentId).orElseThrow(() -> new ResourceNotFoundException("Секция", parentId)));
     }
@@ -40,7 +40,7 @@ public class TopicService {
      * @return saved topic
      */
     @Transactional
-    public Topic createTopic(Topic topic, Long parentId) {
+    public TopicEntity createTopic(TopicEntity topic, Long parentId) {
         init(topic, parentId);
 
         if (!sectionRightsService.getRights(topic.getParent()).getCreateTopics()) {
@@ -51,7 +51,7 @@ public class TopicService {
     }
 
     @Transactional
-    public Topic createTopicWithPost(Topic topic, Post post, Long parentId, Long authorId, List<MultipartFile> files) {
+    public TopicEntity createTopicWithPost(TopicEntity topic, PostEntity post, Long parentId, Long authorId, List<MultipartFile> files) {
         var saved = createTopic(topic, parentId);
         postService.createPostWithAttachments(post, authorId, saved.getId(), files);
         return saved;
@@ -77,7 +77,7 @@ public class TopicService {
      * @return found topic
      */
     @Transactional
-    public Topic getTopic(Long id) {
+    public TopicEntity getTopic(Long id) {
         return topicRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Тема", id));
     }
 
@@ -89,13 +89,13 @@ public class TopicService {
      * @return updated saved topic
      */
     @Transactional
-    public Topic updateTopic(Topic topic, Long parentId) {
+    public TopicEntity updateTopic(TopicEntity topic, Long parentId) {
         var found = getTopic(topic.getId());
         init(topic, parentId);
         return topicRepository.save(topic);
     }
 
-    public Page<Post> getTopicPosts(Topic topic, Pageable pageable) {
-        return postRepository.findAll(QPost.post.parent.id.eq(topic.getId()), pageable);
+    public Page<PostEntity> getTopicPosts(TopicEntity topic, Pageable pageable) {
+        return postRepository.findAll(QPostEntity.postEntity.parent.id.eq(topic.getId()), pageable);
     }
 }

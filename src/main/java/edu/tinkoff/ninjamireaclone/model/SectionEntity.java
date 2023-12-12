@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "section")
-public class Section {
+public class SectionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "section_seq")
@@ -24,21 +24,21 @@ public class Section {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Section parent;
+    private SectionEntity parent;
 
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-    private List<Section> subsections;
+    private List<SectionEntity> subsections;
 
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-    private List<Topic> topics;
+    private List<TopicEntity> topics;
 
     @OneToMany(
             mappedBy = "section",
@@ -46,5 +46,5 @@ public class Section {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<SectionRights> sectionRights;
+    private List<SectionRightsEntity> sectionRights;
 }

@@ -38,13 +38,13 @@ public class NewsService {
     private final SectionRightsRepository sectionRightsRepository;
 
     @Transactional
-    public Section createNews(String title, String text, List<MultipartFile> files) {
+    public SectionEntity createNews(String title, String text, List<MultipartFile> files) {
         var rootPost = createRootPost(text, files);
         var rootTopic = createRootTopic(title, rootPost);
 
         rootPost.setParent(rootTopic);
 
-        var section = Section.builder()
+        var section = SectionEntity.builder()
                 .name(title)
                 .parent(getNewsRoot())
                 .topics(Lists.newArrayList(rootTopic))
@@ -59,14 +59,14 @@ public class NewsService {
         return savedSection;
     }
 
-    private Topic createRootTopic(String title, Post rootPost) {
-        return Topic.builder()
+    private TopicEntity createRootTopic(String title, PostEntity rootPost) {
+        return TopicEntity.builder()
                 .name(title)
                 .posts(Lists.newArrayList(rootPost))
                 .build();
     }
 
-    private Post createRootPost(String text, List<MultipartFile> files) {
+    private PostEntity createRootPost(String text, List<MultipartFile> files) {
         var currentUser = accountService.getCurrentUser();
 
         List<MultipartFile> nonNullFiles = Objects.requireNonNullElse(files, List.of());
@@ -74,7 +74,7 @@ public class NewsService {
                 .map(storageService::store)
                 .collect(Collectors.toCollection(HashSet::new));
 
-        return Post.builder()
+        return PostEntity.builder()
                 .author(currentUser)
                 .text(text)
                 .isAnonymous(false)
@@ -83,10 +83,10 @@ public class NewsService {
                 .build();
     }
 
-    private void initNewsRights(Section savedSection) {
+    private void initNewsRights(SectionEntity savedSection) {
         var createCommentPrivilege = roleService.getPrivilegeByName("CREATE_COMMENT");
 
-        var sectionRights = SectionRights.builder()
+        var sectionRights = SectionRightsEntity.builder()
                 .rights(new Rights(false, true))
                 .privilege(createCommentPrivilege)
                 .section(savedSection)
@@ -96,18 +96,18 @@ public class NewsService {
     }
 
     @Transactional
-    public Section getNewsRoot() {
+    public SectionEntity getNewsRoot() {
         return sectionRepository.findById(DataLoader.NEWS_ROOT_ID).orElseThrow(() -> new NotFoundException("News root is not found"));
     }
 
     @Transactional
-    public Page<Section> getAllNews(Pageable pageable) {
-        return sectionRepository.findAll(QSection.section.parent.id.eq(DataLoader.NEWS_ROOT_ID), pageable);
+    public Page<SectionEntity> getAllNews(Pageable pageable) {
+        return sectionRepository.findAll(QSectionEntity.sectionEntity.parent.id.eq(DataLoader.NEWS_ROOT_ID), pageable);
     }
 
 
     @Transactional
-    public Section getNews(Long id) {
+    public SectionEntity getNews(Long id) {
         var section = sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("News with id %s is not found".formatted(id)));
 
@@ -119,12 +119,12 @@ public class NewsService {
     }
 
     @Transactional
-    public Topic getNewsRootTopic(Section news) {
+    public TopicEntity getNewsRootTopic(SectionEntity news) {
         var queryFactory = new JPAQueryFactory(entityManager);
         var rootTopic = queryFactory
-                .selectFrom(QTopic.topic)
-                .where(QTopic.topic.parent.id.eq(news.getId()))
-                .orderBy(QTopic.topic.id.asc())
+                .selectFrom(QTopicEntity.topicEntity)
+                .where(QTopicEntity.topicEntity.parent.id.eq(news.getId()))
+                .orderBy(QTopicEntity.topicEntity.id.asc())
                 .fetchFirst();
 
         if (Objects.isNull(rootTopic)
@@ -138,30 +138,30 @@ public class NewsService {
     }
 
     @Transactional
-    public Post getNewsRootTopicPost(Section news) {
+    public PostEntity getNewsRootTopicPost(SectionEntity news) {
         return getNewsRootTopic(news).getPosts().get(0);
     }
 
     @Transactional
-    public Page<Topic> getComments(Long newsId, Pageable pageable) {
+    public Page<TopicEntity> getComments(Long newsId, Pageable pageable) {
         var news = getNews(newsId);
         var rootTopic = getNewsRootTopic(news);
 
         var predicate = ExpressionUtils.and(
-                QTopic.topic.id.ne(rootTopic.getId()),
-                QTopic.topic.parent.id.eq(news.getId())
+                QTopicEntity.topicEntity.id.ne(rootTopic.getId()),
+                QTopicEntity.topicEntity.parent.id.eq(news.getId())
         );
 
         return topicRepository.findAll(predicate, pageable);
     }
 
     @Transactional
-    public Post getRootComment(Topic comment) {
+    public PostEntity getRootComment(TopicEntity comment) {
         var queryFactory = new JPAQueryFactory(entityManager);
         var rootPost = queryFactory
-                .selectFrom(QPost.post)
-                .where(QPost.post.parent.id.eq(comment.getId()))
-                .orderBy(QPost.post.id.asc())
+                .selectFrom(QPostEntity.postEntity)
+                .where(QPostEntity.postEntity.parent.id.eq(comment.getId()))
+                .orderBy(QPostEntity.postEntity.id.asc())
                 .fetchFirst();
 
         if (Objects.isNull(rootPost)) {
@@ -172,7 +172,7 @@ public class NewsService {
     }
 
     @Transactional
-    public Topic getThread(Long id) {
+    public TopicEntity getThread(Long id) {
         var topic = topicRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Comment with id %s is not found".formatted(id)));
 
@@ -195,34 +195,34 @@ public class NewsService {
     }
 
     @Transactional
-    public Page<Post> getThread(Topic comment, Pageable pageable) {
+    public Page<PostEntity> getThread(TopicEntity comment, Pageable pageable) {
         var rootPost = getRootComment(comment);
 
         var predicate = ExpressionUtils.and(
-                QPost.post.id.ne(rootPost.getId()),
-                QPost.post.parent.id.eq(comment.getId())
+                QPostEntity.postEntity.id.ne(rootPost.getId()),
+                QPostEntity.postEntity.parent.id.eq(comment.getId())
         );
 
         return postRepository.findAll(predicate, pageable);
     }
 
     @Transactional
-    public Page<Post> getThread(Long threadId, Pageable pageable) {
+    public Page<PostEntity> getThread(Long threadId, Pageable pageable) {
         return getThread(getThread(threadId), pageable);
     }
 
     @Transactional
-    public Topic createComment(Long newsId, String text, boolean isAnonymous) {
+    public TopicEntity createComment(Long newsId, String text, boolean isAnonymous) {
         var account = accountService.getCurrentUser();
         var news = getNews(newsId);
 
-        var post = Post.builder()
+        var post = PostEntity.builder()
                 .author(account)
                 .text(text)
                 .isAnonymous(isAnonymous)
                 .build();
 
-        var topic = Topic.builder()
+        var topic = TopicEntity.builder()
                 .name("comment")
                 .parent(news)
                 .posts(Lists.newArrayList(post))
@@ -234,11 +234,11 @@ public class NewsService {
     }
 
     @Transactional
-    public Post createThreadComment(Long threadId, String text, boolean isAnonymous) {
+    public PostEntity createThreadComment(Long threadId, String text, boolean isAnonymous) {
         var account = accountService.getCurrentUser();
         var thread = getThread(threadId);
 
-        var post = Post.builder()
+        var post = PostEntity.builder()
                 .parent(thread)
                 .author(account)
                 .text(text)

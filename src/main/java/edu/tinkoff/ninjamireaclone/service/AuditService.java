@@ -1,6 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service;
 
-import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
 import edu.tinkoff.ninjamireaclone.repository.PostRevisionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class AuditService {
      * @return list of revisions
      */
     @Transactional
-    public List<Post> getPostRevisions(Long id) {
+    public List<PostEntity> getPostRevisions(Long id) {
         return postRevisionRepository.getRevisionsById(id);
     }
 }

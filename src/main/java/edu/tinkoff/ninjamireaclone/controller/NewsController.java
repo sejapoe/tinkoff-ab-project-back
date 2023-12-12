@@ -12,8 +12,8 @@ import edu.tinkoff.ninjamireaclone.dto.post.response.PostResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.NewsMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
-import edu.tinkoff.ninjamireaclone.model.Post;
-import edu.tinkoff.ninjamireaclone.model.Section;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,13 +43,13 @@ public class NewsController {
     @PreAuthorize("hasAuthority('CREATE_NEWS')")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<NewsResponseDto> createNews(@ModelAttribute @Valid CreateNewsRequestDto dto) {
-        Section news = newsService.createNews(
+        SectionEntity news = newsService.createNews(
                 dto.name(),
                 dto.text(),
                 dto.files()
         );
 
-        Post newsPost = newsService.getNewsRootTopicPost(news);
+        PostEntity newsPost = newsService.getNewsRootTopicPost(news);
 
         return ResponseEntity.ok(newsMapper.toNewsResponseDto(news, newsPost));
     }

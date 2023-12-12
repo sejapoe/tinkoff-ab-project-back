@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "topic")
-public class Topic {
+public class TopicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_seq")
@@ -24,7 +24,7 @@ public class Topic {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Section parent;
+    private SectionEntity parent;
 
     @OneToMany(
             mappedBy = "parent",
@@ -32,5 +32,5 @@ public class Topic {
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )
-    private List<Post> posts;
+    private List<PostEntity> posts;
 }

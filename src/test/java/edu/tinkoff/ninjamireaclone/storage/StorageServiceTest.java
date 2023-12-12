@@ -4,7 +4,7 @@ import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.config.StorageProperties;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
-import edu.tinkoff.ninjamireaclone.model.Document;
+import edu.tinkoff.ninjamireaclone.model.DocumentEntity;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import jakarta.transaction.Transactional;
@@ -116,7 +116,7 @@ public class StorageServiceTest extends AbstractBaseTest {
                 "Lorem ipsum dolores".getBytes(Charset.defaultCharset())
         );
         storageService.store(file);
-        Document document = documentRepository.findAll().get(0);
+        DocumentEntity document = documentRepository.findAll().get(0);
 
         // when
         Resource resource = storageService.loadAsResource(document.getFilename());

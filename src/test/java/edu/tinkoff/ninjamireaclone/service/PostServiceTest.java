@@ -67,14 +67,14 @@ public class PostServiceTest extends AbstractBaseTest {
         );
         List<MultipartFile> files = List.of(fileA, fileB);
 
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
         topicGiven.setParent(sectionGiven);
         topicGiven = topicRepository.save(topicGiven);
-        var accountGiven = new Account();
+        var accountGiven = new AccountEntity();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
         accountGiven.setDisplayName("Astarion");
@@ -83,7 +83,7 @@ public class PostServiceTest extends AbstractBaseTest {
         accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
-        var postGiven = new Post();
+        var postGiven = new PostEntity();
         postGiven.setText("Sample");
 
         // when
@@ -117,14 +117,14 @@ public class PostServiceTest extends AbstractBaseTest {
         );
         List<MultipartFile> files = List.of(fileA, fileB);
 
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
         topicGiven.setParent(sectionGiven);
         topicGiven = topicRepository.save(topicGiven);
-        var accountGiven = new Account();
+        var accountGiven = new AccountEntity();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
         accountGiven.setDisplayName("Astarion");
@@ -133,7 +133,7 @@ public class PostServiceTest extends AbstractBaseTest {
         accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
-        var postGiven = new Post();
+        var postGiven = new PostEntity();
         postGiven.setText("Sample");
 
         var postCreated = postService.createPostWithAttachments(postGiven, accountGiven.getId(), topicGiven.getId(), files);
@@ -170,14 +170,14 @@ public class PostServiceTest extends AbstractBaseTest {
         );
         List<MultipartFile> files = List.of(fileA, fileB);
 
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
         topicGiven.setParent(sectionGiven);
         topicGiven = topicRepository.save(topicGiven);
-        var accountGiven = new Account();
+        var accountGiven = new AccountEntity();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
         accountGiven.setDisplayName("Astarion");
@@ -186,7 +186,7 @@ public class PostServiceTest extends AbstractBaseTest {
         accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
-        var postGiven = new Post();
+        var postGiven = new PostEntity();
         postGiven.setText("Sample");
 
         var postCreated = postService.createPostWithAttachments(postGiven, accountGiven.getId(), topicGiven.getId(), files);
@@ -219,14 +219,14 @@ public class PostServiceTest extends AbstractBaseTest {
         );
         List<MultipartFile> files = List.of(fileA, fileB);
 
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
         topicGiven.setParent(sectionGiven);
         topicGiven = topicRepository.save(topicGiven);
-        var accountGiven = new Account();
+        var accountGiven = new AccountEntity();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
         accountGiven.setDisplayName("Astarion");
@@ -235,7 +235,7 @@ public class PostServiceTest extends AbstractBaseTest {
         accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
-        var postGiven = new Post();
+        var postGiven = new PostEntity();
         postGiven.setText("Sample");
 
         var postCreated = postService.createPostWithAttachments(postGiven, accountGiven.getId(), topicGiven.getId(), files);
@@ -252,14 +252,14 @@ public class PostServiceTest extends AbstractBaseTest {
     @Transactional
     public void cleanUpZeroComments() {
         // given
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
         topicGiven.setParent(sectionGiven);
         topicGiven = topicRepository.save(topicGiven);
-        var accountGiven = new Account();
+        var accountGiven = new AccountEntity();
         accountGiven.setName("Astarion");
         accountGiven.setPassword("12345");
         accountGiven.setDisplayName("Astarion");
@@ -268,7 +268,7 @@ public class PostServiceTest extends AbstractBaseTest {
         accountGiven.setEnabled(true);
         accountGiven = accountRepository.save(accountGiven);
 
-        var postGiven = new Post();
+        var postGiven = new PostEntity();
         postGiven.setText("Sample");
 
         for (int i = 0; i < 3; i++) {

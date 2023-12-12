@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "account")
-public class Account implements UserDetails {
+public class AccountEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
@@ -46,14 +46,14 @@ public class Account implements UserDetails {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST}
     )
     @JoinColumn(name = "avatar_id")
-    private Document avatar;
+    private DocumentEntity avatar;
 
     @OneToMany(
             mappedBy = "author",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
-    private List<Post> posts;
+    private List<PostEntity> posts;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -61,11 +61,11 @@ public class Account implements UserDetails {
             joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
     )
-    private List<Role> roles;
+    private List<RoleEntity> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().flatMap(Role::getAuthorities).toList();
+        return roles.stream().flatMap(RoleEntity::getAuthorities).toList();
     }
 
     @Override

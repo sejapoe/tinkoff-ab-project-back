@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "privilege")
-public class Privilege {
+public class PrivilegeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "privilege_seq")
     @SequenceGenerator(name = "privilege_seq", sequenceName = "privilege_seq", allocationSize = 1)
@@ -20,5 +20,5 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private List<Role> roles;
+    private List<RoleEntity> roles;
 }

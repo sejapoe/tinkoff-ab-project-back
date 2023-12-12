@@ -30,16 +30,16 @@ public class DataLoader implements ApplicationRunner {
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    private Section root;
-    private Section newsRoot;
+    private SectionEntity root;
+    private SectionEntity newsRoot;
 
-    private Privilege defaultPrivilege;
-    private Privilege createSubjectPrivilege;
-    private Privilege createNewsPrivilege;
+    private PrivilegeEntity defaultPrivilege;
+    private PrivilegeEntity createSubjectPrivilege;
+    private PrivilegeEntity createNewsPrivilege;
 
-    private Role userRole;
-    private Role moderatorRole;
-    private Role adminRole;
+    private RoleEntity userRole;
+    private RoleEntity moderatorRole;
+    private RoleEntity adminRole;
 
     @Override
     @Transactional
@@ -102,19 +102,19 @@ public class DataLoader implements ApplicationRunner {
         );
     }
 
-    private Privilege createPrivilegeIfDoesntExists(String name) {
+    private PrivilegeEntity createPrivilegeIfDoesntExists(String name) {
         return privilegeRepository.findByName(name).orElseGet(() -> {
-            var privilege = new Privilege();
+            var privilege = new PrivilegeEntity();
             privilege.setName(name);
             return privilegeRepository.save(privilege);
         });
     }
 
-    private Role createRoleIfDoesntExists(String name, Privilege... privileges) {
-        List<Privilege> privilegeList = new ArrayList<>(List.of(privileges));
+    private RoleEntity createRoleIfDoesntExists(String name, PrivilegeEntity... privileges) {
+        List<PrivilegeEntity> privilegeList = new ArrayList<>(List.of(privileges));
 
         var createdRole = roleRepository.findByName(name).orElseGet(() -> {
-            var role = new Role();
+            var role = new RoleEntity();
             role.setName(name);
             role.setPrivileges(privilegeList);
             return roleRepository.save(role);
@@ -146,7 +146,7 @@ public class DataLoader implements ApplicationRunner {
             return;
         }
 
-        SectionRights rights = new SectionRights();
+        SectionRightsEntity rights = new SectionRightsEntity();
         rights.setRights(new Rights(false, false));
         rights.setSection(root);
         rights.setPrivilege(defaultPrivilege);
@@ -154,7 +154,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void initCourses() {
-        List<Section> subsections = root.getSubsections();
+        List<SectionEntity> subsections = root.getSubsections();
         if (Objects.nonNull(subsections) && !subsections.isEmpty()) return;
         for (int i = 1; i <= NUM_COURSES; i++) {
             var course = createCourseIfDoesntExists(i);
@@ -162,17 +162,17 @@ public class DataLoader implements ApplicationRunner {
         }
     }
 
-    private Section createCourseIfDoesntExists(int number) {
-        Section course = new Section();
+    private SectionEntity createCourseIfDoesntExists(int number) {
+        SectionEntity course = new SectionEntity();
         course.setParent(root);
         course.setName("%d курс".formatted(number));
         return sectionRepository.save(course);
     }
 
-    private void initCourseRights(Section course) {
+    private void initCourseRights(SectionEntity course) {
         if (sectionRightsRepository.existsBySection_Id(course.getId())) return;
 
-        SectionRights rights = new SectionRights();
+        SectionRightsEntity rights = new SectionRightsEntity();
         rights.setRights(new Rights(true, false));
         rights.setSection(course);
 
@@ -198,7 +198,7 @@ public class DataLoader implements ApplicationRunner {
             return;
         }
 
-        var rights = SectionRights.builder()
+        var rights = SectionRightsEntity.builder()
                 .rights(new Rights(true, false))
                 .section(newsRoot)
                 .privilege(createNewsPrivilege)
@@ -207,12 +207,12 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void initAdmin() {
-        boolean adminExists = accountRepository.exists(QAccount.account.roles.any().id.eq(adminRole.getId()));
+        boolean adminExists = accountRepository.exists(QAccountEntity.accountEntity.roles.any().id.eq(adminRole.getId()));
         if (adminExists) {
             return;
         }
 
-        var account = new Account();
+        var account = new AccountEntity();
         account.setName("admin");
         account.setDisplayName("Администратор");
         account.setDescription("Царь во дворца, царь во дворца.\nХоди то, делай сюда");

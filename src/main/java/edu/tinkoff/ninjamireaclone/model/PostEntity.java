@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "post")
-public class Post {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq")
@@ -43,12 +43,12 @@ public class Post {
     @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    private Account author;
+    private AccountEntity author;
 
     @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Topic parent;
+    private TopicEntity parent;
 
     @NotAudited
     @Column(name = "is_anonymous", nullable = false)
@@ -65,9 +65,9 @@ public class Post {
             joinColumns = {@JoinColumn(name = "post_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "document_id", referencedColumnName = "id")}
     )
-    private Set<Document> documents = new HashSet<>();
+    private Set<DocumentEntity> documents = new HashSet<>();
 
-    public void addDocument(Document document) {
+    public void addDocument(DocumentEntity document) {
         this.documents.add(document);
         document.getPosts().add(this);
     }

@@ -5,8 +5,8 @@ import edu.tinkoff.ninjamireaclone.dto.post.request.UpdatePostRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.post.response.PostResponseDto;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,8 +115,8 @@ public class PostController {
         return ResponseEntity.ok(getPostResponseDto(post));
     }
 
-    private PostResponseDto getPostResponseDto(Post post) {
-        Account currentUser = accountService.getCurrentUser();
+    private PostResponseDto getPostResponseDto(PostEntity post) {
+        AccountEntity currentUser = accountService.getCurrentUser();
         return postMapper.toPostResponseDto(
                 post,
                 accountService.getCurrentUserId(),

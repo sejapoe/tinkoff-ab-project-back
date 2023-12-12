@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "document")
-public class Document {
+public class DocumentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
     @SequenceGenerator(name = "document_seq", sequenceName = "document_seq", allocationSize = 1)
@@ -30,5 +30,5 @@ public class Document {
     private DocumentType documentType;
 
     @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY)
-    private Set<Post> posts = new HashSet<>();
+    private Set<PostEntity> posts = new HashSet<>();
 }

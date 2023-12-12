@@ -6,8 +6,8 @@ import edu.tinkoff.ninjamireaclone.dto.auth.response.JwtResponseDto;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.SignUpException;
 import edu.tinkoff.ninjamireaclone.mapper.AccountMapper;
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Role;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
+import edu.tinkoff.ninjamireaclone.model.RoleEntity;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +33,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponseDto> login(@RequestBody JwtRequestDto requestDto) {
         var userDetails = accountService.loadUserByUsername(requestDto.name());
-        var accountId = ((Account) userDetails).getId();
-        JwtResponseDto jwtResponseDto = getResponseDto((Account) userDetails, requestDto.name(), requestDto.password());
+        var accountId = ((AccountEntity) userDetails).getId();
+        JwtResponseDto jwtResponseDto = getResponseDto((AccountEntity) userDetails, requestDto.name(), requestDto.password());
         return ResponseEntity.ok(jwtResponseDto);
     }
 
@@ -43,18 +43,18 @@ public class AuthController {
         if (!requestDto.password().equals(requestDto.confirmPassword())) {
             throw new SignUpException("Пароли не совпадают");
         }
-        Account createdAccount = accountService.createAccount(accountMapper.toAccount(requestDto));
+        AccountEntity createdAccount = accountService.createAccount(accountMapper.toAccount(requestDto));
         JwtResponseDto jwtResponseDto = getResponseDto(createdAccount, requestDto.name(), requestDto.password());
         return ResponseEntity.ok(jwtResponseDto);
     }
 
     @NotNull
-    private JwtResponseDto getResponseDto(Account account, String name, String password) {
+    private JwtResponseDto getResponseDto(AccountEntity account, String name, String password) {
         return new JwtResponseDto(
                 account.getId(),
                 account.getName(),
                 authService.createAuthToken(account, name, password),
-                account.getRoles().stream().map(Role::getName).toList()
+                account.getRoles().stream().map(RoleEntity::getName).toList()
         );
     }
 

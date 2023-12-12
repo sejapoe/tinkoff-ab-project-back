@@ -1,8 +1,8 @@
 package edu.tinkoff.ninjamireaclone.rule;
 
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.SectionRights;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.SectionRightsEntity;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.service.RoleService;
 import edu.tinkoff.ninjamireaclone.service.rule.ConditionTrigger;
@@ -20,15 +20,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CreateSubsectionsForSubjectRule implements Rule<Section> {
+public class CreateSubsectionsForSubjectRule implements Rule<SectionEntity> {
 
     private static final String[] subsectionNames = {"Конспекты семинаров", "Контрольные работы", "Литература", "Экзамен"};
     private final SectionRepository sectionRepository;
     private final RoleService roleService;
 
     @Override
-    public Class<Section> getType() {
-        return Section.class;
+    public Class<SectionEntity> getType() {
+        return SectionEntity.class;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
     }
 
     @Override
-    public Section evaluate(Section section) {
+    public SectionEntity evaluate(SectionEntity section) {
         if (!section.getParent().getName().endsWith("курс")
                 || !Objects.isNull(section.getParent().getParent().getParent())) return section;
 
@@ -47,11 +47,11 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
         log.info("Creating subsections for `%s`".formatted(section.getName()));
 
         var subsections = Arrays.stream(subsectionNames).map(name -> {
-            var subsection = new Section();
+            var subsection = new SectionEntity();
             subsection.setParent(section);
             subsection.setName(name);
 
-            var sectionRights = new SectionRights();
+            var sectionRights = new SectionRightsEntity();
             sectionRights.setPrivilege(createTopicPrivilege);
             sectionRights.setRights(new Rights(false, true));
             sectionRights.setSection(subsection);
@@ -63,7 +63,7 @@ public class CreateSubsectionsForSubjectRule implements Rule<Section> {
 
         section.setSubsections(subsections);
 
-        var sectionRights = new SectionRights();
+        var sectionRights = new SectionRightsEntity();
         sectionRights.setPrivilege(defaultPrivilege);
         sectionRights.setRights(new Rights(false, false));
         sectionRights.setSection(section);

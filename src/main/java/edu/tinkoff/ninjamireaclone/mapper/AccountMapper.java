@@ -4,8 +4,8 @@ import edu.tinkoff.ninjamireaclone.dto.account.request.UpdateAccountRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.account.response.AccountResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.auth.request.SignUpRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.common.PageResponseDto;
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Role;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
+import edu.tinkoff.ninjamireaclone.model.RoleEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ public interface AccountMapper {
     @Mapping(target = "gender", expression = "java(Gender.NOT_SPECIFIED)")
     @Mapping(target = "description", expression = "java(\"\")")
     @Mapping(target = "avatar", ignore = true)
-    Account toAccount(SignUpRequestDto requestDto);
+    AccountEntity toAccount(SignUpRequestDto requestDto);
 
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "posts", ignore = true)
@@ -28,13 +28,13 @@ public interface AccountMapper {
     @Mapping(target = "avatar", ignore = true)
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "displayName", source = "name")
-    Account toAccount(UpdateAccountRequestDto requestDto);
+    AccountEntity toAccount(UpdateAccountRequestDto requestDto);
 
-    AccountResponseDto toAccountResponseDto(Account account);
+    AccountResponseDto toAccountResponseDto(AccountEntity account);
 
-    PageResponseDto<AccountResponseDto> toPageResponseDto(Page<Account> page);
+    PageResponseDto<AccountResponseDto> toPageResponseDto(Page<AccountEntity> page);
 
-    default String roleToString(Role role) {
+    default String roleToString(RoleEntity role) {
         return role.getName();
     }
 }

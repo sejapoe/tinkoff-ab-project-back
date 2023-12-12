@@ -1,10 +1,10 @@
 package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
-import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
 import edu.tinkoff.ninjamireaclone.model.Gender;
-import edu.tinkoff.ninjamireaclone.model.Privilege;
-import edu.tinkoff.ninjamireaclone.model.Role;
+import edu.tinkoff.ninjamireaclone.model.PrivilegeEntity;
+import edu.tinkoff.ninjamireaclone.model.RoleEntity;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRightsRepository;
@@ -53,14 +53,14 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void createAccount() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
 
@@ -80,14 +80,14 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void getAccount() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
         accountGiven = accountService.createAccount(accountGiven);
@@ -108,16 +108,16 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void getAccountUserDetails() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
-        var defaultPrivilege = new Privilege();
+        var defaultPrivilege = new PrivilegeEntity();
         defaultPrivilege.setName("DEFAULT");
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         defaultRole.setPrivileges(new ArrayList<>(List.of(defaultPrivilege)));
         roleRepository.save(defaultRole);
@@ -136,17 +136,17 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void grantRoles() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
-        var adminRole = new Role();
+        var adminRole = new RoleEntity();
         adminRole.setName("ROLE_ADMIN");
         adminRole = roleRepository.save(adminRole);
         accountGiven = accountService.createAccount(accountGiven);
@@ -164,17 +164,17 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void removeRoles() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setGender(Gender.NOT_SPECIFIED);
         accountGiven.setEnabled(true);
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         defaultRole = roleRepository.save(defaultRole);
-        var adminRole = new Role();
+        var adminRole = new RoleEntity();
         adminRole.setName("ROLE_ADMIN");
         adminRole = roleRepository.save(adminRole);
         accountGiven = accountService.createAccount(accountGiven);
@@ -192,13 +192,13 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Test
     public void deleteAccount() {
         // given
-        Account accountGiven = new Account();
+        AccountEntity accountGiven = new AccountEntity();
         accountGiven.setName("Alistair");
         accountGiven.setPassword("qwerty");
         accountGiven.setDisplayName("Alistair");
         accountGiven.setDescription("");
         accountGiven.setEnabled(true);
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
         accountGiven = accountService.createAccount(accountGiven);
@@ -216,19 +216,19 @@ public class AccountServiceTest extends AbstractBaseTest {
     @Transactional
     public void getAllAccounts() {
         // given
-        Account accountGivenA = new Account();
+        AccountEntity accountGivenA = new AccountEntity();
         accountGivenA.setName("Alistair");
         accountGivenA.setPassword("qwerty");
         accountGivenA.setDisplayName("Alistair");
         accountGivenA.setDescription("");
         accountGivenA.setEnabled(true);
-        Account accountGivenB = new Account();
+        AccountEntity accountGivenB = new AccountEntity();
         accountGivenB.setName("Ketheric");
         accountGivenB.setPassword("123");
         accountGivenB.setDisplayName("Ketheric");
         accountGivenB.setEnabled(true);
         accountGivenB.setDescription("");
-        var defaultRole = new Role();
+        var defaultRole = new RoleEntity();
         defaultRole.setName("ROLE_USER");
         roleRepository.save(defaultRole);
         accountService.createAccount(accountGivenA);

@@ -7,7 +7,7 @@ import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.PostMapper;
 import edu.tinkoff.ninjamireaclone.mapper.TopicMapper;
-import edu.tinkoff.ninjamireaclone.model.Account;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
 import edu.tinkoff.ninjamireaclone.service.AccountService;
 import edu.tinkoff.ninjamireaclone.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -83,7 +83,7 @@ public class TopicController {
     public ResponseEntity<TopicResponseDto> get(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
         var topic = topicService.getTopic(id);
         var posts = topicService.getTopicPosts(topic, pageMapper.fromRequestDto(pageRequestDto));
-        Account currentUser = accountService.getCurrentUser();
+        AccountEntity currentUser = accountService.getCurrentUser();
         return ResponseEntity.ok(topicMapper.toTopicResponseDto(topic,
                 posts,
                 accountService.getCurrentUserId(),

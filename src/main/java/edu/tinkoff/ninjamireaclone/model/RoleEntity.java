@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "role")
-public class Role {
+public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
@@ -33,10 +33,10 @@ public class Role {
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}
     )
-    private List<Privilege> privileges;
+    private List<PrivilegeEntity> privileges;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<Account> accounts = new HashSet<>();
+    private Set<AccountEntity> accounts = new HashSet<>();
 
     public Stream<? extends GrantedAuthority> getAuthorities() {
         return Stream.concat(
