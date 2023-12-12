@@ -6,7 +6,7 @@ import edu.tinkoff.ninjamireaclone.exception.storage.StorageException;
 import edu.tinkoff.ninjamireaclone.exception.storage.StorageFileNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.DocumentEntity;
 import edu.tinkoff.ninjamireaclone.model.DocumentType;
-import edu.tinkoff.ninjamireaclone.model.QDocument;
+import edu.tinkoff.ninjamireaclone.model.QDocumentEntity;
 import edu.tinkoff.ninjamireaclone.repository.DocumentRepository;
 import io.minio.*;
 import io.minio.errors.ErrorResponseException;
@@ -131,7 +131,7 @@ public class S3StorageService implements StorageService {
     @Override
     @Transactional
     public String getOriginalName(String filename) {
-        return documentRepository.findOne(QDocument.document.filename.eq(filename))
+        return documentRepository.findOne(QDocumentEntity.documentEntity.filename.eq(filename))
                 .map(DocumentEntity::getOriginalName)
                 .orElseThrow(() -> new StorageFileNotFoundException("Failed to read file: " + filename));
     }

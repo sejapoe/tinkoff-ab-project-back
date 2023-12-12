@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone.section;
 
 import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
-import edu.tinkoff.ninjamireaclone.model.QSection;
+import edu.tinkoff.ninjamireaclone.model.QSectionEntity;
 import edu.tinkoff.ninjamireaclone.model.Rights;
 import edu.tinkoff.ninjamireaclone.model.SectionEntity;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
@@ -36,7 +36,7 @@ public class SectionServiceTest extends AbstractBaseTest {
     @AfterEach
     @Transactional
     public void clear() {
-        sectionRepository.deleteAll(sectionRepository.findAll(QSection.section.name.startsWith("[TEST]")));
+        sectionRepository.deleteAll(sectionRepository.findAll(QSectionEntity.sectionEntity.name.startsWith("[TEST]")));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class SectionServiceTest extends AbstractBaseTest {
 
         // then
         assertThat(sectionRepository.existsById(course1.getId())).isFalse();
-        assertThat(sectionRepository.findOne(QSection.section.name.eq("[TEST] 1 курс"))).isEmpty();
+        assertThat(sectionRepository.findOne(QSectionEntity.sectionEntity.name.eq("[TEST] 1 курс"))).isEmpty();
     }
 
     @Test
@@ -113,8 +113,8 @@ public class SectionServiceTest extends AbstractBaseTest {
         // then
         assertThat(result.getName()).isEqualTo("[TEST] 2 курс");
         assertThat(sectionRepository.existsById(course1.getId())).isTrue();
-        assertThat(sectionRepository.findOne(QSection.section.name.eq("[TEST] 1 курс"))).isEmpty();
-        assertThat(sectionRepository.findOne(QSection.section.name.eq("[TEST] 2 курс"))).isPresent();
+        assertThat(sectionRepository.findOne(QSectionEntity.sectionEntity.name.eq("[TEST] 1 курс"))).isEmpty();
+        assertThat(sectionRepository.findOne(QSectionEntity.sectionEntity.name.eq("[TEST] 2 курс"))).isPresent();
     }
 
     @Test

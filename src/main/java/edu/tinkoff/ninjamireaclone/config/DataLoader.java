@@ -207,7 +207,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void initAdmin() {
-        boolean adminExists = accountRepository.exists(QAccount.account.roles.any().id.eq(adminRole.getId()));
+        boolean adminExists = accountRepository.exists(QAccountEntity.accountEntity.roles.any().id.eq(adminRole.getId()));
         if (adminExists) {
             return;
         }

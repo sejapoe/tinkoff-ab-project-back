@@ -102,7 +102,7 @@ public class NewsService {
 
     @Transactional
     public Page<SectionEntity> getAllNews(Pageable pageable) {
-        return sectionRepository.findAll(QSection.section.parent.id.eq(DataLoader.NEWS_ROOT_ID), pageable);
+        return sectionRepository.findAll(QSectionEntity.sectionEntity.parent.id.eq(DataLoader.NEWS_ROOT_ID), pageable);
     }
 
 
@@ -122,9 +122,9 @@ public class NewsService {
     public TopicEntity getNewsRootTopic(SectionEntity news) {
         var queryFactory = new JPAQueryFactory(entityManager);
         var rootTopic = queryFactory
-                .selectFrom(QTopic.topic)
-                .where(QTopic.topic.parent.id.eq(news.getId()))
-                .orderBy(QTopic.topic.id.asc())
+                .selectFrom(QTopicEntity.topicEntity)
+                .where(QTopicEntity.topicEntity.parent.id.eq(news.getId()))
+                .orderBy(QTopicEntity.topicEntity.id.asc())
                 .fetchFirst();
 
         if (Objects.isNull(rootTopic)
@@ -148,8 +148,8 @@ public class NewsService {
         var rootTopic = getNewsRootTopic(news);
 
         var predicate = ExpressionUtils.and(
-                QTopic.topic.id.ne(rootTopic.getId()),
-                QTopic.topic.parent.id.eq(news.getId())
+                QTopicEntity.topicEntity.id.ne(rootTopic.getId()),
+                QTopicEntity.topicEntity.parent.id.eq(news.getId())
         );
 
         return topicRepository.findAll(predicate, pageable);
@@ -159,9 +159,9 @@ public class NewsService {
     public PostEntity getRootComment(TopicEntity comment) {
         var queryFactory = new JPAQueryFactory(entityManager);
         var rootPost = queryFactory
-                .selectFrom(QPost.post)
-                .where(QPost.post.parent.id.eq(comment.getId()))
-                .orderBy(QPost.post.id.asc())
+                .selectFrom(QPostEntity.postEntity)
+                .where(QPostEntity.postEntity.parent.id.eq(comment.getId()))
+                .orderBy(QPostEntity.postEntity.id.asc())
                 .fetchFirst();
 
         if (Objects.isNull(rootPost)) {
@@ -199,8 +199,8 @@ public class NewsService {
         var rootPost = getRootComment(comment);
 
         var predicate = ExpressionUtils.and(
-                QPost.post.id.ne(rootPost.getId()),
-                QPost.post.parent.id.eq(comment.getId())
+                QPostEntity.postEntity.id.ne(rootPost.getId()),
+                QPostEntity.postEntity.parent.id.eq(comment.getId())
         );
 
         return postRepository.findAll(predicate, pageable);

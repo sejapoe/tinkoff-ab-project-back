@@ -3,7 +3,7 @@ package edu.tinkoff.ninjamireaclone.service;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
 import edu.tinkoff.ninjamireaclone.model.PostEntity;
-import edu.tinkoff.ninjamireaclone.model.QPost;
+import edu.tinkoff.ninjamireaclone.model.QPostEntity;
 import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
@@ -96,6 +96,6 @@ public class TopicService {
     }
 
     public Page<PostEntity> getTopicPosts(TopicEntity topic, Pageable pageable) {
-        return postRepository.findAll(QPost.post.parent.id.eq(topic.getId()), pageable);
+        return postRepository.findAll(QPostEntity.postEntity.parent.id.eq(topic.getId()), pageable);
     }
 }

@@ -4,8 +4,8 @@ import edu.tinkoff.ninjamireaclone.config.DataLoader;
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
-import edu.tinkoff.ninjamireaclone.model.QSection;
-import edu.tinkoff.ninjamireaclone.model.QTopic;
+import edu.tinkoff.ninjamireaclone.model.QSectionEntity;
+import edu.tinkoff.ninjamireaclone.model.QTopicEntity;
 import edu.tinkoff.ninjamireaclone.model.SectionEntity;
 import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
@@ -50,8 +50,8 @@ public class SectionService {
     public MultiPage<SectionEntity, TopicEntity> getMultiPage(SectionEntity section, Pageable pageable) {
         return multiPager.findAll(pageable.getPageNumber(),
                 pageable.getPageSize(),
-                QSection.section.parent.id.eq(section.getId()),
-                QTopic.topic.parent.id.eq(section.getId()));
+                QSectionEntity.sectionEntity.parent.id.eq(section.getId()),
+                QTopicEntity.topicEntity.parent.id.eq(section.getId()));
     }
 
     /**
