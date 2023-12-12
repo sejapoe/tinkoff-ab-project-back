@@ -38,5 +38,6 @@
     <include file="/db/migrations/2023-12-08-02-create-role-privileges.xml"/>
     <include file="/db/migrations/2023-12-09-01-modify-create-action-rights-fk.xml"/>
     <include file="/db/migrations/2023-12-09-02-delegate-id-generation-to-database.xml"/>
+    <include file="/db/migrations/2023-12-12-01-optimize-indexes.xml" />
 
 </databaseChangeLog>

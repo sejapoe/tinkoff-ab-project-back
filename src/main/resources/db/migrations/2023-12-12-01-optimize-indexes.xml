@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="2023-12-12-01-optimize-indexes" author="JudexMars" runInTransaction="false">
+        <createIndex tableName="account" indexName="account_name_index">
+            <column name="name" />
+        </createIndex>
+        <createIndex tableName="account" indexName="account_gender_index">
+            <column name="gender" />
+        </createIndex>
+        <createIndex tableName="account" indexName="account_enabled_index">
+            <column name="enabled" />
+        </createIndex>
+        
+        <createIndex tableName="post" indexName="post_op_index">
+            <column name="op" />
+        </createIndex>
+        <createIndex tableName="post" indexName="post_created_at_index">
+            <column name="created_at" />
+        </createIndex>
+
+        <createIndex tableName="post" indexName="post_parent_id_index">
+            <column name="parent_id" />
+        </createIndex>
+        <createIndex tableName="post" indexName="post_author_id_index">
+            <column name="author_id" />
+        </createIndex>
+
+        <createIndex tableName="post_audit" indexName="post_audit_id_index">
+            <column name="id" />
+        </createIndex>
+
+        <createIndex tableName="privilege" indexName="privilege_name_index">
+            <column name="name" />
+        </createIndex>
+        <createIndex tableName="role" indexName="role_name_index">
+            <column name="name" />
+        </createIndex>
+
+        <createIndex tableName="section_rights" indexName="section_rights_section_privilege_id_index">
+            <column name="section_id" />
+            <column name="privilege_id" />
+        </createIndex>
+        <createIndex tableName="section_rights" indexName="section_rights_section_id_index">
+            <column name="section_id" />
+        </createIndex>
+
+        <createIndex tableName="section" indexName="section_parent_id">
+            <column name="parent_id" />
+        </createIndex>
+
+        <createIndex tableName="topic" indexName="topic_parent_id_index">
+            <column name="parent_id" />
+        </createIndex>
+
+        <createIndex tableName="account_role" indexName="account_role_account_id_index">
+            <column name="account_id" />
+        </createIndex>
+        <createIndex tableName="account_role" indexName="account_role_role_id_index">
+            <column name="role_id" />
+        </createIndex>
+
+        <createIndex tableName="role_privilege" indexName="role_privilege_role_id_index">
+            <column name="role_id" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
