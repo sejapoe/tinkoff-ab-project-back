@@ -39,13 +39,32 @@
         <createIndex tableName="role" indexName="role_name_index">
             <column name="name" />
         </createIndex>
+
         <createIndex tableName="section_rights" indexName="section_rights_section_privilege_id_index">
             <column name="section_id" />
             <column name="privilege_id" />
         </createIndex>
+        <createIndex tableName="section_rights" indexName="section_rights_section_id_index">
+            <column name="section_id" />
+        </createIndex>
+
+        <createIndex tableName="section" indexName="section_parent_id">
+            <column name="parent_id" />
+        </createIndex>
 
         <createIndex tableName="topic" indexName="topic_parent_id_index">
             <column name="parent_id" />
+        </createIndex>
+
+        <createIndex tableName="account_role" indexName="account_role_account_id_index">
+            <column name="account_id" />
+        </createIndex>
+        <createIndex tableName="account_role" indexName="account_role_role_id_index">
+            <column name="role_id" />
+        </createIndex>
+
+        <createIndex tableName="role_privilege" indexName="role_privilege_role_id_index">
+            <column name="role_id" />
         </createIndex>
     </changeSet>
 </databaseChangeLog>
