@@ -4,7 +4,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
-    <changeSet id="2023-12-12-01-optimize-indexes" author="JudexMars">
+    <changeSet id="2023-12-12-01-optimize-indexes" author="JudexMars" runInTransaction="false">
         <createIndex tableName="account" indexName="account_name_index">
             <column name="name" />
         </createIndex>
@@ -39,8 +39,9 @@
         <createIndex tableName="role" indexName="role_name_index">
             <column name="name" />
         </createIndex>
-        <createIndex tableName="section_rights" indexName="section_rights_section_id_index">
+        <createIndex tableName="section_rights" indexName="section_rights_section_privilege_id_index">
             <column name="section_id" />
+            <column name="privilege_id" />
         </createIndex>
 
         <createIndex tableName="topic" indexName="topic_parent_id_index">
