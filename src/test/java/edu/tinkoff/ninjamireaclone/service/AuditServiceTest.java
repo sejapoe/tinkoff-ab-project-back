@@ -65,14 +65,14 @@ public class AuditServiceTest extends AbstractBaseTest {
         ));
 
         var ids = transactionExecutorService.execute(() -> {
-            var sectionGiven = new Section();
+            var sectionGiven = new SectionEntity();
             sectionGiven.setName("Root");
             sectionGiven = sectionRepository.save(sectionGiven);
-            var topicGiven = new Topic();
+            var topicGiven = new TopicEntity();
             topicGiven.setName("Main");
             topicGiven.setParent(sectionGiven);
             topicGiven = topicRepository.save(topicGiven);
-            var accountGiven = new Account();
+            var accountGiven = new AccountEntity();
             accountGiven.setName("Astarion");
             accountGiven.setPassword("12345");
             accountGiven.setDisplayName("Astarion");
@@ -85,7 +85,7 @@ public class AuditServiceTest extends AbstractBaseTest {
         });
 
         var postId = transactionExecutorService.execute(() -> {
-            var postGiven = new Post();
+            var postGiven = new PostEntity();
             postGiven.setText("Text 1");
             return postService.createPostWithAttachments(postGiven, ids.get("acc_id"), ids.get("topic_id"), null).getId();
         });

@@ -2,8 +2,8 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.repository.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -54,11 +54,11 @@ public class TopicServiceTest extends AbstractBaseTest {
     @Transactional
     public void createTopic() {
         // given
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
 
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
 
         // when
@@ -77,11 +77,11 @@ public class TopicServiceTest extends AbstractBaseTest {
     @Transactional
     public void updateTopic() {
         // given
-        var sectionGiven = new Section();
+        var sectionGiven = new SectionEntity();
         sectionGiven.setName("Root");
         sectionGiven = sectionRepository.save(sectionGiven);
 
-        var topicGiven = new Topic();
+        var topicGiven = new TopicEntity();
         topicGiven.setName("Main");
 
         var topicCreated = topicRepository.save(topicGiven);

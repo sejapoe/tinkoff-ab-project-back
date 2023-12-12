@@ -1,6 +1,6 @@
 package edu.tinkoff.ninjamireaclone.service.storage;
 
-import edu.tinkoff.ninjamireaclone.model.Document;
+import edu.tinkoff.ninjamireaclone.model.DocumentEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +21,7 @@ public interface StorageService {
      * @param file the file to be stored
      * @return stored document entity
      */
-    Document store(MultipartFile file);
+    DocumentEntity store(MultipartFile file);
 
     /**
      * Loads the file with the specified filename from the storage and returns its path.

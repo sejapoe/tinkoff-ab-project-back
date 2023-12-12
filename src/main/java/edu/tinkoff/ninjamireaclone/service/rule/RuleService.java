@@ -2,9 +2,9 @@ package edu.tinkoff.ninjamireaclone.service.rule;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 public class RuleService {
     /**
      * The EXPECTED_ENTITY_NUMBER variable represents the expected number of entities.
-     * It set for 3 because 3 possible entities ({@link Section}, {@link Topic}, {@link Account}) are used in the project.)
+     * It set for 3 because 3 possible entities ({@link SectionEntity}, {@link TopicEntity}, {@link AccountEntity}) are used in the project.)
      *
      * @see RuleService#createTriggers
      */
@@ -67,10 +67,10 @@ public class RuleService {
      * @return handled section
      */
     @SuppressWarnings("unchecked")
-    public Section handleSectionCreated(Section section) {
+    public SectionEntity handleSectionCreated(SectionEntity section) {
         var _section = section;
-        for (Rule<?> entry : createTriggers.get(Section.class)) {
-            _section = ((Rule<Section>) entry).evaluate(_section);
+        for (Rule<?> entry : createTriggers.get(SectionEntity.class)) {
+            _section = ((Rule<SectionEntity>) entry).evaluate(_section);
         }
         return _section;
     }

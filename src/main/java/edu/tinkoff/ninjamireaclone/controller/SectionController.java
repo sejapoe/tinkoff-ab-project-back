@@ -7,8 +7,8 @@ import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
 import edu.tinkoff.ninjamireaclone.mapper.PageMapper;
 import edu.tinkoff.ninjamireaclone.mapper.SectionMapper;
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.service.SectionRightsService;
 import edu.tinkoff.ninjamireaclone.service.SectionService;
 import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
@@ -45,7 +45,7 @@ public class SectionController {
     @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping
     public ResponseEntity<SectionResponseDto> getRootSection(@ParameterObject PageRequestDto pageRequestDto) {
-        Section section = sectionService.getRoot();
+        SectionEntity section = sectionService.getRoot();
         return ResponseEntity.ok(sectionToPageDto(section, pageMapper.fromRequestDto(pageRequestDto)));
     }
 
@@ -58,12 +58,12 @@ public class SectionController {
     @PreAuthorize("hasAuthority('VIEW')")
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<SectionResponseDto> getSection(@PathVariable Long id, @ParameterObject PageRequestDto pageRequestDto) {
-        Section section = sectionService.get(id);
+        SectionEntity section = sectionService.get(id);
         return ResponseEntity.ok(sectionToPageDto(section, pageMapper.fromRequestDto(pageRequestDto)));
     }
 
-    private SectionResponseDto sectionToPageDto(Section section, Pageable pageable) {
-        MultiPage<Section, Topic> multiPage = sectionService.getMultiPage(section, pageable);
+    private SectionResponseDto sectionToPageDto(SectionEntity section, Pageable pageable) {
+        MultiPage<SectionEntity, TopicEntity> multiPage = sectionService.getMultiPage(section, pageable);
         Rights rights = sectionRightsService.getRights(section);
         return sectionMapper.toDto(section, multiPage, rights);
     }
@@ -77,7 +77,7 @@ public class SectionController {
     })
     @PostMapping
     public ResponseEntity<ShortSectionResponseDto> createSection(@RequestBody @Valid CreateSectionRequestDto createSectionRequestDto) {
-        Section section = sectionService.create(createSectionRequestDto.parentId(), createSectionRequestDto.name());
+        SectionEntity section = sectionService.create(createSectionRequestDto.parentId(), createSectionRequestDto.name());
         return ResponseEntity.ok(sectionMapper.toShortDto(section));
     }
 

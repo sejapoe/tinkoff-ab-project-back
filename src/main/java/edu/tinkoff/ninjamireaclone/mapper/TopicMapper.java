@@ -4,8 +4,8 @@ import edu.tinkoff.ninjamireaclone.dto.topic.request.CreateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.request.UpdateTopicRequestDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.ShortTopicResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.topic.response.TopicResponseDto;
-import edu.tinkoff.ninjamireaclone.model.Post;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,15 +17,15 @@ public interface TopicMapper {
     @Mapping(target = "posts", ignore = true)
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "id", ignore = true)
-    Topic toTopic(CreateTopicRequestDto requestDto);
+    TopicEntity toTopic(CreateTopicRequestDto requestDto);
 
     @Mapping(target = "posts", ignore = true)
     @Mapping(target = "parent", ignore = true)
-    Topic toTopic(UpdateTopicRequestDto requestDto);
+    TopicEntity toTopic(UpdateTopicRequestDto requestDto);
 
     @Mapping(target = "parentId", source = "topic.parent.id")
     @Mapping(target = "posts", source = "posts")
-    TopicResponseDto toTopicResponseDto(Topic topic, Page<Post> posts, @Context Long userId, @Context boolean isAdmin);
+    TopicResponseDto toTopicResponseDto(TopicEntity topic, Page<PostEntity> posts, @Context Long userId, @Context boolean isAdmin);
 
-    ShortTopicResponseDto toShortTopicResponseDto(Topic topic);
+    ShortTopicResponseDto toShortTopicResponseDto(TopicEntity topic);
 }

@@ -4,8 +4,8 @@ import edu.tinkoff.ninjamireaclone.dto.section.request.SectionMultiPageResponseD
 import edu.tinkoff.ninjamireaclone.dto.section.response.SectionResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.section.response.ShortSectionResponseDto;
 import edu.tinkoff.ninjamireaclone.model.Rights;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.utils.page.MultiPage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,13 +18,13 @@ public interface SectionMapper {
     @Mapping(target = "page", source = "multiPage")
     @Mapping(target = "rights.canCreateTopics", source = "rights.createTopics")
     @Mapping(target = "rights.canCreateSubsections", source = "rights.createSubsections")
-    SectionResponseDto toDto(Section section, MultiPage<Section, Topic> multiPage, Rights rights);
+    SectionResponseDto toDto(SectionEntity section, MultiPage<SectionEntity, TopicEntity> multiPage, Rights rights);
 
     @Mapping(target = "subsections", source = "multiPage.content1")
     @Mapping(target = "topics", source = "multiPage.content2")
-    SectionMultiPageResponseDto toMultiPageDto(MultiPage<Section, Topic> multiPage);
+    SectionMultiPageResponseDto toMultiPageDto(MultiPage<SectionEntity, TopicEntity> multiPage);
 
     @Mapping(target = "id", source = "section.id")
     @Mapping(target = "name", source = "section.name")
-    ShortSectionResponseDto toShortDto(Section section);
+    ShortSectionResponseDto toShortDto(SectionEntity section);
 }

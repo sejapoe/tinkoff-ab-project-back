@@ -1,6 +1,6 @@
 package edu.tinkoff.ninjamireaclone.repository;
 
-import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public interface PostRevisionRepository {
 
     List<Long> getRevisionsIds(Long id);
 
-    List<Post> getRevisionsById(Long id);
+    List<PostEntity> getRevisionsById(Long id);
 
     void deleteAll();
 }

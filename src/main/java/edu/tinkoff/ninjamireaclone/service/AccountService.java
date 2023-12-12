@@ -3,8 +3,8 @@ package edu.tinkoff.ninjamireaclone.service;
 import edu.tinkoff.ninjamireaclone.exception.AccountAlreadyExistsException;
 import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
-import edu.tinkoff.ninjamireaclone.model.Account;
-import edu.tinkoff.ninjamireaclone.model.Role;
+import edu.tinkoff.ninjamireaclone.model.AccountEntity;
+import edu.tinkoff.ninjamireaclone.model.RoleEntity;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.service.storage.StorageService;
 import jakarta.transaction.Transactional;
@@ -42,7 +42,7 @@ public class AccountService implements UserDetailsService {
      * @param name account's name
      * @return account
      */
-    public Account getByName(String name) {
+    public AccountEntity getByName(String name) {
         return accountRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Аккаунт", name));
     }
 
@@ -52,7 +52,7 @@ public class AccountService implements UserDetailsService {
      * @param id id to be used
      * @return account
      */
-    public Account getById(Long id) {
+    public AccountEntity getById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Аккаунт", id));
     }
 
@@ -76,7 +76,7 @@ public class AccountService implements UserDetailsService {
      * @return created account
      * @throws AccountAlreadyExistsException if account with such username already exists
      */
-    public Account createAccount(Account account) throws AccountAlreadyExistsException {
+    public AccountEntity createAccount(AccountEntity account) throws AccountAlreadyExistsException {
         if (accountRepository.findByName(account.getName()).isPresent()) {
             throw new AccountAlreadyExistsException(account.getName());
         }
@@ -93,7 +93,7 @@ public class AccountService implements UserDetailsService {
      * @param roles roles to be assigned
      * @return updated account
      */
-    public Account grantRoles(Long id, List<Role> roles) {
+    public AccountEntity grantRoles(Long id, List<RoleEntity> roles) {
         var account = getById(id);
         roles.addAll(account.getRoles());
         account.setRoles(roles);
@@ -107,7 +107,7 @@ public class AccountService implements UserDetailsService {
      * @param roles roles to be removed
      * @return updated account
      */
-    public Account removeRoles(Long id, List<Role> roles) {
+    public AccountEntity removeRoles(Long id, List<RoleEntity> roles) {
         var account = getById(id);
         var resultRoles = new ArrayList<>(account.getRoles());
         resultRoles.removeAll(roles);
@@ -139,10 +139,10 @@ public class AccountService implements UserDetailsService {
      * @return current user id or -1 if unauthenticated
      */
     public long getCurrentUserId() {
-        return Optional.ofNullable(getCurrentUser()).map(Account::getId).orElse(-1L);
+        return Optional.ofNullable(getCurrentUser()).map(AccountEntity::getId).orElse(-1L);
     }
 
-    public Account getCurrentUser() {
+    public AccountEntity getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             return getByName(authentication.getName());
@@ -152,7 +152,7 @@ public class AccountService implements UserDetailsService {
         }
     }
 
-    public Account update(Account updater, MultipartFile avatar) {
+    public AccountEntity update(AccountEntity updater, MultipartFile avatar) {
         var account = getById(updater.getId());
         account.setDisplayName(updater.getDisplayName());
         account.setDescription(updater.getDescription());
@@ -169,7 +169,7 @@ public class AccountService implements UserDetailsService {
      * @param pageable pagination properties
      * @return page of accounts
      */
-    public Page<Account> getAll(Pageable pageable) {
+    public Page<AccountEntity> getAll(Pageable pageable) {
         return accountRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id")));
     }
 
@@ -186,11 +186,11 @@ public class AccountService implements UserDetailsService {
         return account.getId();
     }
 
-    public Account promote(Long id) {
+    public AccountEntity promote(Long id) {
         var account = getById(id);
 
-        List<Role> roles = account.getRoles();
-        Role roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
+        List<RoleEntity> roles = account.getRoles();
+        RoleEntity roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
 
         if (roles.contains(roleModerator)) {
             throw new ConflictException("Пользователь %s уже является модератором".formatted(account.getName()));
@@ -200,11 +200,11 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
-    public Account demote(Long id) {
+    public AccountEntity demote(Long id) {
         var account = getById(id);
 
-        List<Role> roles = account.getRoles();
-        Role roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
+        List<RoleEntity> roles = account.getRoles();
+        RoleEntity roleModerator = roleService.getRoleByName("ROLE_MODERATOR");
 
         if (!roles.contains(roleModerator)) {
             throw new ConflictException("Пользователь %s не является модератором".formatted(account.getName()));

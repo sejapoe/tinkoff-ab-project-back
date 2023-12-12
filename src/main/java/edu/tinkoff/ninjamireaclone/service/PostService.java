@@ -2,8 +2,8 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.AccessDeniedException;
 import edu.tinkoff.ninjamireaclone.exception.ResourceNotFoundException;
-import edu.tinkoff.ninjamireaclone.model.Document;
-import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.DocumentEntity;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
 import edu.tinkoff.ninjamireaclone.repository.AccountRepository;
 import edu.tinkoff.ninjamireaclone.repository.PostRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
@@ -30,13 +30,13 @@ public class PostService {
     private final TransactionExecutorService transactionExecutorService;
     private final AccountService accountService;
 
-    private void attachDocuments(Post post, Set<Document> documents) {
+    private void attachDocuments(PostEntity post, Set<DocumentEntity> documents) {
         for (var d : documents) {
             post.addDocument(d);
         }
     }
 
-    private void init(Post post, Long authorId, Long parentId) {
+    private void init(PostEntity post, Long authorId, Long parentId) {
         if (nonNull(authorId)) {
             post.setAuthor(accountRepository.findById(authorId)
                     .orElseThrow(() -> new ResourceNotFoundException("Пользователь", authorId)));
@@ -48,7 +48,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Post post, Long authorId, Long parentId) {
+    public PostEntity updatePost(PostEntity post, Long authorId, Long parentId) {
         var found = getPost(post.getId());
         post.setCreatedAt(found.getCreatedAt());
         post.setDocuments(found.getDocuments());
@@ -57,7 +57,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long id, String text) {
+    public PostEntity updatePost(Long id, String text) {
         var post = getPost(id);
 
         if (accountService.checkFakeId(post.getAuthor().getId())) {
@@ -71,7 +71,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post getPost(Long id) {
+    public PostEntity getPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Пост", id));
     }
 
@@ -83,10 +83,10 @@ public class PostService {
     }
 
     @Transactional
-    public Post createPostWithAttachments(Post post, Long authorId, Long parentId, List<MultipartFile> files) {
+    public PostEntity createPostWithAttachments(PostEntity post, Long authorId, Long parentId, List<MultipartFile> files) {
         init(post, authorId, parentId);
         if (nonNull(files)) {
-            Set<Document> documents = new HashSet<>();
+            Set<DocumentEntity> documents = new HashSet<>();
             for (var f : files) {
                 documents.add(storageService.store(f));
             }

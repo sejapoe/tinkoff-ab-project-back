@@ -2,8 +2,8 @@ package edu.tinkoff.ninjamireaclone.service;
 
 import edu.tinkoff.ninjamireaclone.exception.NoSuchPrivilegeException;
 import edu.tinkoff.ninjamireaclone.exception.NoSuchRoleException;
-import edu.tinkoff.ninjamireaclone.model.Privilege;
-import edu.tinkoff.ninjamireaclone.model.Role;
+import edu.tinkoff.ninjamireaclone.model.PrivilegeEntity;
+import edu.tinkoff.ninjamireaclone.model.RoleEntity;
 import edu.tinkoff.ninjamireaclone.repository.PrivilegeRepository;
 import edu.tinkoff.ninjamireaclone.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +16,19 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final PrivilegeRepository privilegeRepository;
 
-    public Role getDefaultRole() {
+    public RoleEntity getDefaultRole() {
         return getRoleByName("ROLE_USER");
     }
 
-    public Role getRoleByName(String name) {
+    public RoleEntity getRoleByName(String name) {
         return roleRepository.findByName(name).orElseThrow(() -> new NoSuchRoleException(name));
     }
 
-    public Privilege getDefaultPrivilege() {
+    public PrivilegeEntity getDefaultPrivilege() {
         return getPrivilegeByName("DEFAULT");
     }
 
-    public Privilege getPrivilegeByName(String name) {
+    public PrivilegeEntity getPrivilegeByName(String name) {
         return privilegeRepository.findByName(name).orElseThrow(() -> new NoSuchPrivilegeException(name));
     }
 }

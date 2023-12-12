@@ -1,7 +1,7 @@
 package edu.tinkoff.ninjamireaclone.mapper;
 
 import edu.tinkoff.ninjamireaclone.dto.audit.PostAuditResponseDto;
-import edu.tinkoff.ninjamireaclone.model.Post;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,5 +11,5 @@ public interface AuditMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "text", source = "text")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    PostAuditResponseDto toPostAuditResponseDto(Post post);
+    PostAuditResponseDto toPostAuditResponseDto(PostEntity post);
 }

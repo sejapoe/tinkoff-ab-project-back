@@ -6,8 +6,8 @@ import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.exception.NotFoundException;
 import edu.tinkoff.ninjamireaclone.model.QSection;
 import edu.tinkoff.ninjamireaclone.model.QTopic;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import edu.tinkoff.ninjamireaclone.repository.SectionRepository;
 import edu.tinkoff.ninjamireaclone.repository.TopicRepository;
 import edu.tinkoff.ninjamireaclone.service.rule.RuleService;
@@ -29,7 +29,7 @@ public class SectionService {
     private final RuleService ruleService;
     private final TopicRepository topicRepository;
     private final SectionRightsService sectionRightsService;
-    private MultiPager<Section, Topic, SectionRepository, TopicRepository> multiPager;
+    private MultiPager<SectionEntity, TopicEntity, SectionRepository, TopicRepository> multiPager;
 
     @PostConstruct
     private void init() {
@@ -42,12 +42,12 @@ public class SectionService {
      * @throws NotFoundException if section with given id is not found
      */
     @Transactional
-    public Section get(Long id) {
+    public SectionEntity get(Long id) {
         return sectionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Section with id %d is not found".formatted(id)));
     }
 
-    public MultiPage<Section, Topic> getMultiPage(Section section, Pageable pageable) {
+    public MultiPage<SectionEntity, TopicEntity> getMultiPage(SectionEntity section, Pageable pageable) {
         return multiPager.findAll(pageable.getPageNumber(),
                 pageable.getPageSize(),
                 QSection.section.parent.id.eq(section.getId()),
@@ -59,10 +59,10 @@ public class SectionService {
      *
      * @param section section to create
      * @return created section
-     * @see RuleService#handleSectionCreated(Section)
+     * @see RuleService#handleSectionCreated(SectionEntity)
      */
     @Transactional
-    public Section create(Section section) {
+    public SectionEntity create(SectionEntity section) {
         if (Objects.nonNull(section.getParent())
                 && !sectionRightsService.getRights(section.getParent()).getCreateSubsections()) {
             throw new AccessDeniedException("Вы не можете создавать подразделы здесь!");
@@ -79,14 +79,14 @@ public class SectionService {
      * @param name     section name
      * @return created section
      * @throws NotFoundException if parent section is not found
-     * @see SectionService#create(Section)
+     * @see SectionService#create(SectionEntity)
      */
     @Transactional
-    public Section create(Long parentId, String name) {
+    public SectionEntity create(Long parentId, String name) {
         var parent = get(parentId);
         // check if parent writable
 
-        Section section = new Section();
+        SectionEntity section = new SectionEntity();
         section.setName(name);
         section.setParent(parent);
 
@@ -106,7 +106,7 @@ public class SectionService {
      * @throws NotFoundException if section with given id is not found
      */
     @Transactional
-    public Section update(Long id, String name) {
+    public SectionEntity update(Long id, String name) {
         var section = get(id);
         section.setName(name);
         return sectionRepository.save(section);
@@ -121,7 +121,7 @@ public class SectionService {
      */
     @Transactional
     public void delete(Long id) {
-        Section section = get(id);
+        SectionEntity section = get(id);
         sectionRepository.delete(section);
     }
 
@@ -132,7 +132,7 @@ public class SectionService {
      * @throws NotFoundException if root section is not found
      */
     @Transactional
-    public Section getRoot() {
+    public SectionEntity getRoot() {
         return sectionRepository.findById(DataLoader.ROOT_ID).orElseThrow(() ->
                 new NotFoundException("Root section is not found!"));
     }

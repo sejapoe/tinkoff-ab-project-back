@@ -3,9 +3,9 @@ package edu.tinkoff.ninjamireaclone.mapper;
 import edu.tinkoff.ninjamireaclone.dto.news.response.NewsCommentResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.news.response.NewsResponseDto;
 import edu.tinkoff.ninjamireaclone.dto.news.response.ShortNewsResponseDto;
-import edu.tinkoff.ninjamireaclone.model.Post;
-import edu.tinkoff.ninjamireaclone.model.Section;
-import edu.tinkoff.ninjamireaclone.model.Topic;
+import edu.tinkoff.ninjamireaclone.model.PostEntity;
+import edu.tinkoff.ninjamireaclone.model.SectionEntity;
+import edu.tinkoff.ninjamireaclone.model.TopicEntity;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,12 +19,12 @@ public interface NewsMapper {
     @Mapping(target = "files", source = "newsPost.documents")
     @Mapping(target = "text", source = "newsPost.text")
     @Mapping(target = "createdAt", source = "newsPost.createdAt")
-    NewsResponseDto toNewsResponseDto(Section news, Post newsPost);
+    NewsResponseDto toNewsResponseDto(SectionEntity news, PostEntity newsPost);
 
     @Mapping(target = "title", source = "news.name")
-    ShortNewsResponseDto toShortNewsResponseDto(Section news);
+    ShortNewsResponseDto toShortNewsResponseDto(SectionEntity news);
 
     @Mapping(target = "threadId", source = "comment.id")
     @Mapping(target = "post", source = "post")
-    NewsCommentResponseDto toNewsCommentResponseDto(Topic comment, Post post, @Context Long userId, @Context boolean isAdmin);
+    NewsCommentResponseDto toNewsCommentResponseDto(TopicEntity comment, PostEntity post, @Context Long userId, @Context boolean isAdmin);
 }
