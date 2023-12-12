@@ -1,6 +1,8 @@
 package edu.tinkoff.ninjamireaclone.service;
 
+import com.google.common.collect.Lists;
 import edu.tinkoff.ninjamireaclone.AbstractBaseTest;
+import edu.tinkoff.ninjamireaclone.exception.ConflictException;
 import edu.tinkoff.ninjamireaclone.model.AccountEntity;
 import edu.tinkoff.ninjamireaclone.model.Gender;
 import edu.tinkoff.ninjamireaclone.model.PrivilegeEntity;
@@ -23,8 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountServiceTest extends AbstractBaseTest {
 
@@ -239,5 +240,186 @@ public class AccountServiceTest extends AbstractBaseTest {
 
         // then
         assertEquals(2, page.getTotalElements());
+    }
+
+    @Test
+    @Transactional
+    public void checkFakeId() {
+        // given
+        AccountEntity accountA = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .build();
+        AccountEntity accountB = AccountEntity.builder()
+                .name("NOT_TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .build();
+
+        var savedAccountA = accountRepository.save(accountA);
+
+        // when
+        var result = accountService.checkFakeId(savedAccountA.getId());
+
+        // then
+        assertFalse(result);
+    }
+
+    @Test
+    @Transactional
+    public void checkFakeIdWrong() {
+        // given
+        AccountEntity accountA = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .build();
+        AccountEntity accountB = AccountEntity.builder()
+                .name("NOT_TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .build();
+
+        var savedAccountA = accountRepository.save(accountA);
+        var savedAccountB = accountRepository.save(accountB);
+
+        // when
+        var result = accountService.checkFakeId(savedAccountB.getId());
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @Transactional
+    public void promoteUser() {
+        // given
+        var defaultRole = new RoleEntity();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+
+        var moderatorRole = new RoleEntity();
+        moderatorRole.setName("ROLE_MODERATOR");
+        roleRepository.save(moderatorRole);
+
+        var account = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .roles(Lists.newArrayList(defaultRole))
+                .build();
+        accountRepository.save(account);
+
+        // when
+        var result = accountService.promote(account.getId());
+
+        // then
+        assertThat(result.getRoles()).contains(moderatorRole);
+    }
+
+    @Test
+    @Transactional
+    public void promoteUserAlreadyModerator() {
+        // given
+        var defaultRole = new RoleEntity();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+
+        var moderatorRole = new RoleEntity();
+        moderatorRole.setName("ROLE_MODERATOR");
+        roleRepository.save(moderatorRole);
+
+        var account = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .roles(Lists.newArrayList(defaultRole, moderatorRole))
+                .build();
+        accountRepository.save(account);
+
+        // when
+        var result = assertThrows(Exception.class, () -> accountService.promote(account.getId()));
+
+        // then
+        assertThat(result).isInstanceOf(ConflictException.class);
+    }
+
+    @Test
+    @Transactional
+    public void demoteUser() {
+        // given
+        var defaultRole = new RoleEntity();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+
+        var moderatorRole = new RoleEntity();
+        moderatorRole.setName("ROLE_MODERATOR");
+        roleRepository.save(moderatorRole);
+
+        var account = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .roles(Lists.newArrayList(defaultRole, moderatorRole))
+                .build();
+        accountRepository.save(account);
+
+        // when
+        var result = accountService.demote(account.getId());
+
+        // then
+        assertThat(result.getRoles()).doesNotContain(moderatorRole);
+    }
+
+    @Test
+    @Transactional
+    public void demoteUserNotAModerator() {
+        // given
+        var defaultRole = new RoleEntity();
+        defaultRole.setName("ROLE_USER");
+        roleRepository.save(defaultRole);
+
+        var moderatorRole = new RoleEntity();
+        moderatorRole.setName("ROLE_MODERATOR");
+        roleRepository.save(moderatorRole);
+
+        var account = AccountEntity.builder()
+                .name("TEST_USER")
+                .password("testpass")
+                .displayName("Test user")
+                .description("Test user")
+                .gender(Gender.NOT_SPECIFIED)
+                .enabled(true)
+                .roles(Lists.newArrayList(defaultRole))
+                .build();
+        accountRepository.save(account);
+
+        // when
+        var result = assertThrows(Exception.class, () -> accountService.demote(account.getId()));
+
+        // then
+        assertThat(result).isInstanceOf(ConflictException.class);
     }
 }
